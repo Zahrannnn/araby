@@ -1,28 +1,28 @@
-"use client"
+"use client";
 
-import React from 'react';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
-import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
-import { authApi } from '@/lib/api';
+import React from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
+import { authApi } from "@/lib/api";
 
 // Login form validation schema
 const loginSchema = z.object({
   email: z
     .string()
-    .min(1, 'Email is required')
-    .email('Please enter a valid email address'),
+    .min(1, "Email is required")
+    .email("Please enter a valid email address"),
   password: z
     .string()
-    .min(1, 'Password is required')
-    .min(6, 'Password must be at least 6 characters'),
+    .min(1, "Password is required")
+    .min(6, "Password must be at least 6 characters"),
   rememberMe: z.boolean().optional(),
 });
 
@@ -31,7 +31,7 @@ type LoginFormData = z.infer<typeof loginSchema>;
 const LoginPage = () => {
   const [showPassword, setShowPassword] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
-  const [error, setError] = React.useState<string>('');
+  const [error, setError] = React.useState<string>("");
   const router = useRouter();
 
   const {
@@ -43,17 +43,17 @@ const LoginPage = () => {
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
       rememberMe: false,
     },
   });
 
-  const rememberMe = watch('rememberMe');
+  const rememberMe = watch("rememberMe");
 
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
-    setError('');
+    setError("");
 
     try {
       // Call the login API
@@ -63,34 +63,35 @@ const LoginPage = () => {
       );
 
       // The authApi.login already stores the token and user data in cookies
-      console.log('Login successful:', {
+      console.log("Login successful:", {
         user: response.user,
         role: response.role,
-        expireAt: response.expireAt
+        expireAt: response.expireAt,
       });
 
       // Redirect to dashboard based on user role
-      let redirectPath = '/dashboard';
-      
+      let redirectPath = "/dashboard";
+
       // You can customize redirect based on role if needed
       switch (response.role) {
-        case 'SuperAdmin':
-          redirectPath = '/super-admin';
+        case "SuperAdmin":
+          redirectPath = "/super-admin";
           break;
-        case 'Manager':
-          redirectPath = '/company';
+        case "Manager":
+          redirectPath = "/company";
           break;
-        case 'Employee':
-          redirectPath = '/employee/dashboard';
+        case "Employee":
+          redirectPath = "/employee/dashboard";
           break;
         default:
-          redirectPath = '/dashboard';
+          redirectPath = "/dashboard";
       }
 
       router.push(redirectPath);
     } catch (error) {
-      console.error('Login error:', error);
-      const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
+      console.error("Login error:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : "An unexpected error occurred";
       setError(errorMessage);
     } finally {
       setIsLoading(false);
@@ -103,11 +104,11 @@ const LoginPage = () => {
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
-            <Image 
-              src="https://i.postimg.cc/PfWyMjKv/image-removebg-preview.png" 
-              alt="NEDX Logo" 
-              width={120} 
-              height={60} 
+            <Image
+              src="https://i.postimg.cc/PfWyMjKv/image-removebg-preview.png"
+              alt="NEDX Logo"
+              width={120}
+              height={60}
               className="h-auto w-auto"
             />
           </div>
@@ -117,7 +118,7 @@ const LoginPage = () => {
         <div className="rounded-lg">
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-gray-900 mb-2">
-              Welcome to CRM System
+              DEIN CRM. DEIN VORSPRUNG
             </h1>
           </div>
 
@@ -136,15 +137,19 @@ const LoginPage = () => {
               </Label>
               <Input
                 id="email"
-                {...register('email')}
+                {...register("email")}
                 type="email"
                 autoComplete="email"
                 placeholder="user@example.com"
-                className={`h-12 text-base ${errors.email ? 'border-red-500' : ''}`}
+                className={`h-12 text-base ${
+                  errors.email ? "border-red-500" : ""
+                }`}
                 disabled={isLoading}
               />
               {errors.email && (
-                <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.email.message}
+                </p>
               )}
             </div>
 
@@ -156,11 +161,13 @@ const LoginPage = () => {
               <div className="relative">
                 <Input
                   id="password"
-                  {...register('password')}
+                  {...register("password")}
                   type={showPassword ? "text" : "password"}
                   autoComplete="current-password"
                   placeholder="••••••••••••"
-                  className={`h-12 text-base pr-12 ${errors.password ? 'border-red-500' : ''}`}
+                  className={`h-12 text-base pr-12 ${
+                    errors.password ? "border-red-500" : ""
+                  }`}
                   disabled={isLoading}
                 />
                 <button
@@ -177,17 +184,19 @@ const LoginPage = () => {
                 </button>
               </div>
               {errors.password && (
-                <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.password.message}
+                </p>
               )}
             </div>
 
             {/* Remember Me */}
             <div className="flex items-center">
-              <Checkbox 
-                id="remember-me" 
-                className="mr-3" 
+              <Checkbox
+                id="remember-me"
+                className="mr-3"
                 checked={rememberMe}
-                onCheckedChange={(checked) => setValue('rememberMe', !!checked)}
+                onCheckedChange={(checked) => setValue("rememberMe", !!checked)}
                 disabled={isLoading}
               />
               <Label htmlFor="remember-me" className="text-sm text-gray-700">
@@ -202,7 +211,7 @@ const LoginPage = () => {
                 className="w-full h-12 bg-red-500 hover:bg-red-600 text-white font-medium text-base shadow-sm transition-colors"
                 disabled={isLoading}
               >
-                {isLoading ? 'Signing in...' : 'Login'}
+                {isLoading ? "Signing in..." : "Login"}
               </Button>
             </div>
           </form>
