@@ -137,7 +137,7 @@ const Page = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
           <p className="text-gray-600">{t('superAdmin.dashboard.loading')}</p>
@@ -148,14 +148,14 @@ const Page = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center bg-white p-8 rounded-lg shadow-sm border">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="text-center bg-white p-6 sm:p-8 rounded-lg shadow-sm border max-w-md w-full">
           <div className="text-red-500 text-5xl mb-4">⚠️</div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">{t('superAdmin.dashboard.errorLoading')}</h2>
-          <p className="text-gray-600 mb-4">{error}</p>
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">{t('superAdmin.dashboard.errorLoading')}</h2>
+          <p className="text-gray-600 mb-4 text-sm sm:text-base">{error}</p>
           <button 
             onClick={() => window.location.reload()} 
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm sm:text-base"
           >
             {t('superAdmin.dashboard.retryButton')}
           </button>
@@ -171,32 +171,33 @@ const Page = () => {
   const { topCards, topCompanies } = dashboardData;
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
           {t('superAdmin.dashboard.title')}
         </h1>
-        <p className="text-gray-600">
+        <p className="text-gray-600 text-sm sm:text-base">
           {t('superAdmin.dashboard.subtitle')}
         </p>
       </div>
 
       {/* Metrics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
         {/* Current Monthly Profit */}
-        <div className="bg-white rounded-lg p-6 shadow-sm border">
+        <div className="bg-white rounded-lg p-4 sm:p-6 shadow-sm border">
           <div className="flex items-center justify-between mb-4">
-            <span className="text-gray-600 text-sm">
+            <span className="text-gray-600 text-xs sm:text-sm">
               {t('superAdmin.dashboard.currentMonthProfit')}
             </span>
-            <div className="bg-green-100 p-2 rounded-lg">
+            <div className="bg-green-100 p-2 rounded-lg flex-shrink-0">
               <svg
-                width="78"
-                height="63"
+                width="48"
+                height="39"
                 viewBox="0 0 78 63"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
+                className="w-8 h-6 sm:w-12 sm:h-9"
               >
                 <g filter="url(#filter0_d_0_1)">
                   <rect x="4" width="70" height="55" rx="15" fill="#2ECC71" />
@@ -256,26 +257,27 @@ const Page = () => {
             </div>
           </div>
           <div className="flex items-end justify-between">
-            <span className="text-3xl font-bold text-gray-900">
+            <span className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 break-all">
               {formatCurrency(topCards.currentMonthProfit)}
             </span>
-            <span className="text-green-600 text-sm font-medium">
+            <span className="text-green-600 text-xs sm:text-sm font-medium flex-shrink-0 ml-2">
               {calculatePercentage(topCards.currentMonthProfit, topCards.lastMonthProfit)}
             </span>
           </div>
         </div>
 
         {/* Total System Profit */}
-        <div className="bg-white rounded-lg p-6 shadow-sm border">
+        <div className="bg-white rounded-lg p-4 sm:p-6 shadow-sm border">
           <div className="flex items-center justify-between mb-4">
-            <span className="text-gray-600 text-sm">{t('superAdmin.dashboard.totalSystemProfit')}</span>
-            <div className="bg-blue-100 p-2 rounded-lg">
+            <span className="text-gray-600 text-xs sm:text-sm">{t('superAdmin.dashboard.totalSystemProfit')}</span>
+            <div className="bg-blue-100 p-2 rounded-lg flex-shrink-0">
               <svg
-                width="78"
-                height="63"
+                width="48"
+                height="39"
                 viewBox="0 0 78 63"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
+                className="w-8 h-6 sm:w-12 sm:h-9"
               >
                 <g filter="url(#filter0_d_0_2)">
                   <rect x="4" width="70" height="55" rx="15" fill="#58A9DF" />
@@ -327,26 +329,27 @@ const Page = () => {
             </div>
           </div>
           <div className="flex items-end justify-between">
-            <span className="text-3xl font-bold text-gray-900">
+            <span className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 break-all">
               {formatCurrency(topCards.totalProfit)}
             </span>
-            <span className="text-green-600 text-sm font-medium">
+            <span className="text-green-600 text-xs sm:text-sm font-medium flex-shrink-0 ml-2">
               {topCards.totalProfit > 0 ? "+100%" : "0%"}
             </span>
           </div>
         </div>
 
         {/* Total Subscriptions */}
-        <div className="bg-white rounded-lg p-6 shadow-sm border">
+        <div className="bg-white rounded-lg p-4 sm:p-6 shadow-sm border sm:col-span-2 lg:col-span-1">
           <div className="flex items-center justify-between mb-4">
-            <span className="text-gray-600 text-sm">{t('superAdmin.dashboard.totalSubscriptions')}</span>
-            <div className="bg-purple-100 p-2 rounded-lg">
+            <span className="text-gray-600 text-xs sm:text-sm">{t('superAdmin.dashboard.totalSubscriptions')}</span>
+            <div className="bg-purple-100 p-2 rounded-lg flex-shrink-0">
               <svg
-                width="78"
-                height="63"
+                width="48"
+                height="39"
                 viewBox="0 0 78 63"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
+                className="w-8 h-6 sm:w-12 sm:h-9"
               >
                 <g filter="url(#filter0_d_0_3)">
                   <rect x="4" width="70" height="55" rx="15" fill="#514F6E" />
@@ -413,10 +416,10 @@ const Page = () => {
             </div>
           </div>
           <div className="flex items-end justify-between">
-            <span className="text-3xl font-bold text-gray-900">
+            <span className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
               {topCards.totalSubscriptions.toLocaleString()}
             </span>
-            <span className="text-green-600 text-sm font-medium">
+            <span className="text-green-600 text-xs sm:text-sm font-medium flex-shrink-0 ml-2">
               {topCards.currentMonthSubscriptions > 0 ? "+100%" : "0%"}
             </span>
           </div>
@@ -424,50 +427,52 @@ const Page = () => {
       </div>
 
       {/* Chart Section */}
-      <div className="bg-white rounded-lg p-6 shadow-sm border mb-8">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold text-gray-900">
+      <div className="bg-white rounded-lg p-4 sm:p-6 shadow-sm border mb-6 sm:mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
             {t('superAdmin.dashboard.monthlySubscriptionProfit')}
           </h2>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-600">{t('superAdmin.dashboard.last12Months')}</span>
-            <select
-              className="text-sm border border-gray-300 rounded px-3 py-1"
-              aria-label={t('superAdmin.dashboard.selectTimeRange')}
-            >
-              <option>März 2025</option>
-            </select>
-            <button
-              className="text-gray-400 hover:text-gray-600"
-              title={t('superAdmin.dashboard.moreOptions')}
-            >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
+            <span className="text-xs sm:text-sm text-gray-600">{t('superAdmin.dashboard.last12Months')}</span>
+            <div className="flex items-center gap-2">
+              <select
+                className="text-xs sm:text-sm border border-gray-300 rounded px-2 sm:px-3 py-1"
+                aria-label={t('superAdmin.dashboard.selectTimeRange')}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
-                />
-              </svg>
-            </button>
+                <option>März 2025</option>
+              </select>
+              <button
+                className="text-gray-400 hover:text-gray-600 p-1"
+                title={t('superAdmin.dashboard.moreOptions')}
+              >
+                <svg
+                  className="w-4 h-4 sm:w-5 sm:h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
 
         {/* Chart Container */}
-        <div className="h-80">
+        <div className="h-64 sm:h-80">
           {chartData.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
                 data={chartData}
                 margin={{
                   top: 20,
-                  right: 30,
-                  left: 40,
+                  right: 10,
+                  left: 10,
                   bottom: 20,
                 }}
               >
@@ -476,7 +481,7 @@ const Page = () => {
                   dataKey="month" 
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fontSize: 12, fill: '#6b7280' }}
+                  tick={{ fontSize: 10, fill: '#6b7280' }}
                   angle={-45}
                   textAnchor="end"
                   height={60}
@@ -484,21 +489,22 @@ const Page = () => {
                 <YAxis 
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fontSize: 12, fill: '#6b7280' }}
+                  tick={{ fontSize: 10, fill: '#6b7280' }}
                   tickFormatter={(value) => `€${value}`}
+                  width={60}
                 />
                 <Line
                   type="monotone"
                   dataKey="profit"
                   stroke="#3b82f6"
-                  strokeWidth={3}
-                  dot={{ fill: '#3b82f6', strokeWidth: 2, r: 4 }}
-                  activeDot={{ r: 6, stroke: '#3b82f6', strokeWidth: 2 }}
+                  strokeWidth={2}
+                  dot={{ fill: '#3b82f6', strokeWidth: 2, r: 3 }}
+                  activeDot={{ r: 5, stroke: '#3b82f6', strokeWidth: 2 }}
                 />
               </LineChart>
             </ResponsiveContainer>
           ) : (
-            <div className="flex items-center justify-center h-full text-gray-500">
+            <div className="flex items-center justify-center h-full text-gray-500 text-sm sm:text-base">
               {t('superAdmin.dashboard.noChartData')}
             </div>
           )}
@@ -506,12 +512,45 @@ const Page = () => {
       </div>
 
       {/* Top 5 Companies Table */}
-      <div className="bg-white rounded-lg p-6 shadow-sm border">
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">
+      <div className="bg-white rounded-lg p-4 sm:p-6 shadow-sm border">
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4 sm:mb-6">
           {t('superAdmin.dashboard.topCompanies')}
         </h2>
 
-        <div className="overflow-x-auto">
+        {/* Mobile Cards View */}
+        <div className="block sm:hidden space-y-4">
+          {topCompanies.length > 0 ? (
+            topCompanies.map((company, index) => (
+              <div key={index} className="border border-gray-200 rounded-lg p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-gray-900">#{index + 1}</span>
+                  <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    {t('active')}
+                  </span>
+                </div>
+                <h3 className="font-medium text-gray-900 mb-2">{company.companyName}</h3>
+                <div className="grid grid-cols-2 gap-2 text-sm">
+                  <div>
+                    <span className="text-gray-500">{t('superAdmin.dashboard.totalProfit')}:</span>
+                    <div className="font-medium">{formatCurrency(company.totalProfit)}</div>
+                  </div>
+                  <div>
+                    <span className="text-gray-500">{t('superAdmin.dashboard.joinDate')}:</span>
+                    <div className="font-medium">{formatDate(company.createdAt)}</div>
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="text-center text-gray-500 py-8">
+              {t('superAdmin.dashboard.noCompaniesFound')}
+            </div>
+          )}
+        </div>
+
+        {/* Desktop Table View */}
+        <div className="hidden sm:block overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-gray-200">

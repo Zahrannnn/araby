@@ -11,12 +11,15 @@ import {
   BellIcon,
   QuestionMarkCircleIcon,
   ChevronRightIcon,
-  ArrowRightOnRectangleIcon
+  ArrowRightOnRectangleIcon,
+  Bars3Icon,
+  XMarkIcon
 } from '@heroicons/react/24/outline';
 import { Button } from './button';
 import { cn } from '@/lib/utils';
 import { LanguageSwitcher } from './language-switcher';
 import Image from 'next/image';
+
 interface SuperAdminSidebarProps {
   locale: string;
   isCollapsed?: boolean;
@@ -73,9 +76,6 @@ const sidebarItems: SidebarItem[] = [
       },
     ],
   },
-  
- 
-  
   {
     name: 'Settings',
     translationKey: 'settings',
@@ -107,6 +107,7 @@ export function SuperAdminSidebar({
   className 
 }: SuperAdminSidebarProps) {
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const t = useTranslations();
 
@@ -131,28 +132,74 @@ export function SuperAdminSidebar({
     return expandedItems.includes(itemName) && !isCollapsed;
   };
 
-  return (
-    <aside className={cn(
-      "bg-sidebar border-r border-sidebar-border h-full flex flex-col transition-all duration-300 ease-in-out",
-      isCollapsed ? "w-16" : "w-64",
-      className
-    )}>
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
+
+  const handleLogout = () => {
+    document.cookie = 'auth-token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+    document.cookie = 'user-data=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+    window.location.href = '/login';
+  };
+
+  // Mobile menu toggle button (shown only on mobile)
+  const MobileMenuToggle = () => (
+    <Button
+      variant="ghost"
+      size="icon"
+      onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+      className="md:hidden fixed top-4 left-4 z-50 bg-white shadow-md border"
+    >
+      {isMobileMenuOpen ? (
+        <XMarkIcon className="h-5 w-5" />
+      ) : (
+        <Bars3Icon className="h-5 w-5" />
+      )}
+    </Button>
+  );
+
+  // Mobile overlay
+  const MobileOverlay = () => (
+    isMobileMenuOpen && (
+      <div
+        className="fixed inset-0 bg-white/50 backdrop-blur-sm bg-opacity-50 z-30 md:hidden"
+        onClick={closeMobileMenu}
+      />
+    )
+  );
+
+  const SidebarContent = () => (
+    <>
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-sidebar-border">
+      <div className="flex items-center justify-between p-3 sm:p-4 border-b border-sidebar-border">
         {!isCollapsed && (
           <div className="flex items-center space-x-3 flex-col">
-            <Image src="https://i.postimg.cc/PfWyMjKv/image-removebg-preview.png" alt="NEDX" width={100} height={100} />
+            <Image 
+              src="https://i.postimg.cc/PfWyMjKv/image-removebg-preview.png" 
+              alt="NEDX" 
+              width={100} 
+              height={100}
+              className=""
+            />
             <div>
               <p className="text-xs text-sidebar-foreground/60">Super Admin Portal</p>
             </div>
           </div>
         )}
         
-       
+        {/* Close button for mobile */}
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={closeMobileMenu}
+          className="md:hidden"
+        >
+          <XMarkIcon className="h-5 w-5" />
+        </Button>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto px-2 py-4 space-y-1">
+      <nav className="flex-1 overflow-y-auto px-2 py-3 sm:py-4 space-y-1">
         {sidebarItems.map((item) => {
           const isActive = isActiveRoute(item.href);
           const hasSubItems = item.subItems && item.subItems.length > 0;
@@ -171,8 +218,9 @@ export function SuperAdminSidebar({
               >
                 <Link
                   href={getNavLink(item.href)}
+                  onClick={closeMobileMenu}
                   className={cn(
-                    `flex items-center flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors hover:bg-[#f22e3e] hover:text-white ${pathname.includes(item.href) ? 'bg-[#f22e3e] text-white' : ''}`,
+                    `flex items-center flex-1 px-3 py-2 sm:py-2.5 text-sm font-medium rounded-md transition-colors hover:bg-[#f22e3e] hover:text-white ${pathname.includes(item.href) ? 'bg-[#f22e3e] text-white' : ''}`,
                     isCollapsed && "justify-center"
                   )}
                   title={isCollapsed ? (t(item.translationKey) || item.name) : undefined}
@@ -184,10 +232,10 @@ export function SuperAdminSidebar({
                   
                   {!isCollapsed && (
                     <>
-                      <span className="flex-1">{t(item.translationKey) || item.name}</span>
+                      <span className="flex-1 text-sm sm:text-base">{t(item.translationKey) || item.name}</span>
                       {item.badge && (
                         <span className={cn(
-                          "ml-auto inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium",
+                          "ml-auto inline-flex items-center px-1.5 sm:px-2 py-0.5 rounded-full text-xs font-medium",
                           item.badge === '!' 
                             ? "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400"
                             : "bg-sidebar-primary/10 text-sidebar-primary"
@@ -205,11 +253,11 @@ export function SuperAdminSidebar({
                     variant="ghost"
                     size="icon"
                     onClick={() => toggleExpanded(item.name)}
-                    className="h-8 w-8 mr-1 text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/50"
+                    className="h-7 w-7 sm:h-8 sm:w-8 mr-1 text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/50"
                   >
                     <ChevronRightIcon 
                       className={cn(
-                        "h-4 w-4 transition-transform",
+                        "h-3 w-3 sm:h-4 sm:w-4 transition-transform",
                         itemExpanded && "rotate-90"
                       )} 
                     />
@@ -219,21 +267,22 @@ export function SuperAdminSidebar({
 
               {/* Sub Items */}
               {hasSubItems && itemExpanded && !isCollapsed && (
-                <div className="ml-8 mt-1 space-y-1">
+                <div className="ml-6 sm:ml-8 mt-1 space-y-1">
                   {item.subItems!.map((subItem) => {
                     const isSubActive = isActiveRoute(subItem.href);
                     return (
                       <Link
                         key={subItem.name}
                         href={getNavLink(subItem.href)}
+                        onClick={closeMobileMenu}
                         className={cn(
-                          "flex items-center justify-between px-3 py-2 text-sm rounded-md transition-colors",
+                          "flex items-center justify-between px-3 py-1.5 sm:py-2 text-sm rounded-md transition-colors",
                           isSubActive
                             ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
                             : "text-sidebar-foreground/80 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
                         )}
                       >
-                        <span>{t(subItem.translationKey) || subItem.name}</span>
+                        <span className="text-xs sm:text-sm">{t(subItem.translationKey) || subItem.name}</span>
                         {subItem.badge && (
                           <span className="ml-auto inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-sidebar-primary/10 text-sidebar-primary">
                             {subItem.badge}
@@ -264,17 +313,13 @@ export function SuperAdminSidebar({
       </nav>
 
       {/* Footer */}
-      <div className="border-t border-sidebar-border p-4">
+      <div className="border-t border-sidebar-border p-3 sm:p-4">
         {!isCollapsed ? (
           <div className="space-y-2">
             <Button 
               variant="ghost" 
-              className="w-full justify-start text-sidebar-foreground/80 hover:bg-sidebar-accent/50" 
-              onClick={() => {
-                document.cookie = 'auth-token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
-                document.cookie = 'user-data=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
-                window.location.href = '/login';
-              }}
+              className="w-full justify-start text-sidebar-foreground/80 hover:bg-sidebar-accent/50 text-sm" 
+              onClick={handleLogout}
             >
               <ArrowRightOnRectangleIcon className="h-4 w-4 mr-2" />
               {t('logout')}
@@ -295,6 +340,40 @@ export function SuperAdminSidebar({
           </div>
         )}
       </div>
-    </aside>
+    </>
+  );
+
+  return (
+    <>
+      {/* Mobile Menu Toggle */}
+      <MobileMenuToggle />
+
+      {/* Mobile Overlay */}
+      <MobileOverlay />
+
+      {/* Sidebar */}
+      <aside className={cn(
+        "bg-sidebar border-r border-sidebar-border h-full flex flex-col transition-all duration-300 ease-in-out",
+        // Desktop sidebar
+        "hidden md:flex",
+        isCollapsed ? "w-16" : "w-56 lg:w-64",
+        // Mobile sidebar
+        "md:relative",
+        isMobileMenuOpen && "fixed inset-y-0 left-0 z-40 w-64 flex md:hidden",
+        className
+      )}>
+        <SidebarContent />
+      </aside>
+
+      {/* Mobile Sidebar */}
+      {isMobileMenuOpen && (
+        <aside className={cn(
+          "md:hidden fixed inset-y-0 left-0 z-40 w-64 bg-sidebar border-r border-sidebar-border h-full flex flex-col transition-transform duration-300 ease-in-out transform",
+          isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+        )}>
+          <SidebarContent />
+        </aside>
+      )}
+    </>
   );
 } 
