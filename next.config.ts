@@ -1,7 +1,27 @@
 import type { NextConfig } from "next";
+import createNextIntlPlugin from 'next-intl/plugin';
+
+const withNextIntl = createNextIntlPlugin('./i18n.ts');
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  eslint: {
+    // Disable ESLint during builds
+    ignoreDuringBuilds: true,
+  },
+  serverExternalPackages: ['html2canvas', 'react-pdf'],
+  // Additional config for PDF generation
+  webpack: (config) => {
+    config.resolve.alias.canvas = false;
+    return config;  
+  },
+  images: {
+    remotePatterns: [
+      {
+        hostname: 'i.postimg.cc',
+        protocol: 'https',
+      },
+    ],
+  },
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);

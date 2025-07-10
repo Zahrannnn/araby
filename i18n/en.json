@@ -1,0 +1,153 @@
+{
+  "dashboard": "Dashboard",
+  "login": "Login",
+  "logout": "Logout",
+  "profile": "Profile",
+  
+  "save": "Save",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "edit": "Edit",
+  "create": "Create",
+  "view": "View",
+  
+  "active": "Active",
+  "inactive": "Inactive",
+  "pending": "Pending",
+  "completed": "Completed",
+  
+  "name": "Name",
+  "email": "Email",
+  "phone": "Phone",
+  "address": "Address",
+  "date": "Date",
+  "amount": "Amount",
+  "status": "Status",
+  "actions": "Actions",
+  
+  "companies": "Companies",
+  "clients": "Clients",
+  "employees": "Employees",
+  "tasks": "Tasks",
+  "quotes": "Quotes",
+  "invoices": "Invoices",
+  "expenses": "Expenses",
+  "revenues": "Revenues",
+  "subscriptions": "Subscriptions",
+  "analytics": "Analytics",
+  
+  "welcome": "Welcome",
+  "settings": "Settings",
+  "reports": "Reports",
+  "notifications": "Notifications",
+
+  "roles": {
+    "superAdmin": "Super Administrator",
+    "companyManager": "Company Manager",
+    "employee": "Employee"
+  },
+
+  "superAdmin": {
+    "dashboard": {
+      "title": "Super Admin Dashboard",
+      "subtitle": "Comprehensive overview of system performance",
+      "currentMonthProfit": "Current Monthly Profit",
+      "totalSystemProfit": "Total System Profit",
+      "totalSubscriptions": "Total Subscriptions",
+      "monthlySubscriptionProfit": "Monthly Subscription Profit",
+      "last12Months": "Last 12 Months",
+      "selectTimeRange": "Select time range",
+      "moreOptions": "More options",
+      "noChartData": "No chart data available",
+      "topCompanies": "Top 5 Companies",
+      "companyName": "Company Name",
+      "totalProfit": "Total Profit",
+      "joinDate": "Join Date",
+      "rejected": "Rejected",
+      "loading": "Loading dashboard data...",
+      "errorLoading": "Error loading",
+      "retryButton": "Try again",
+      "noAuthToken": "No authentication token found",
+      "noCompaniesFound": "No companies found"
+    }
+  },
+
+  "auth": {
+    "signInToAccount": "Sign in to your account",
+    "enterCredentials": "Enter your credentials to access your account",
+    "emailAddress": "Email address",
+    "emailPlaceholder": "Enter your email",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot your password?",
+    "signIn": "Sign in",
+    "signingIn": "Signing in...",
+    "signOut": "Sign out",
+    "errors": {
+      "emailRequired": "Email is required",
+      "emailInvalid": "Please enter a valid email address",
+      "passwordRequired": "Password is required",
+      "passwordMinLength": "Password must be at least 6 characters",
+      "invalidCredentials": "Invalid email or password",
+      "networkError": "Network error. Please check your connection.",
+      "serverError": "Server error. Please try again later."
+    }
+  },
+
+  "home": {
+    "title": "Araby - Business Management Platform",
+    "subtitle": "Streamline your business operations with our comprehensive management solution",
+    "hero": {
+      "heading": "Manage Your Business with Confidence",
+      "subheading": "From client management to invoicing, handle all your business needs in one powerful platform",
+      "getStarted": "Get Started",
+      "learnMore": "Learn More"
+    },
+    "features": {
+      "title": "Everything You Need to Grow Your Business",
+      "subtitle": "Powerful features designed to streamline your workflow",
+      "clientManagement": {
+        "title": "Client Management",
+        "description": "Keep track of your clients, their projects, and communication history in one place"
+      },
+      "invoicing": {
+        "title": "Smart Invoicing",
+        "description": "Create professional invoices and quotes with automated calculations and tax handling"
+      },
+      "taskTracking": {
+        "title": "Task Tracking",
+        "description": "Organize your work with priority-based task management and deadline tracking"
+      },
+      "reporting": {
+        "title": "Financial Reports",
+        "description": "Get insights into your business performance with detailed financial analytics"
+      },
+      "multiLanguage": {
+        "title": "Multi-Language Support",
+        "description": "Work in Arabic, German, or English with full RTL/LTR support"
+      },
+      "teamWork": {
+        "title": "Team Collaboration",
+        "description": "Manage employees, assign tasks, and track progress across your organization"
+      }
+    },
+    "cta": {
+      "title": "Ready to Transform Your Business?",
+      "subtitle": "Join thousands of businesses already using Araby to streamline their operations",
+      "startTrial": "Start Free Trial",
+      "contactSales": "Contact Sales"
+    },
+    "footer": {
+      "copyright": "© 2024 Araby. All rights reserved.",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service",
+      "support": "Support"
+    }
+  },
+
+  "ui": {
+    "changeLanguage": "Change Language",
+    "selectLanguage": "Select language"
+  }
+} 

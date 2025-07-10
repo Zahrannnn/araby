@@ -1,0 +1,153 @@
+{
+  "dashboard": "Dashboard",
+  "login": "Anmelden",
+  "logout": "Abmelden",
+  "profile": "Profil",
+  
+  "save": "Speichern",
+  "cancel": "Abbrechen",
+  "delete": "Löschen",
+  "edit": "Bearbeiten",
+  "create": "Erstellen",
+  "view": "Anzeigen",
+  
+  "active": "Aktiv",
+  "inactive": "Inaktiv",
+  "pending": "Ausstehend",
+  "completed": "Abgeschlossen",
+  
+  "name": "Name",
+  "email": "E-Mail",
+  "phone": "Telefon",
+  "address": "Adresse",
+  "date": "Datum",
+  "amount": "Betrag",
+  "status": "Status",
+  "actions": "Aktionen",
+  
+  "companies": "Unternehmen",
+  "clients": "Kunden",
+  "employees": "Mitarbeiter",
+  "tasks": "Aufgaben",
+  "quotes": "Angebote",
+  "invoices": "Rechnungen",
+  "expenses": "Ausgaben",
+  "revenues": "Einnahmen",
+  "subscriptions": "Abonnements",
+  "analytics": "Analytik",
+  
+  "welcome": "Willkommen",
+  "settings": "Einstellungen",
+  "reports": "Berichte",
+  "notifications": "Benachrichtigungen",
+
+  "roles": {
+    "superAdmin": "Super Administrator",
+    "companyManager": "Unternehmensleiter",
+    "employee": "Mitarbeiter"
+  },
+
+  "superAdmin": {
+    "dashboard": {
+      "title": "Super Admin Dashboard",
+      "subtitle": "Umfassender Überblick über die Systemleistung",
+      "currentMonthProfit": "Aktueller Monatsgewinn",
+      "totalSystemProfit": "Gesamtgewinn System",
+      "totalSubscriptions": "Gesamt Abonnements",
+      "monthlySubscriptionProfit": "Monatlicher Abonnement-Gewinn",
+      "last12Months": "letzten 12 Monate",
+      "selectTimeRange": "Zeitraum auswählen",
+      "moreOptions": "Mehr Optionen",
+      "noChartData": "Keine Chartdaten verfügbar",
+      "topCompanies": "Top 5 Unternehmen",
+      "companyName": "Unternehmensname",
+      "totalProfit": "Gesamtgewinn",
+      "joinDate": "Beitrittsdatum",
+      "rejected": "Abgelehnt",
+      "loading": "Lade Dashboard-Daten...",
+      "errorLoading": "Fehler beim Laden",
+      "retryButton": "Erneut versuchen",
+      "noAuthToken": "Kein Authentifizierungs-Token gefunden",
+      "noCompaniesFound": "Keine Unternehmen gefunden"
+    }
+  },
+
+  "auth": {
+    "signInToAccount": "Bei Ihrem Konto anmelden",
+    "enterCredentials": "Geben Sie Ihre Anmeldedaten ein, um auf Ihr Konto zuzugreifen",
+    "emailAddress": "E-Mail-Adresse",
+    "emailPlaceholder": "E-Mail eingeben",
+    "password": "Passwort",
+    "passwordPlaceholder": "Passwort eingeben",
+    "rememberMe": "Angemeldet bleiben",
+    "forgotPassword": "Passwort vergessen?",
+    "signIn": "Anmelden",
+    "signingIn": "Anmeldung läuft...",
+    "signOut": "Abmelden",
+    "errors": {
+      "emailRequired": "E-Mail ist erforderlich",
+      "emailInvalid": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+      "passwordRequired": "Passwort ist erforderlich",
+      "passwordMinLength": "Passwort muss mindestens 6 Zeichen lang sein",
+      "invalidCredentials": "Ungültige E-Mail oder Passwort",
+      "networkError": "Netzwerkfehler. Bitte überprüfen Sie Ihre Verbindung.",
+      "serverError": "Serverfehler. Bitte versuchen Sie es später erneut."
+    }
+  },
+
+  "home": {
+    "title": "Araby - Business Management Plattform",
+    "subtitle": "Optimieren Sie Ihre Geschäftsabläufe mit unserer umfassenden Management-Lösung",
+    "hero": {
+      "heading": "Verwalten Sie Ihr Unternehmen mit Vertrauen",
+      "subheading": "Von der Kundenverwaltung bis zur Rechnungsstellung - alle Ihre Geschäftsbedürfnisse in einer leistungsstarken Plattform",
+      "getStarted": "Loslegen",
+      "learnMore": "Mehr erfahren"
+    },
+    "features": {
+      "title": "Alles was Sie brauchen, um Ihr Unternehmen zu vergrößern",
+      "subtitle": "Leistungsstarke Funktionen zur Optimierung Ihres Workflows",
+      "clientManagement": {
+        "title": "Kundenverwaltung",
+        "description": "Verfolgen Sie Ihre Kunden, ihre Projekte und Kommunikationshistorie an einem Ort"
+      },
+      "invoicing": {
+        "title": "Intelligente Rechnungsstellung",
+        "description": "Erstellen Sie professionelle Rechnungen und Angebote mit automatischen Berechnungen und Steuerbehandlung"
+      },
+      "taskTracking": {
+        "title": "Aufgabenverfolgung",
+        "description": "Organisieren Sie Ihre Arbeit mit prioritätsbasiertem Aufgabenmanagement und Terminverfolgung"
+      },
+      "reporting": {
+        "title": "Finanzberichte",
+        "description": "Erhalten Sie Einblicke in Ihre Unternehmensleistung mit detaillierten Finanzanalysen"
+      },
+      "multiLanguage": {
+        "title": "Mehrsprachige Unterstützung",
+        "description": "Arbeiten Sie in Arabisch, Deutsch oder Englisch mit vollständiger RTL/LTR-Unterstützung"
+      },
+      "teamWork": {
+        "title": "Teamzusammenarbeit",
+        "description": "Verwalten Sie Mitarbeiter, weisen Sie Aufgaben zu und verfolgen Sie den Fortschritt in Ihrer Organisation"
+      }
+    },
+    "cta": {
+      "title": "Bereit, Ihr Unternehmen zu transformieren?",
+      "subtitle": "Schließen Sie sich Tausenden von Unternehmen an, die bereits Araby verwenden, um ihre Abläufe zu optimieren",
+      "startTrial": "Kostenlose Testversion starten",
+      "contactSales": "Vertrieb kontaktieren"
+    },
+    "footer": {
+      "copyright": "© 2024 Araby. Alle Rechte vorbehalten.",
+      "privacy": "Datenschutzrichtlinie",
+      "terms": "Nutzungsbedingungen",
+      "support": "Support"
+    }
+  },
+
+  "ui": {
+    "changeLanguage": "Sprache ändern",
+    "selectLanguage": "Sprache auswählen"
+  }
+} 

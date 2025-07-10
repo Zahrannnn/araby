@@ -1,0 +1,153 @@
+{
+  "dashboard": "لوحة التحكم",
+  "login": "تسجيل الدخول",
+  "logout": "تسجيل الخروج",
+  "profile": "الملف الشخصي",
+  
+  "save": "حفظ",
+  "cancel": "إلغاء",
+  "delete": "حذف",
+  "edit": "تعديل",
+  "create": "إنشاء",
+  "view": "عرض",
+  
+  "active": "نشط",
+  "inactive": "غير نشط",
+  "pending": "في الانتظار",
+  "completed": "مكتمل",
+  
+  "name": "الاسم",
+  "email": "البريد الإلكتروني",
+  "phone": "الهاتف",
+  "address": "العنوان",
+  "date": "التاريخ",
+  "amount": "المبلغ",
+  "status": "الحالة",
+  "actions": "الإجراءات",
+  
+  "companies": "الشركات",
+  "clients": "العملاء",
+  "employees": "الموظفون",
+  "tasks": "المهام",
+  "quotes": "العروض",
+  "invoices": "الفواتير",
+  "expenses": "المصروفات",
+  "revenues": "الإيرادات",
+  "subscriptions": "الاشتراكات",
+  "analytics": "التحليلات",
+  
+  "welcome": "مرحباً",
+  "settings": "الإعدادات",
+  "reports": "التقارير",
+  "notifications": "الإشعارات",
+
+  "roles": {
+    "superAdmin": "المدير العام",
+    "companyManager": "مدير الشركة",
+    "employee": "موظف"
+  },
+
+  "superAdmin": {
+    "dashboard": {
+      "title": "لوحة تحكم المدير العام",
+      "subtitle": "نظرة شاملة على أداء النظام",
+      "currentMonthProfit": "ربح الشهر الحالي",
+      "totalSystemProfit": "إجمالي ربح النظام",
+      "totalSubscriptions": "إجمالي الاشتراكات",
+      "monthlySubscriptionProfit": "ربح الاشتراكات الشهري",
+      "last12Months": "آخر 12 شهر",
+      "selectTimeRange": "اختر الفترة الزمنية",
+      "moreOptions": "المزيد من الخيارات",
+      "noChartData": "لا توجد بيانات للرسم البياني",
+      "topCompanies": "أفضل 5 شركات",
+      "companyName": "اسم الشركة",
+      "totalProfit": "إجمالي الربح",
+      "joinDate": "تاريخ الانضمام",
+      "rejected": "مرفوض",
+      "loading": "جاري تحميل بيانات لوحة التحكم...",
+      "errorLoading": "خطأ في التحميل",
+      "retryButton": "المحاولة مرة أخرى",
+      "noAuthToken": "لم يتم العثور على رمز المصادقة",
+      "noCompaniesFound": "لم يتم العثور على شركات"
+    }
+  },
+
+  "auth": {
+    "signInToAccount": "تسجيل الدخول إلى حسابك",
+    "enterCredentials": "أدخل بيانات الاعتماد للوصول إلى حسابك",
+    "emailAddress": "عنوان البريد الإلكتروني",
+    "emailPlaceholder": "أدخل بريدك الإلكتروني",
+    "password": "كلمة المرور",
+    "passwordPlaceholder": "أدخل كلمة المرور",
+    "rememberMe": "تذكرني",
+    "forgotPassword": "هل نسيت كلمة المرور؟",
+    "signIn": "تسجيل الدخول",
+    "signingIn": "جاري تسجيل الدخول...",
+    "signOut": "تسجيل الخروج",
+    "errors": {
+      "emailRequired": "البريد الإلكتروني مطلوب",
+      "emailInvalid": "يرجى إدخال عنوان بريد إلكتروني صحيح",
+      "passwordRequired": "كلمة المرور مطلوبة",
+      "passwordMinLength": "يجب أن تكون كلمة المرور 6 أحرف على الأقل",
+      "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+      "networkError": "خطأ في الشبكة. يرجى التحقق من اتصالك.",
+      "serverError": "خطأ في الخادم. يرجى المحاولة مرة أخرى لاحقاً."
+    }
+  },
+
+  "home": {
+    "title": "عربي - منصة إدارة الأعمال",
+    "subtitle": "تبسيط عمليات عملك مع حل الإدارة الشامل لدينا",
+    "hero": {
+      "heading": "إدارة عملك بثقة",
+      "subheading": "من إدارة العملاء إلى الفوترة، تعامل مع جميع احتياجات عملك في منصة واحدة قوية",
+      "getStarted": "ابدأ الآن",
+      "learnMore": "اعرف المزيد"
+    },
+    "features": {
+      "title": "كل ما تحتاجه لتنمية عملك",
+      "subtitle": "ميزات قوية مصممة لتبسيط سير عملك",
+      "clientManagement": {
+        "title": "إدارة العملاء",
+        "description": "تتبع عملائك ومشاريعهم وتاريخ التواصل في مكان واحد"
+      },
+      "invoicing": {
+        "title": "الفوترة الذكية",
+        "description": "إنشاء فواتير وعروض أسعار احترافية مع حسابات آلية ومعالجة الضرائب"
+      },
+      "taskTracking": {
+        "title": "تتبع المهام",
+        "description": "نظم عملك مع إدارة المهام القائمة على الأولوية وتتبع المواعيد النهائية"
+      },
+      "reporting": {
+        "title": "التقارير المالية",
+        "description": "احصل على رؤى حول أداء عملك مع تحليلات مالية مفصلة"
+      },
+      "multiLanguage": {
+        "title": "دعم متعدد اللغات",
+        "description": "اعمل بالعربية أو الألمانية أو الإنجليزية مع دعم كامل لـ RTL/LTR"
+      },
+      "teamWork": {
+        "title": "التعاون الجماعي",
+        "description": "إدارة الموظفين وتعيين المهام وتتبع التقدم عبر منظمتك"
+      }
+    },
+    "cta": {
+      "title": "هل أنت مستعد لتحويل عملك؟",
+      "subtitle": "انضم إلى آلاف الشركات التي تستخدم بالفعل عربي لتبسيط عملياتها",
+      "startTrial": "ابدأ النسخة التجريبية المجانية",
+      "contactSales": "اتصل بالمبيعات"
+    },
+    "footer": {
+      "copyright": "© 2024 عربي. جميع الحقوق محفوظة.",
+      "privacy": "سياسة الخصوصية",
+      "terms": "شروط الخدمة",
+      "support": "الدعم"
+    }
+  },
+
+  "ui": {
+    "changeLanguage": "تغيير اللغة",
+    "selectLanguage": "اختر اللغة"
+  }
+} 
