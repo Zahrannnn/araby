@@ -9,7 +9,6 @@ import {
   BuildingOfficeIcon,
   CogIcon,
   BellIcon,
-  QuestionMarkCircleIcon,
   ChevronRightIcon,
   ArrowRightOnRectangleIcon,
   Bars3Icon,
@@ -18,6 +17,8 @@ import {
 import { Button } from './button';
 import { cn } from '@/lib/utils';
 import { LanguageSwitcher } from './language-switcher';
+import { NotificationsSidebar } from './notifications-sidebar';
+import { useNotifications } from '@/hooks/useNotifications';
 import Image from 'next/image';
 
 interface SuperAdminSidebarProps {
@@ -108,8 +109,10 @@ export function SuperAdminSidebar({
 }: SuperAdminSidebarProps) {
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const pathname = usePathname();
   const t = useTranslations();
+  const { getUnreadCount } = useNotifications();
 
   const isActiveRoute = (href: string) => {
     const pathWithoutLocale = pathname.replace(`/${locale}`, '');
@@ -140,6 +143,14 @@ export function SuperAdminSidebar({
     document.cookie = 'auth-token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
     document.cookie = 'user-data=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
     window.location.href = '/login';
+  };
+
+  const handleNotificationsClick = () => {
+    setIsNotificationsOpen(true);
+  };
+
+  const handleNotificationsClose = () => {
+    setIsNotificationsOpen(false);
   };
 
   // Mobile menu toggle button (shown only on mobile)
@@ -313,29 +324,66 @@ export function SuperAdminSidebar({
       </nav>
 
       {/* Footer */}
-      <div className="border-t border-sidebar-border p-3 sm:p-4">
+      <div className=" border-sidebar-border p-3 sm:p-4">
         {!isCollapsed ? (
-          <div className="space-y-2">
-            <Button 
-              variant="ghost" 
-              className="w-full justify-start text-sidebar-foreground/80 hover:bg-sidebar-accent/50 text-sm" 
-              onClick={handleLogout}
-            >
-              <ArrowRightOnRectangleIcon className="h-4 w-4 mr-2" />
-              {t('logout')}
-            </Button>
-            <div className="space-y-1">
-              <p className="text-xs text-sidebar-foreground/60 px-1">{t('ui.changeLanguage')}</p>
+          <div className="space-y-3">
+            {/* Language Section */}
+            <div className="space-y-2">
+              <p className="text-sm text-sidebar-foreground/80 font-medium">{t('ui.changeLanguage') || 'Change Language'}</p>
               <LanguageSwitcher variant="dropdown" className="w-full" />
             </div>
+            
+            {/* Separator */}
+            <div className="border-t border-sidebar-border"></div>
+            
+            {/* Notifications */}
+            <div 
+              className="flex items-center space-x-3 px-1 py-2 text-sidebar-foreground/80 hover:bg-sidebar-accent/50 rounded-md cursor-pointer"
+              onClick={handleNotificationsClick}
+            >
+              <div className="relative">
+                <BellIcon className="h-5 w-5" />
+                {getUnreadCount() > 0 && (
+                  <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full flex items-center justify-center">
+                    <span className="text-xs text-white font-bold">•</span>
+                  </span>
+                )}
+              </div>
+              <span className="text-sm">{t('notifications.button') || 'Notifications'}</span>
+              {getUnreadCount() > 0 && (
+                <span className="ml-auto inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-red-500 text-white">
+                  {getUnreadCount()}
+                </span>
+              )}
+            </div>
+            
+            {/* Log out */}
+            <Button 
+              variant="ghost" 
+              className="w-full justify-start text-sidebar-foreground/80 hover:bg-sidebar-accent/50 text-sm px-1" 
+              onClick={handleLogout}
+            >
+              <ArrowRightOnRectangleIcon className="h-5 w-5 mr-3" />
+              {t('logout') || 'Log out'}
+            </Button>
           </div>
         ) : (
           <div className="flex flex-col space-y-2 items-center">
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <BellIcon className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <QuestionMarkCircleIcon className="h-4 w-4" />
+            <div className="relative">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-8 w-8"
+                onClick={handleNotificationsClick}
+              >
+                <BellIcon className="h-4 w-4" />
+              </Button>
+              {getUnreadCount() > 0 && (
+                <span className="absolute -top-1 -right-1 h-2 w-2 bg-red-500 rounded-full"></span>
+              )}
+            </div>
+            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={handleLogout}>
+              <ArrowRightOnRectangleIcon className="h-4 w-4" />
             </Button>
           </div>
         )}
@@ -374,6 +422,12 @@ export function SuperAdminSidebar({
           <SidebarContent />
         </aside>
       )}
+
+      {/* Notifications Sidebar */}
+      <NotificationsSidebar
+        isOpen={isNotificationsOpen}
+        onClose={handleNotificationsClose}
+      />
     </>
   );
 } 

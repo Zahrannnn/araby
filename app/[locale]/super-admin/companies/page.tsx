@@ -3,6 +3,9 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { useTranslations } from 'next-intl'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { AddCompanyModal } from "@/components/super-admin/add-company-modal"
+import { DeleteCompanyModal } from "@/components/super-admin/delete-company-modal"
+import { ViewCompanyModal } from "@/components/super-admin/view-company-modal"
 
 // Type definitions based on the actual API response structure
 interface Company {
@@ -35,6 +38,11 @@ const Page = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [activeFilter, setActiveFilter] = useState<boolean | null>(null);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [companyToDelete, setCompanyToDelete] = useState<{ id: number; name: string } | null>(null);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [companyToView, setCompanyToView] = useState<Company | null>(null);
 
   // Debounce search term
   useEffect(() => {
@@ -153,6 +161,50 @@ const Page = () => {
     return status === "مفعلة";
   };
 
+  // Handle delete company
+  const handleDeleteClick = (companyId: number, companyName: string) => {
+    setCompanyToDelete({ id: companyId, name: companyName });
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleDeleteSuccess = () => {
+    setIsDeleteModalOpen(false);
+    setCompanyToDelete(null);
+    fetchCompanies(); // Refresh the companies list
+  };
+
+  const handleDeleteCancel = () => {
+    setIsDeleteModalOpen(false);
+    setCompanyToDelete(null);
+  };
+
+  // Handle view company
+  const handleViewClick = (company: Company) => {
+    setCompanyToView(company);
+    setIsViewModalOpen(true);
+  };
+
+  const handleViewCancel = () => {
+    setIsViewModalOpen(false);
+    setCompanyToView(null);
+  };
+
+  // Handle edit from view modal
+  const handleEditFromView = () => {
+    // TODO: Implement edit functionality
+    console.log("Edit company:", companyToView);
+    setIsViewModalOpen(false);
+    setCompanyToView(null);
+  };
+
+  // Handle delete from view modal
+  const handleDeleteFromView = () => {
+    if (companyToView) {
+      setIsViewModalOpen(false); // Close view modal first
+      handleDeleteClick(companyToView.companyId, companyToView.companyName); // Open delete modal
+    }
+  };
+
   // Loading state
   if (isLoading) {
     return (
@@ -205,7 +257,10 @@ const Page = () => {
               {t('superAdmin.companies.subtitle')} ({t('superAdmin.companies.totalCompanies', { count: totalCount })})
             </p>
           </div>
-          <Button className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-md">
+          <Button 
+            className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-md"
+            onClick={() => setIsAddModalOpen(true)}
+          >
             {t('superAdmin.companies.addCompany')}
           </Button>
         </div>
@@ -318,17 +373,28 @@ const Page = () => {
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                             </svg>
                           </Button>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-gray-600">
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="h-8 w-8 text-gray-400 hover:text-blue-600"
+                            onClick={() => handleViewClick(company)}
+                          >
                             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                             </svg>
                           </Button>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-red-600">
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="h-8 w-8 text-gray-400 hover:text-red-600"
+                            onClick={() => handleDeleteClick(company.companyId, company.companyName)}
+                          >
                             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                             </svg>
                           </Button>
+                          
                         </div>
                       </td>
                     </tr>
@@ -401,6 +467,34 @@ const Page = () => {
             </p>
           </div>
         )}
+
+        {/* Add Company Modal */}
+        <AddCompanyModal 
+          isOpen={isAddModalOpen} 
+          onClose={() => setIsAddModalOpen(false)} 
+          onSuccess={() => {
+            fetchCompanies(); // Refresh the companies list
+            setIsAddModalOpen(false);
+          }}
+        />
+
+        {/* Delete Company Modal */}
+        <DeleteCompanyModal 
+          isOpen={isDeleteModalOpen} 
+          onClose={handleDeleteCancel}
+          onSuccess={handleDeleteSuccess}
+          companyId={companyToDelete?.id || null}
+          companyName={companyToDelete?.name || ""}
+        />
+
+        {/* View Company Modal */}
+        <ViewCompanyModal 
+          isOpen={isViewModalOpen} 
+          onClose={handleViewCancel}
+          onEdit={handleEditFromView}
+          onDelete={handleDeleteFromView}
+          company={companyToView}
+        />
       </div>
     </div>
   )

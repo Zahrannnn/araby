@@ -36,6 +36,9 @@ export const API_ENDPOINTS = {
   
   // Subscriptions
   SUBSCRIPTIONS: '/subscriptions',
+  
+  // Super Admin endpoints
+  SUPER_ADMIN_NOTIFICATIONS: '/SuperAdmin/notifications',
 } as const;
 
 /**
@@ -70,6 +73,46 @@ export interface ApiErrorResponse {
   message: string;
   error?: string;
   statusCode?: number;
+}
+
+/**
+ * Company details response from API
+ */
+export interface CompanyDetailsResponse {
+  companyInfo: {
+    id: number;
+    companyName: string;
+    contactEmail: string;
+    phoneNumber: string;
+    address: string;
+    city: string;
+    zipCode: string;
+    country: string;
+    vatNumber: string;
+    subsType: string;
+    subscriptionTypeId: number;
+    isActive: boolean;
+    createdAt: string;
+    updatedAt: string | null;
+    subscriptionEndDate: string;
+    notes: string | null;
+  };
+  managerInfo: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+    userName: string;
+    createdAt: string;
+    isActive: boolean;
+  };
+  metrics: {
+    subscriptionDate: string;
+    customerCount: number;
+    employeeCount: number;
+    totalProfit: number;
+    paidInvoiceCount: number;
+  };
 }
 
 /**
@@ -187,6 +230,61 @@ export const authApi = {
 };
 
 /**
+ * Super Admin API calls
+ */
+export const superAdminApi = {
+  async getNotifications(): Promise<Notification[]> {
+    try {
+      const response = await apiClient.get<Notification[]>(API_ENDPOINTS.SUPER_ADMIN_NOTIFICATIONS);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const errorData = error.response.data as ApiErrorResponse;
+        throw new Error(errorData.message || errorData.error || 'Failed to fetch notifications');
+      }
+      throw new Error('Network error. Please check your connection.');
+    }
+  },
+
+  async markNotificationAsRead(notificationId: number): Promise<void> {
+    try {
+      await apiClient.put(`/SuperAdmin/markAsRead?notificationId=${notificationId}`);
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const errorData = error.response.data as ApiErrorResponse;
+        throw new Error(errorData.message || errorData.error || 'Failed to mark notification as read');
+      }
+      throw new Error('Network error. Please check your connection.');
+    }
+  },
+
+  async markAllNotificationsAsRead(): Promise<void> {
+    try {
+      await apiClient.put('/SuperAdmin/markAllAsRead');
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const errorData = error.response.data as ApiErrorResponse;
+        throw new Error(errorData.message || errorData.error || 'Failed to mark all notifications as read');
+      }
+      throw new Error('Network error. Please check your connection.');
+    }
+  },
+
+  async getCompanyDetails(companyId: number): Promise<CompanyDetailsResponse> {
+    try {
+      const response = await apiClient.get<CompanyDetailsResponse>(`/SuperAdmin/companies/${companyId}`);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const errorData = error.response.data as ApiErrorResponse;
+        throw new Error(errorData.message || errorData.error || 'Failed to fetch company details');
+      }
+      throw new Error('Network error. Please check your connection.');
+    }
+  },
+};
+
+/**
  * TanStack Query configuration
  */
 export const queryClient = new QueryClient({
@@ -219,6 +317,7 @@ export const queryKeys = {
   user: (id: string) => ['users', id] as const,
   companies: ['companies'] as const,
   company: (id: string) => ['companies', id] as const,
+  companyDetails: (id: number) => ['companies', 'details', id] as const,
   clients: (companyId: string) => ['clients', companyId] as const,
   client: (id: string) => ['clients', 'detail', id] as const,
   employees: (companyId: string) => ['employees', companyId] as const,
@@ -231,4 +330,16 @@ export const queryKeys = {
   expenses: (companyId: string) => ['expenses', companyId] as const,
   revenues: (companyId: string) => ['revenues', companyId] as const,
   subscriptions: ['subscriptions'] as const,
+  notifications: ['notifications'] as const,
 } as const; 
+
+/**
+ * Notification interface based on API response
+ */
+export interface Notification {
+  notificationId: number;
+  message: string;
+  type: string;
+  createdAt: string;
+  isRead: boolean;
+} 
