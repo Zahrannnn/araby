@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { AddCompanyModal } from "@/components/super-admin/add-company-modal"
+import { UpdateCompanyModal } from "@/components/super-admin/update-company-modal"
 import { DeleteCompanyModal } from "@/components/super-admin/delete-company-modal"
 import { ViewCompanyModal } from "@/components/super-admin/view-company-modal"
 
@@ -39,6 +40,8 @@ const Page = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [activeFilter, setActiveFilter] = useState<boolean | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [companyToUpdate, setCompanyToUpdate] = useState<number | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [companyToDelete, setCompanyToDelete] = useState<{ id: number; name: string } | null>(null);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
@@ -191,10 +194,25 @@ const Page = () => {
 
   // Handle edit from view modal
   const handleEditFromView = () => {
-    // TODO: Implement edit functionality
-    console.log("Edit company:", companyToView);
-    setIsViewModalOpen(false);
-    setCompanyToView(null);
+    if (companyToView) {
+      setCompanyToUpdate(companyToView.companyId);
+      setIsUpdateModalOpen(true);
+      setIsViewModalOpen(false);
+      setCompanyToView(null);
+    }
+  };
+
+  // Handle update company success
+  const handleUpdateSuccess = () => {
+    setIsUpdateModalOpen(false);
+    setCompanyToUpdate(null);
+    fetchCompanies(); // Refresh the companies list
+  };
+
+  // Handle update company cancel
+  const handleUpdateCancel = () => {
+    setIsUpdateModalOpen(false);
+    setCompanyToUpdate(null);
   };
 
   // Handle delete from view modal
@@ -368,7 +386,15 @@ const Page = () => {
                       <td className="px-6 py-4 text-sm text-gray-900">{company.address}</td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2">
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-blue-600">
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="h-8 w-8 text-gray-400 hover:text-blue-600"
+                            onClick={() => {
+                              setCompanyToUpdate(company.companyId);
+                              setIsUpdateModalOpen(true);
+                            }}
+                          >
                             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                             </svg>
@@ -476,6 +502,14 @@ const Page = () => {
             fetchCompanies(); // Refresh the companies list
             setIsAddModalOpen(false);
           }}
+        />
+
+        {/* Update Company Modal */}
+        <UpdateCompanyModal 
+          isOpen={isUpdateModalOpen} 
+          onClose={handleUpdateCancel}
+          onSuccess={handleUpdateSuccess}
+          companyId={companyToUpdate}
         />
 
         {/* Delete Company Modal */}
