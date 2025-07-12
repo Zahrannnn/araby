@@ -56,49 +56,15 @@ const sidebarItems: SidebarItem[] = [
     translationKey: 'companies',
     href: '/super-admin/companies',
     icon: BuildingOfficeIcon,
-    badge: '127',
-    subItems: [
-      {
-        name: 'All Companies',
-        translationKey: 'allCompanies',
-        href: '/super-admin/companies',
-      },
-      {
-        name: 'Pending Approval',
-        translationKey: 'pendingApproval',
-        href: '/super-admin/companies/pending',
-        badge: '3',
-      },
-      {
-        name: 'Suspended',
-        translationKey: 'suspended',
-        href: '/super-admin/companies/suspended',
-        badge: '2',
-      },
-    ],
+   
+   
   },
   {
     name: 'Settings',
     translationKey: 'settings',
     href: '/super-admin/settings',
     icon: CogIcon,
-    subItems: [
-      {
-        name: 'General',
-        translationKey: 'general',
-        href: '/super-admin/settings/general',
-      },
-      {
-        name: 'Email Templates',
-        translationKey: 'emailTemplates',
-        href: '/super-admin/settings/email',
-      },
-      {
-        name: 'Feature Flags',
-        translationKey: 'featureFlags',
-        href: '/super-admin/settings/features',
-      },
-    ],
+   
   },
 ];
 
