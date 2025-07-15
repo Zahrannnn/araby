@@ -3,7 +3,7 @@
 import React from 'react'
 import { useTranslations } from 'next-intl'
 import { Button } from "@/components/ui/button"
-import { ChevronLeftIcon, PencilIcon, TrashIcon, EyeIcon } from '@heroicons/react/24/outline'
+import { ChevronLeftIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
 import { useEmployeeDetails, useEmployeeTasks } from '@/hooks/useEmployees'
 import type { Employee, Task } from '@/lib/api'
 
@@ -111,14 +111,6 @@ export function ViewEmployeeModal({
         </span>
       )
     }
-  };
-
-  // Format permissions
-  const formatPermissions = (permissions: string[]) => {
-    return permissions.map(permission => {
-      const translationKey = `permissionsList.${permission}`;
-      return t(translationKey) || permission;
-    });
   };
 
   // Status and priority colors for tasks table
@@ -229,7 +221,7 @@ export function ViewEmployeeModal({
               
               <div>
                 <label className="block text-sm font-medium text-gray-500 mb-1">
-                  Anzahl der zugewiesenen Aufgaben:
+                  {t('assignedTasksCount')}:
                 </label>
                 <p className="text-gray-900 font-bold">{employeeDetails.relatedTaskCount}</p>
               </div>
@@ -238,7 +230,7 @@ export function ViewEmployeeModal({
                 <label className="block text-sm font-medium text-gray-500 mb-1">
                   {t('creationDate')}:
                 </label>
-                <p className="text-gray-900">Nicht festgelegt</p>
+                <p className="text-gray-900">{t('notSpecified')}</p>
               </div>
             </div>
           </div>
@@ -248,12 +240,12 @@ export function ViewEmployeeModal({
             <div className="flex items-center gap-2 mb-4">
               <div className="w-1 h-6 bg-red-500"></div>
               <h3 className="text-lg font-semibold text-gray-900">
-                Erteilte Berechtigungen
+                {t('grantedPermissions')}
               </h3>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {['Kunden anzeigen', 'Kunden anzeigen', 'Kunden anzeigen'].map((permission, index) => (
+              {[t('viewCustomers'), t('viewCustomers'), t('viewCustomers')].map((permission, index) => (
                 <div key={index} className="flex items-center gap-2">
                   <input 
                     type="checkbox" 
@@ -280,7 +272,7 @@ export function ViewEmployeeModal({
               <p className="text-2xl font-bold text-blue-900 mb-1">
                 {employeeDetails.inProgressTaskCount}
               </p>
-              <p className="text-sm text-blue-600">In Bearbeitung</p>
+              <p className="text-sm text-blue-600">{t('inProgress')}</p>
             </div>
 
             {/* Completed Tasks */}
@@ -293,7 +285,7 @@ export function ViewEmployeeModal({
               <p className="text-2xl font-bold text-green-900 mb-1">
                 {employeeDetails.completedTaskCount}
               </p>
-              <p className="text-sm text-green-600">Abgeschlossene<br/>Aufgaben</p>
+              <p className="text-sm text-green-600">{t('completedTasks')}</p>
             </div>
 
             {/* Pending Tasks */}
@@ -306,7 +298,7 @@ export function ViewEmployeeModal({
               <p className="text-2xl font-bold text-red-900 mb-1">
                 {employeeDetails.pendingTaskCount}
               </p>
-              <p className="text-sm text-red-600">Ausstehend</p>
+              <p className="text-sm text-red-600">{t('pendingTasks')}</p>
             </div>
 
             {/* Completion Rate */}
@@ -319,7 +311,7 @@ export function ViewEmployeeModal({
               <p className="text-2xl font-bold text-yellow-900 mb-1">
                 {employeeDetails.completionrateTaskCount}%
               </p>
-              <p className="text-sm text-yellow-600">Erledigungsrate</p>
+              <p className="text-sm text-yellow-600">{t('completionRate')}</p>
             </div>
           </div>
 
@@ -372,22 +364,22 @@ export function ViewEmployeeModal({
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Aufgabentitel
+                        {t('tasksTable.taskTitle')}
                       </th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Aufgabenstatus
+                        {t('tasksTable.taskStatus')}
                       </th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Priorität
+                        {t('tasksTable.priority')}
                       </th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Fälligkeitsdatum
+                        {t('tasksTable.dueDate')}
                       </th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Kunde
+                        {t('tasksTable.customer')}
                       </th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Bearbeitungszeit
+                        {t('tasksTable.processingTime')}
                       </th>
                     </tr>
                   </thead>
@@ -414,7 +406,7 @@ export function ViewEmployeeModal({
                           {task.assignedTo}
                         </td>
                         <td className="px-4 py-3 text-sm text-gray-900">
-                          Stunde
+                          {t('tasksTable.hour')}
                         </td>
                       </tr>
                     ))}
