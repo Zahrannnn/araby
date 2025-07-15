@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl'
 import { Button } from "@/components/ui/button"
 import { ChevronLeftIcon, DocumentArrowDownIcon } from '@heroicons/react/24/outline'
 import { useOfferDetails } from '@/hooks/useCustomers'
-import type { OfferDetails, OfferLocation, ServiceLineItem, PackingMaterial } from '@/lib/api'
+import type { OfferLocation, ServiceLineItem, PackingMaterial } from '@/lib/api'
 
 interface ViewOfferModalProps {
   isOpen: boolean;
@@ -122,6 +122,204 @@ export function ViewOfferModal({ isOpen, onClose, offerId }: ViewOfferModalProps
     }
   };
 
+  // Render service details based on service type
+  const renderServiceDetails = (service: ServiceLineItem) => {
+    const details = service.serviceDetails;
+    const serviceType = service.serviceType.toLowerCase();
+
+    switch (serviceType) {
+      case 'move':
+        return (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            {details.moveDate && (
+              <p><span className="font-medium">{t('moveDate')}:</span> {formatDate(details.moveDate)}</p>
+            )}
+            {details.moveStartTime && (
+              <p><span className="font-medium">{t('startTime')}:</span> {formatTime(details.moveStartTime)}</p>
+            )}
+            {details.selectedTariffDescription && (
+              <p><span className="font-medium">{t('tariff')}:</span> {details.selectedTariffDescription}</p>
+            )}
+            {details.numberOfStaff && (
+              <p><span className="font-medium">{t('numberOfStaff')}:</span> {details.numberOfStaff}</p>
+            )}
+            {details.durationHours && (
+              <p><span className="font-medium">{t('duration')}:</span> {details.durationHours}h</p>
+            )}
+            {details.hourlyRateCHF && (
+              <p><span className="font-medium">{t('hourlyRate')}:</span> {formatCurrency(details.hourlyRateCHF)}/h</p>
+            )}
+            {details.numberOfDeliveryTrucks && (
+              <p><span className="font-medium">{t('numberOfTrucks')}:</span> {details.numberOfDeliveryTrucks}</p>
+            )}
+            {details.roundTripCostCHF && (
+              <p><span className="font-medium">{t('roundTripCost')}:</span> {formatCurrency(details.roundTripCostCHF)}</p>
+            )}
+            {details.disassemblyAssemblyBy && (
+              <p><span className="font-medium">{t('disassemblyAssembly')}:</span> {details.disassemblyAssemblyBy}</p>
+            )}
+          </div>
+        );
+
+      case 'cleaning':
+        return (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            {details.cleaningType && (
+              <p className="md:col-span-2"><span className="font-medium">{t('cleaningType')}:</span> {details.cleaningType}</p>
+            )}
+            {details.cleaningDate && (
+              <p><span className="font-medium">{t('cleaningDate')}:</span> {formatDate(details.cleaningDate)}</p>
+            )}
+            {details.cleaningStartTime && (
+              <p><span className="font-medium">{t('startTime')}:</span> {formatTime(details.cleaningStartTime)}</p>
+            )}
+            {details.fixedPriceRateCHF && (
+              <p><span className="font-medium">{t('fixedRate')}:</span> {formatCurrency(details.fixedPriceRateCHF)}</p>
+            )}
+            {details.numberOfStaff && (
+              <p><span className="font-medium">{t('numberOfStaff')}:</span> {details.numberOfStaff}</p>
+            )}
+            {details.fillNailHoles !== undefined && (
+              <p><span className="font-medium">{t('fillNailHoles')}:</span> {details.fillNailHoles ? t('yes') : t('no')}</p>
+            )}
+            {details.withHighPressureCleaner !== undefined && (
+              <p><span className="font-medium">{t('highPressureCleaner')}:</span> {details.withHighPressureCleaner ? t('yes') : t('no')}</p>
+            )}
+            {details.discount && (
+              <p><span className="font-medium">{t('discount')}:</span> {formatCurrency(details.discount)}</p>
+            )}
+          </div>
+        );
+
+      case 'packing':
+        return (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            {details.packingDate && (
+              <p><span className="font-medium">{t('packingDate')}:</span> {formatDate(details.packingDate)}</p>
+            )}
+            {details.packingStartTime && (
+              <p><span className="font-medium">{t('startTime')}:</span> {formatTime(details.packingStartTime)}</p>
+            )}
+            {details.selectedTariffDescription && (
+              <p><span className="font-medium">{t('tariff')}:</span> {details.selectedTariffDescription}</p>
+            )}
+            {details.numberOfStaff && (
+              <p><span className="font-medium">{t('numberOfStaff')}:</span> {details.numberOfStaff}</p>
+            )}
+            {details.durationHours && (
+              <p><span className="font-medium">{t('duration')}:</span> {details.durationHours}h</p>
+            )}
+            {details.hourlyRateCHF && (
+              <p><span className="font-medium">{t('hourlyRate')}:</span> {formatCurrency(details.hourlyRateCHF)}/h</p>
+            )}
+            {details.roundTripCostCHF && (
+              <p><span className="font-medium">{t('roundTripCost')}:</span> {formatCurrency(details.roundTripCostCHF)}</p>
+            )}
+          </div>
+        );
+
+      case 'unpacking':
+        return (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            {details.unpackingDate && (
+              <p><span className="font-medium">{t('unpackingDate')}:</span> {formatDate(details.unpackingDate)}</p>
+            )}
+            {details.unpackingStartTime && (
+              <p><span className="font-medium">{t('startTime')}:</span> {formatTime(details.unpackingStartTime)}</p>
+            )}
+            {details.selectedTariffDescription && (
+              <p><span className="font-medium">{t('tariff')}:</span> {details.selectedTariffDescription}</p>
+            )}
+            {details.numberOfStaff && (
+              <p><span className="font-medium">{t('numberOfStaff')}:</span> {details.numberOfStaff}</p>
+            )}
+            {details.durationHours && (
+              <p><span className="font-medium">{t('duration')}:</span> {details.durationHours}h</p>
+            )}
+            {details.hourlyRateCHF && (
+              <p><span className="font-medium">{t('hourlyRate')}:</span> {formatCurrency(details.hourlyRateCHF)}/h</p>
+            )}
+            {details.roundTripCostCHF && (
+              <p><span className="font-medium">{t('roundTripCost')}:</span> {formatCurrency(details.roundTripCostCHF)}</p>
+            )}
+          </div>
+        );
+
+      case 'disposal':
+        return (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            {details.disposalDate && (
+              <p><span className="font-medium">{t('disposalDate')}:</span> {formatDate(details.disposalDate)}</p>
+            )}
+            {details.disposalStartTime && (
+              <p><span className="font-medium">{t('startTime')}:</span> {formatTime(details.disposalStartTime)}</p>
+            )}
+            {details.estimatedVolumeM3 && (
+              <p><span className="font-medium">{t('estimatedVolume')}:</span> {details.estimatedVolumeM3} m³</p>
+            )}
+            {details.volumeRateCHFPerM3 && (
+              <p><span className="font-medium">{t('volumeRate')}:</span> {formatCurrency(details.volumeRateCHFPerM3)}/m³</p>
+            )}
+            {details.flatRateDisposalCostCHF && (
+              <p><span className="font-medium">{t('flatRate')}:</span> {formatCurrency(details.flatRateDisposalCostCHF)}</p>
+            )}
+            {details.additionalCostsText && (
+              <p className="md:col-span-2"><span className="font-medium">{t('additionalCosts')}:</span> {details.additionalCostsText}</p>
+            )}
+          </div>
+        );
+
+      case 'storage':
+        return (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            {details.volumeM3 && (
+              <p><span className="font-medium">{t('volume')}:</span> {details.volumeM3} m³</p>
+            )}
+            {details.rateCHFPerM3PerMonth && (
+              <p><span className="font-medium">{t('monthlyRate')}:</span> {formatCurrency(details.rateCHFPerM3PerMonth)}/m³</p>
+            )}
+            {details.additionalCostsText && (
+              <p className="md:col-span-2"><span className="font-medium">{t('additionalInfo')}:</span> {details.additionalCostsText}</p>
+            )}
+          </div>
+        );
+
+      case 'transport':
+        return (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            {details.transportDate && (
+              <p><span className="font-medium">{t('transportDate')}:</span> {formatDate(details.transportDate)}</p>
+            )}
+            {details.transportStartTime && (
+              <p><span className="font-medium">{t('startTime')}:</span> {formatTime(details.transportStartTime)}</p>
+            )}
+            {details.transportTypeText && (
+              <p className="md:col-span-2"><span className="font-medium">{t('transportType')}:</span> {details.transportTypeText}</p>
+            )}
+            {details.fixedRateCHF && (
+              <p><span className="font-medium">{t('fixedRate')}:</span> {formatCurrency(details.fixedRateCHF)}</p>
+            )}
+            {details.numberOfStaff && (
+              <p><span className="font-medium">{t('numberOfStaff')}:</span> {details.numberOfStaff}</p>
+            )}
+            {details.numberOfDeliveryTrucks && (
+              <p><span className="font-medium">{t('numberOfTrucks')}:</span> {details.numberOfDeliveryTrucks}</p>
+            )}
+            {details.additionalCostsText && (
+              <p className="md:col-span-2"><span className="font-medium">{t('additionalInfo')}:</span> {details.additionalCostsText}</p>
+            )}
+          </div>
+        );
+
+      default:
+        return (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <p className="text-gray-500 italic">{t('noDetailsAvailable')}</p>
+          </div>
+        );
+    }
+  };
+
   return (
     <div className="fixed inset-0 backdrop-blur-sm bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg max-w-5xl w-full max-h-[90vh] overflow-y-auto">
@@ -212,6 +410,9 @@ export function ViewOfferModal({ isOpen, onClose, offerId }: ViewOfferModalProps
                   <div className="space-y-2 text-sm">
                     <p><span className="font-medium">{t('address')}:</span> {location.street}</p>
                     <p><span className="font-medium">{t('cityZip')}:</span> {location.zipCode} {location.city}</p>
+                    {location.countryCode && (
+                      <p><span className="font-medium">{t('country')}:</span> {location.countryCode}</p>
+                    )}
                     <p><span className="font-medium">{t('buildingType')}:</span> {location.buildingType}</p>
                     <p><span className="font-medium">{t('floor')}:</span> {location.floor}</p>
                     <p><span className="font-medium">{t('hasLift')}:</span> {location.hasLift ? t('yes') : t('no')}</p>
@@ -231,32 +432,7 @@ export function ViewOfferModal({ isOpen, onClose, offerId }: ViewOfferModalProps
                     <h4 className="font-medium text-gray-900">{service.serviceType}</h4>
                     <span className="font-semibold text-gray-900">{formatCurrency(service.totalLinePrice)}</span>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                    {service.serviceDetails.moveDate && (
-                      <p><span className="font-medium">{t('moveDate')}:</span> {formatDate(service.serviceDetails.moveDate)}</p>
-                    )}
-                    {service.serviceDetails.moveStartTime && (
-                      <p><span className="font-medium">{t('startTime')}:</span> {formatTime(service.serviceDetails.moveStartTime)}</p>
-                    )}
-                    {service.serviceDetails.selectedTariffDescription && (
-                      <p><span className="font-medium">{t('tariff')}:</span> {service.serviceDetails.selectedTariffDescription}</p>
-                    )}
-                    {service.serviceDetails.numberOfStaff && (
-                      <p><span className="font-medium">{t('numberOfStaff')}:</span> {service.serviceDetails.numberOfStaff}</p>
-                    )}
-                    {service.serviceDetails.durationHours && (
-                      <p><span className="font-medium">{t('duration')}:</span> {service.serviceDetails.durationHours}h</p>
-                    )}
-                    {service.serviceDetails.hourlyRateCHF && (
-                      <p><span className="font-medium">{t('hourlyRate')}:</span> {formatCurrency(service.serviceDetails.hourlyRateCHF)}/h</p>
-                    )}
-                    {service.serviceDetails.cleaningType && (
-                      <p><span className="font-medium">{t('cleaningType')}:</span> {service.serviceDetails.cleaningType}</p>
-                    )}
-                    {service.serviceDetails.cleaningDate && (
-                      <p><span className="font-medium">{t('cleaningDate')}:</span> {formatDate(service.serviceDetails.cleaningDate)}</p>
-                    )}
-                  </div>
+                  {renderServiceDetails(service)}
                 </div>
               ))}
             </div>

@@ -430,6 +430,38 @@ export interface ServiceDetails {
   deliveryTime?: string;
   discount?: number;
   additionalCosts?: AdditionalCost[];
+  
+  // Packing service details
+  packingDate?: string;
+  packingStartTime?: string;
+  packingMaterialsCost?: number;
+  
+  // Unpacking service details
+  unpackingDate?: string;
+  unpackingStartTime?: string;
+  
+  // Disposal service details
+  disposalDate?: string;
+  disposalStartTime?: string;
+  volumeRateCHFPerM3?: number;
+  flatRateDisposalCostCHF?: number;
+  estimatedVolumeM3?: number;
+  selectedEmployeePlanTariffDescription?: string | null;
+  additionalCostsText?: string;
+  furtherDiscounts?: string;
+  
+  // Storage service details
+  rateCHFPerM3PerMonth?: number;
+  volumeM3?: number;
+  cost?: number;
+  
+  // Transport service details
+  transportDate?: string;
+  transportStartTime?: string;
+  transportTypeText?: string;
+  fixedRateCHF?: number;
+  selectedHourlyTariffDescription?: string | null;
+  concessionText?: string;
 }
 
 export interface ServiceLineItem {
