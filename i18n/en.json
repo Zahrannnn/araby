@@ -27,9 +27,11 @@
   
   "companies": "Companies",
   "clients": "Clients",
+  "customers": "Customers",
   "employees": "Employees",
   "tasks": "Tasks",
   "quotes": "Quotes",
+  "offers": "Offers",
   "invoices": "Invoices",
   "expenses": "Expenses",
   "revenues": "Revenues",
@@ -248,6 +250,249 @@
     }
   },
 
+  "company": {
+    "customers": {
+      "title": "Customer Management",
+      "subtitle": "Manage and view all company customers",
+      "addCustomer": "Add New Customer",
+      "searchPlaceholder": "Search by customer name or email...",
+      "customerName": "Customer Name",
+      "email": "Email",
+      "phoneNumber": "Phone Number",
+      "city": "City",
+      "registrationDate": "Registration Date",
+      "actions": "Actions",
+      "noCustomersFound": "No customers found for your search.",
+      "noCustomers": "No customers available.",
+      "perPage": "/Page",
+      "loading": "Loading customers...",
+      "errorLoading": "Error loading customers",
+      "retry": "Retry",
+      "showingResults": "Showing {from} to {to} of {total} customers",
+      "modal": {
+        "title": "Add New Customer",
+        "breadcrumb": "Enter customer data to add new customer",
+        "customerInformation": "Customer Information",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "email": "Email Address",
+        "phoneNumber": "Phone Number",
+        "address": "Address",
+        "city": "City",
+        "zipCode": "ZIP Code",
+        "country": "Country",
+        "notes": "Notes",
+        "firstNamePlaceholder": "Customer's first name",
+        "lastNamePlaceholder": "Customer's last name",
+        "emailPlaceholder": "customer@company.com",
+        "phoneNumberPlaceholder": "+49 176 12345678",
+        "addressPlaceholder": "Sample Street 12",
+        "cityPlaceholder": "Berlin",
+        "zipCodePlaceholder": "10115",
+        "countryPlaceholder": "Germany",
+        "notesPlaceholder": "Additional notes about the customer",
+        "cancel": "Cancel",
+        "save": "Save",
+        "saving": "Saving...",
+        "validation": {
+          "firstNameRequired": "First name is required",
+          "lastNameRequired": "Last name is required",
+          "emailRequired": "Email address is required",
+          "emailInvalid": "Please enter a valid email address",
+          "phoneRequired": "Phone number is required",
+          "addressRequired": "Address is required",
+          "cityRequired": "City is required",
+          "zipCodeRequired": "ZIP code is required",
+          "countryRequired": "Country is required"
+        }
+      },
+      "updateModal": {
+        "title": "Update Customer: {customerName}",
+        "breadcrumb": "Update customer information",
+        "customerInformation": "Customer Information",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "email": "Email Address",
+        "phoneNumber": "Phone Number",
+        "address": "Address",
+        "city": "City",
+        "zipCode": "ZIP Code",
+        "country": "Country",
+        "notes": "Notes",
+        "firstNamePlaceholder": "Customer's first name",
+        "lastNamePlaceholder": "Customer's last name",
+        "emailPlaceholder": "customer@company.com",
+        "phoneNumberPlaceholder": "+49 176 12345678",
+        "addressPlaceholder": "Sample Street 12",
+        "cityPlaceholder": "Berlin",
+        "zipCodePlaceholder": "10115",
+        "countryPlaceholder": "Germany",
+        "notesPlaceholder": "Additional notes about the customer",
+        "cancel": "Cancel",
+        "update": "Update Customer",
+        "updating": "Updating...",
+        "validation": {
+          "firstNameRequired": "First name is required",
+          "lastNameRequired": "Last name is required",
+          "emailRequired": "Email address is required",
+          "emailInvalid": "Please enter a valid email address",
+          "phoneRequired": "Phone number is required",
+          "addressRequired": "Address is required",
+          "cityRequired": "City is required",
+          "zipCodeRequired": "ZIP code is required",
+          "countryRequired": "Country is required"
+        }
+      },
+      "viewModal": {
+        "title": "Customer Details: {customerName}",
+        "subtitle": "Overview of customer data and activities",
+        "edit": "Edit",
+        "delete": "Delete",
+        "loading": "Loading customer data...",
+        "errorTitle": "Error Loading",
+        "errorUnknown": "Unknown error occurred",
+        "close": "Close",
+        "basicInformation": "Basic Information",
+        "fullName": "Full Name:",
+        "email": "Email",
+        "phoneNumber": "Phone Number",
+        "address": "Address",
+        "city": "City",
+        "zipCode": "ZIP Code",
+        "country": "Country",
+        "creationDate": "Creation Date",
+        "notes": "Notes",
+        "metrics": {
+          "offersTitle": "Number of Offers",
+          "offersSubtitle": "View offers related to this customer",
+          "tasksTitle": "Number of Tasks",
+          "tasksSubtitle": "Tasks related to this customer",
+          "profitTitle": "Profit from Customer",
+          "profitSubtitle": "From billed offers"
+        },
+        "buttons": {
+          "offers": "Offers",
+          "tasks": "Tasks"
+        },
+        "tabs": {
+          "offers": "Offers",
+          "tasks": "Tasks"
+        },
+        "offersTable": {
+          "offerNumber": "Offer Number",
+          "issueDate": "Issue Date",
+          "serviceType": "Service Type",
+          "totalAmount": "Total Amount",
+          "status": "Status",
+          "actions": "Actions",
+          "actionsLabel": "Show actions",
+          "loading": "Loading offers...",
+          "errorUnknown": "Failed to load offers",
+          "noOffers": "No offers found for this customer"
+        },
+        "tasksTable": {
+          "taskTitle": "Task Title",
+          "assignedTo": "Assigned To",
+          "priority": "Priority",
+          "status": "Status",
+          "dueDate": "Due Date",
+          "createdAt": "Created At",
+          "actions": "Actions",
+          "actionsLabel": "Show actions",
+          "loading": "Loading tasks...",
+          "errorUnknown": "Failed to load tasks",
+          "noTasks": "No tasks found for this customer"
+        },
+        "activitiesTable": {
+          "offerNumber": "Offer Number",
+          "issueDate": "Issue Date",
+          "serviceType": "Service Type",
+          "totalAmount": "Total Amount",
+          "status": "Status",
+          "actions": "Actions",
+          "actionsLabel": "Show actions"
+        },
+        "deleteModal": {
+          "title": "Delete Customer",
+          "message": "Are you sure you want to delete {customerName}?",
+          "warning": "This action cannot be undone. All customer data including offers and tasks will be permanently deleted.",
+          "confirmButton": "Yes, Delete",
+          "cancelButton": "Cancel",
+          "deleting": "Deleting..."
+        },
+        "offerDetails": {
+          "title": "Offer Details: {offerNumber}",
+          "subtitle": "Customer: {customerName}",
+          "loading": "Loading offer details...",
+          "errorTitle": "Error Loading Offer",
+          "errorUnknown": "Failed to load offer details",
+          "close": "Close",
+          "downloadPDF": "Download PDF",
+          "basicInformation": "Basic Information",
+          "offerNumber": "Offer Number",
+          "issueDate": "Issue Date",
+          "status": "Status",
+          "totalAmount": "Total Amount",
+          "discountAmount": "Discount Amount",
+          "customerName": "Customer Name",
+          "locations": "Locations",
+          "origin": "Origin",
+          "destination": "Destination",
+          "address": "Address",
+          "cityZip": "City & ZIP",
+          "buildingType": "Building Type",
+          "floor": "Floor",
+          "hasLift": "Elevator Available",
+          "yes": "Yes",
+          "no": "No",
+          "serviceLineItems": "Service Line Items",
+          "moveDate": "Move Date",
+          "startTime": "Start Time",
+          "tariff": "Tariff",
+          "numberOfStaff": "Number of Staff",
+          "duration": "Duration",
+          "hourlyRate": "Hourly Rate",
+          "cleaningType": "Cleaning Type",
+          "cleaningDate": "Cleaning Date",
+          "packingMaterials": "Packing Materials",
+          "description": "Description",
+          "type": "Type",
+          "quantity": "Quantity",
+          "unitPrice": "Unit Price",
+          "totalPrice": "Total Price",
+          "notes": "Notes",
+          "notesInOffer": "Notes in Offer",
+          "notesNotInOffer": "Internal Notes"
+        },
+        "taskDetails": {
+          "title": "Task Details: {taskTitle}",
+          "subtitle": "Assigned to {assignedTo}",
+          "basicInfo": "Basic Task Information",
+          "basicInfoNote": "This is basic task information from the customer tasks list. Detailed task information is only available for tasks with specific IDs.",
+          "limitedInfo": "Limited Information Available",
+          "limitedInfoMessage": "Detailed task information is not available for this task. Only basic information from the customer tasks list can be displayed.",
+          "taskId": "Task ID",
+          "assignedTo": "Assigned To",
+          "priority": "Priority",
+          "status": "Status",
+          "dueDate": "Due Date",
+          "createdAt": "Created At",
+          "startedAt": "Started At",
+          "completedAt": "Completed At",
+          "timeSpent": "Time Spent",
+          "description": "Description",
+          "notes": "Notes",
+          "requirementFiles": "Requirement Files",
+          "resultFiles": "Result Files",
+          "downloadFile": "Download {fileName}",
+          "close": "Close",
+          "notSet": "Not set",
+          "hours": "hours"
+        }
+      }
+    }
+  },
+
   "auth": {
     "signInToAccount": "Sign in to your account",
     "enterCredentials": "Enter your credentials to access your account",
@@ -346,6 +591,87 @@
       "hoursAgo": "{count} hours ago",
       "daysAgo": "{count} days ago",
       "justNow": "Just now"
+    }
+  },
+
+  "settings": {
+    "title": "Settings",
+    "general": "General",
+    "notifications": "Notifications",
+    "security": "Security",
+    "language": "Language",
+    "theme": "Theme",
+    "timezone": "Timezone"
+  },
+
+  "companyDashboard": {
+    "title": "Executive Dashboard",
+    "subtitle": "An overview of your business system",
+    "today": "Today",
+    "monday": "Monday",
+    "july": "July",
+    "date": "Monday, July 14, 2024",
+    
+    "kpi": {
+      "localTransport": {
+        "title": "Local Transport",
+        "amount": "CHF 45,000",
+        "monthlyRevenue": "Monthly Revenue",
+        "julyReports": "July Reports"
+      },
+      "businessConsulting": {
+        "title": "Business Consulting",
+        "amount": "CHF 48,000",
+        "businessProcesses": "Business Processes",
+        "strategyConsulting": "Strategy Consulting",
+        "budgetForecast": "Budget Forecast"
+      },
+      "offersAndCustomers": {
+        "title": "Offers and Customers",
+        "amount": "1.2K",
+        "totalOffers": "Total Offers",
+        "openOffers": "Open Offers",
+        "businessPerformance": "Business Performance",
+        "statusTransfer": "3 businesses will be transferred to the next status"
+      }
+    },
+    
+    "charts": {
+      "revenueExpensesProfit": "Revenue, Expenses and Profit",
+      "revenueByServiceType": "Revenue by Service Type"
+    },
+    
+    "services": {
+      "localTransport": "Local Transport",
+      "internationalTransport": "International Transport",
+      "packagingServices": "Packaging Services",
+      "storage": "Storage",
+      "other": "Other"
+    },
+    
+    "tasksChart": {
+      "title": "Pending and Overdue Tasks",
+      "acceptedOffers": "Accepted Offers 60%",
+      "pendingOffers": "Pending Offers 30%",
+      "newUsers": "New Users 10%",
+      "rejectedOffers": "Rejected Offers"
+    },
+    
+    "tasksList": {
+      "title": "Pending and Overdue Tasks",
+      "viewAll": "View All Tasks",
+      "tasks": {
+        "presentationTracking": "Tracking the Advanced Technology Company presentation",
+        "priceListUpdate": "Price list update for the new year",
+        "monthlySalesReport": "Monthly sales report creation",
+        "contractReview": "Review of expired contracts"
+      },
+      "taskStatus": "Task Status",
+      "status": {
+        "new": "New",
+        "overdue": "Overdue",
+        "completed": "Completed"
+      }
     }
   }
 } 

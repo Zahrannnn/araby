@@ -27,9 +27,11 @@
   
   "companies": "الشركات",
   "clients": "العملاء",
+  "customers": "العملاء",
   "employees": "الموظفون",
   "tasks": "المهام",
   "quotes": "العروض",
+  "offers": "العروض",
   "invoices": "الفواتير",
   "expenses": "المصروفات",
   "revenues": "الإيرادات",
@@ -346,6 +348,320 @@
       "hoursAgo": "منذ {count} ساعات",
       "daysAgo": "منذ {count} أيام",
       "justNow": "الآن"
+    }
+  },
+
+  "company": {
+    "customers": {
+      "title": "إدارة العملاء",
+      "subtitle": "إدارة وعرض جميع عملاء الشركة",
+      "addCustomer": "إضافة عميل جديد",
+      "searchPlaceholder": "البحث باسم العميل أو البريد الإلكتروني...",
+      "customerName": "اسم العميل",
+      "email": "البريد الإلكتروني",
+      "phoneNumber": "رقم الهاتف",
+      "city": "المدينة",
+      "registrationDate": "تاريخ التسجيل",
+      "actions": "الإجراءات",
+      "noCustomersFound": "لم يتم العثور على عملاء لبحثك.",
+      "noCustomers": "لا يوجد عملاء متاحون.",
+      "perPage": "/صفحة",
+      "loading": "جاري تحميل العملاء...",
+      "errorLoading": "خطأ في تحميل العملاء",
+      "retry": "إعادة المحاولة",
+      "showingResults": "عرض {from} إلى {to} من {total} عملاء",
+      "modal": {
+        "title": "إضافة عميل جديد",
+        "breadcrumb": "أدخل بيانات العميل لإضافة عميل جديد",
+        "customerInformation": "معلومات العميل",
+        "firstName": "الاسم الأول",
+        "lastName": "اسم العائلة",
+        "email": "البريد الإلكتروني",
+        "phoneNumber": "رقم الهاتف",
+        "address": "العنوان",
+        "city": "المدينة",
+        "zipCode": "الرمز البريدي",
+        "country": "البلد",
+        "notes": "ملاحظات",
+        "firstNamePlaceholder": "الاسم الأول للعميل",
+        "lastNamePlaceholder": "اسم العائلة للعميل",
+        "emailPlaceholder": "customer@company.com",
+        "phoneNumberPlaceholder": "+49 176 12345678",
+        "addressPlaceholder": "شارع العينة 12",
+        "cityPlaceholder": "برلين",
+        "zipCodePlaceholder": "10115",
+        "countryPlaceholder": "ألمانيا",
+        "notesPlaceholder": "ملاحظات إضافية حول العميل",
+        "cancel": "إلغاء",
+        "save": "حفظ",
+        "saving": "جاري الحفظ...",
+        "validation": {
+          "firstNameRequired": "الاسم الأول مطلوب",
+          "lastNameRequired": "اسم العائلة مطلوب",
+          "emailRequired": "عنوان البريد الإلكتروني مطلوب",
+          "emailInvalid": "يرجى إدخال عنوان بريد إلكتروني صحيح",
+          "phoneRequired": "رقم الهاتف مطلوب",
+          "addressRequired": "العنوان مطلوب",
+          "cityRequired": "المدينة مطلوبة",
+          "zipCodeRequired": "الرمز البريدي مطلوب",
+          "countryRequired": "البلد مطلوب"
+        }
+      },
+      "updateModal": {
+        "title": "تعديل العميل: {customerName}",
+        "breadcrumb": "تحديث معلومات العميل",
+        "customerInformation": "معلومات العميل",
+        "firstName": "الاسم الأول",
+        "lastName": "اسم العائلة",
+        "email": "البريد الإلكتروني",
+        "phoneNumber": "رقم الهاتف",
+        "address": "العنوان",
+        "city": "المدينة",
+        "zipCode": "الرمز البريدي",
+        "country": "البلد",
+        "notes": "ملاحظات",
+        "firstNamePlaceholder": "الاسم الأول للعميل",
+        "lastNamePlaceholder": "اسم العائلة للعميل",
+        "emailPlaceholder": "customer@company.com",
+        "phoneNumberPlaceholder": "+49 176 12345678",
+        "addressPlaceholder": "شارع العينة 12",
+        "cityPlaceholder": "برلين",
+        "zipCodePlaceholder": "10115",
+        "countryPlaceholder": "ألمانيا",
+        "notesPlaceholder": "ملاحظات إضافية حول العميل",
+        "cancel": "إلغاء",
+        "update": "تحديث العميل",
+        "updating": "جاري التحديث...",
+        "validation": {
+          "firstNameRequired": "الاسم الأول مطلوب",
+          "lastNameRequired": "اسم العائلة مطلوب",
+          "emailRequired": "عنوان البريد الإلكتروني مطلوب",
+          "emailInvalid": "يرجى إدخال عنوان بريد إلكتروني صحيح",
+          "phoneRequired": "رقم الهاتف مطلوب",
+          "addressRequired": "العنوان مطلوب",
+          "cityRequired": "المدينة مطلوبة",
+          "zipCodeRequired": "الرمز البريدي مطلوب",
+          "countryRequired": "البلد مطلوب"
+        }
+      },
+      "viewModal": {
+        "title": "تفاصيل العميل: {customerName}",
+        "subtitle": "نظرة عامة على بيانات العميل والأنشطة",
+        "edit": "تعديل",
+        "delete": "حذف",
+        "loading": "جاري تحميل بيانات العميل...",
+        "errorTitle": "خطأ في التحميل",
+        "errorUnknown": "حدث خطأ غير معروف",
+        "close": "إغلاق",
+        "basicInformation": "المعلومات الأساسية",
+        "fullName": "الاسم الكامل:",
+        "email": "البريد الإلكتروني",
+        "phoneNumber": "رقم الهاتف",
+        "address": "العنوان",
+        "city": "المدينة",
+        "zipCode": "الرمز البريدي",
+        "country": "البلد",
+        "creationDate": "تاريخ الإنشاء",
+        "notes": "ملاحظات",
+        "metrics": {
+          "offersTitle": "عدد العروض",
+          "offersSubtitle": "عرض العروض المتعلقة بهذا العميل",
+          "tasksTitle": "عدد المهام",
+          "tasksSubtitle": "المهام المتعلقة بهذا العميل",
+          "profitTitle": "الربح من العميل",
+          "profitSubtitle": "من العروض المُفوترة"
+        },
+        "buttons": {
+          "offers": "العروض",
+          "tasks": "المهام"
+        },
+        "tabs": {
+          "offers": "العروض",
+          "tasks": "المهام"
+        },
+        "offersTable": {
+          "offerNumber": "رقم العرض",
+          "issueDate": "تاريخ الإصدار",
+          "serviceType": "نوع الخدمة",
+          "totalAmount": "المبلغ الإجمالي",
+          "status": "الحالة",
+          "actions": "الإجراءات",
+          "actionsLabel": "عرض الإجراءات",
+          "loading": "جاري تحميل العروض...",
+          "errorUnknown": "فشل في تحميل العروض",
+          "noOffers": "لا توجد عروض لهذا العميل"
+        },
+        "tasksTable": {
+          "taskTitle": "عنوان المهمة",
+          "assignedTo": "مُسند إلى",
+          "priority": "الأولوية",
+          "status": "الحالة",
+          "dueDate": "تاريخ الاستحقاق",
+          "createdAt": "تاريخ الإنشاء",
+          "actions": "الإجراءات",
+          "actionsLabel": "عرض الإجراءات",
+          "loading": "جاري تحميل المهام...",
+          "errorUnknown": "فشل في تحميل المهام",
+          "noTasks": "لا توجد مهام لهذا العميل"
+        },
+        "activitiesTable": {
+          "offerNumber": "رقم العرض",
+          "issueDate": "تاريخ الإصدار",
+          "serviceType": "نوع الخدمة",
+          "totalAmount": "المبلغ الإجمالي",
+          "status": "الحالة",
+          "actions": "الإجراءات",
+          "actionsLabel": "عرض الإجراءات"
+        },
+        "deleteModal": {
+          "title": "حذف العميل",
+          "message": "هل أنت متأكد من رغبتك في حذف {customerName}؟",
+          "warning": "لا يمكن التراجع عن هذا الإجراء. سيتم حذف جميع بيانات العميل بما في ذلك العروض والمهام نهائياً.",
+          "confirmButton": "نعم، احذف",
+          "cancelButton": "إلغاء",
+          "deleting": "جاري الحذف..."
+        },
+        "offerDetails": {
+          "title": "تفاصيل العرض: {offerNumber}",
+          "subtitle": "العميل: {customerName}",
+          "loading": "جاري تحميل تفاصيل العرض...",
+          "errorTitle": "خطأ في تحميل العرض",
+          "errorUnknown": "فشل في تحميل تفاصيل العرض",
+          "close": "إغلاق",
+          "downloadPDF": "تحميل PDF",
+          "basicInformation": "المعلومات الأساسية",
+          "offerNumber": "رقم العرض",
+          "issueDate": "تاريخ الإصدار",
+          "status": "الحالة",
+          "totalAmount": "المبلغ الإجمالي",
+          "discountAmount": "مبلغ الخصم",
+          "customerName": "اسم العميل",
+          "locations": "المواقع",
+          "origin": "الأصل",
+          "destination": "الوجهة",
+          "address": "العنوان",
+          "cityZip": "المدينة والرمز البريدي",
+          "buildingType": "نوع المبنى",
+          "floor": "الطابق",
+          "hasLift": "توفر المصعد",
+          "yes": "نعم",
+          "no": "لا",
+          "serviceLineItems": "عناصر الخدمة",
+          "moveDate": "تاريخ النقل",
+          "startTime": "وقت البداية",
+          "tariff": "التعرفة",
+          "numberOfStaff": "عدد الموظفين",
+          "duration": "المدة",
+          "hourlyRate": "الأجر بالساعة",
+          "cleaningType": "نوع التنظيف",
+          "cleaningDate": "تاريخ التنظيف",
+          "packingMaterials": "مواد التعبئة",
+          "description": "الوصف",
+          "type": "النوع",
+          "quantity": "الكمية",
+          "unitPrice": "سعر الوحدة",
+          "totalPrice": "السعر الإجمالي",
+          "notes": "الملاحظات",
+          "notesInOffer": "ملاحظات في العرض",
+          "notesNotInOffer": "ملاحظات داخلية"
+        },
+        "taskDetails": {
+          "title": "تفاصيل المهمة: {taskTitle}",
+          "subtitle": "مُسندة إلى {assignedTo}",
+          "basicInfo": "معلومات المهمة الأساسية",
+          "basicInfoNote": "هذه هي معلومات المهمة الأساسية من قائمة مهام العملاء. المعلومات التفصيلية للمهمة متاحة فقط للمهام ذات المعرفات المحددة.",
+          "limitedInfo": "معلومات محدودة متاحة",
+          "limitedInfoMessage": "المعلومات التفصيلية للمهمة غير متاحة لهذه المهمة. يمكن عرض المعلومات الأساسية فقط من قائمة مهام العملاء.",
+          "taskId": "معرف المهمة",
+          "assignedTo": "مُسندة إلى",
+          "priority": "الأولوية",
+          "status": "الحالة",
+          "dueDate": "تاريخ الاستحقاق",
+          "createdAt": "تاريخ الإنشاء",
+          "startedAt": "تاريخ البدء",
+          "completedAt": "تاريخ الإنجاز",
+          "timeSpent": "الوقت المستغرق",
+          "description": "الوصف",
+          "notes": "الملاحظات",
+          "requirementFiles": "ملفات المتطلبات",
+          "resultFiles": "ملفات النتائج",
+          "downloadFile": "تحميل {fileName}",
+          "close": "إغلاق",
+          "notSet": "غير محدد",
+          "hours": "ساعات"
+        }
+      }
+    }
+  },
+
+  "companyDashboard": {
+    "title": "لوحة تحكم المدير التنفيذي",
+    "subtitle": "نظرة عامة على نظام عملك",
+    "today": "اليوم",
+    "monday": "الاثنين",
+    "july": "يوليو",
+    "date": "الاثنين، 14 يوليو 2024",
+    
+    "kpi": {
+      "localTransport": {
+        "title": "النقل المحلي",
+        "amount": "45,000 فرنك سويسري",
+        "monthlyRevenue": "الإيرادات الشهرية",
+        "julyReports": "تقارير يوليو"
+      },
+      "businessConsulting": {
+        "title": "الاستشارات التجارية",
+        "amount": "48,000 فرنك سويسري",
+        "businessProcesses": "العمليات التجارية",
+        "strategyConsulting": "الاستشارات الإستراتيجية",
+        "budgetForecast": "توقعات الميزانية"
+      },
+      "offersAndCustomers": {
+        "title": "العروض والعملاء",
+        "amount": "1.2 ألف",
+        "totalOffers": "إجمالي العروض",
+        "openOffers": "العروض المفتوحة",
+        "businessPerformance": "الأداء التجاري",
+        "statusTransfer": "سيتم نقل 3 أعمال إلى الحالة التالية"
+      }
+    },
+    
+    "charts": {
+      "revenueExpensesProfit": "الإيرادات والمصروفات والأرباح",
+      "revenueByServiceType": "الإيرادات حسب نوع الخدمة"
+    },
+    
+    "services": {
+      "localTransport": "النقل المحلي",
+      "internationalTransport": "النقل الدولي",
+      "packagingServices": "خدمات التعبئة",
+      "storage": "التخزين",
+      "other": "أخرى"
+    },
+    
+    "tasksChart": {
+      "title": "المهام المعلقة والمتأخرة",
+      "acceptedOffers": "العروض المقبولة 60%",
+      "pendingOffers": "العروض المعلقة 30%",
+      "newUsers": "المستخدمون الجدد 10%",
+      "rejectedOffers": "العروض المرفوضة"
+    },
+    
+    "tasksList": {
+      "title": "المهام المعلقة والمتأخرة",
+      "viewAll": "عرض جميع المهام",
+      "tasks": {
+        "presentationTracking": "تتبع عرض شركة التكنولوجيا المتقدمة",
+        "priceListUpdate": "تحديث قائمة الأسعار للعام الجديد",
+        "monthlySalesReport": "إنشاء تقرير المبيعات الشهري",
+        "contractReview": "مراجعة العقود المنتهية الصلاحية"
+      },
+      "taskStatus": "حالة المهمة",
+      "status": {
+        "new": "جديد",
+        "overdue": "متأخر",
+        "completed": "مكتمل"
+      }
     }
   }
 } 

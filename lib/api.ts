@@ -25,6 +25,7 @@ export const API_ENDPOINTS = {
   // Company management
   COMPANIES: '/companies',
   CLIENTS: '/clients',
+  CUSTOMERS: '/customer',
   EMPLOYEES: '/employees',
   
   // Business operations
@@ -33,6 +34,9 @@ export const API_ENDPOINTS = {
   INVOICES: '/invoices',
   EXPENSES: '/expenses',
   REVENUES: '/revenues',
+  
+  // Dashboard
+  COMPANY_DASHBOARD: '/CompanyDashboard',
   
   // Subscriptions
   SUBSCRIPTIONS: '/subscriptions',
@@ -285,6 +289,348 @@ export const superAdminApi = {
 };
 
 /**
+ * Customer types
+ */
+export interface Customer {
+  customerId: number;
+  fullName: string;
+  email: string;
+  phoneNumber: string;
+  address: string;
+  city: string;
+  zipCode: string;
+  country: string;
+  createdAt: string;
+  notes: string;
+  offerCount: number;
+  taskCount: number;
+  totalProfit: number;
+}
+
+export interface CustomersResponse {
+  customers: Customer[];
+  totalCount: number;
+}
+
+export interface CustomerQueryParams {
+  pageIndex?: number;
+  pageSize?: number;
+  search?: string;
+}
+
+/**
+ * Task types
+ */
+export interface Task {
+  taskItemId?: number; // Added for task identification
+  taskTitle: string;
+  taskStatus: 'Pending' | 'InProgress' | 'Completed' | 'Cancelled';
+  priority: 'Low' | 'Medium' | 'High';
+  dueDate: string;
+  assignedTo: string;
+  createdAt: string;
+}
+
+export interface TasksResponse {
+  pageIndex: number;
+  totalPages: number;
+  totalCount: number;
+  items: Task[];
+}
+
+/**
+ * Detailed task types
+ */
+export interface TaskFile {
+  fileName: string;
+  fileUrl: string;
+  fileType: 'Requirement' | 'Result';
+}
+
+export interface TaskDetails {
+  taskItemId: number;
+  taskTitle: string;
+  description: string;
+  taskStatus: 'Pending' | 'InProgress' | 'Completed' | 'Cancelled';
+  priority: 'Low' | 'Medium' | 'High';
+  dueDate: string;
+  startedAt: string | null;
+  createdAt: string;
+  completedDate: string | null;
+  timeSpentInHours: number | null;
+  notes: string;
+  assignedToName: string;
+  isInProgress: boolean;
+  isItForAssignedEmployee: boolean;
+  requirementFiles: TaskFile[];
+  resultFiles: TaskFile[];
+}
+
+/**
+ * Offer types
+ */
+export interface Offer {
+  offerId: number;
+  offerNumber: string;
+  issueDate: string;
+  serviceTypeOverall: string;
+  totalAmount: number;
+  status: 'Pending' | 'Accepted' | 'Rejected' | 'Sent';
+}
+
+export interface OffersResponse {
+  pageIndex: number;
+  totalPages: number;
+  totalCount: number;
+  items: Offer[];
+}
+
+/**
+ * Detailed offer types
+ */
+export interface OfferLocation {
+  locationType: 'Origin' | 'Destination';
+  addressIndex: number;
+  street: string;
+  zipCode: string;
+  city: string;
+  countryCode: string;
+  buildingType: string;
+  floor: string;
+  hasLift: boolean;
+}
+
+export interface AdditionalCost {
+  description: string;
+  amount: number;
+}
+
+export interface ServiceDetails {
+  // Move service details
+  moveDate?: string;
+  moveInDate?: string | null;
+  moveStartTime?: string;
+  roundTripCostCHF?: number;
+  selectedTariffDescription?: string;
+  numberOfStaff?: number;
+  numberOfDeliveryTrucks?: number;
+  hourlyRateCHF?: number;
+  durationHours?: number;
+  disassemblyAssemblyBy?: string;
+  
+  // Cleaning service details
+  cleaningType?: string;
+  fixedPriceRateCHF?: number;
+  hourlyRateCHFPerHour?: number | null;
+  fillNailHoles?: boolean;
+  withHighPressureCleaner?: boolean;
+  cleaningDate?: string;
+  cleaningStartTime?: string;
+  deliveryDate?: string;
+  deliveryTime?: string;
+  discount?: number;
+  additionalCosts?: AdditionalCost[];
+}
+
+export interface ServiceLineItem {
+  serviceType: string;
+  totalLinePrice: number;
+  serviceDetails: ServiceDetails;
+}
+
+export interface PackingMaterial {
+  description: string;
+  rentOrBuy: 'Rent' | 'Buy';
+  quantity: number;
+  unitPrice: number;
+  totalPrice: number;
+}
+
+export interface OfferDetails {
+  offerId: number;
+  offerNumber: string;
+  customerId: number;
+  customerName: string;
+  issueDate: string;
+  status: 'Pending' | 'Accepted' | 'Rejected' | 'Sent';
+  totalAmount: number;
+  discountAmount: number;
+  pdfUrl: string;
+  googleCalendarEventId: string;
+  notesInOffer: string;
+  notesNotInOffer: string;
+  locations: OfferLocation[];
+  serviceLineItems: ServiceLineItem[];
+  packingMaterials: PackingMaterial[];
+}
+
+/**
+ * Customer API calls
+ */
+export const customerApi = {
+  async getCustomers(params: CustomerQueryParams = {}): Promise<CustomersResponse> {
+    try {
+      const searchParams = new URLSearchParams();
+      
+      if (params.pageIndex !== undefined) {
+        searchParams.append('pageIndex', params.pageIndex.toString());
+      }
+      if (params.pageSize !== undefined) {
+        searchParams.append('pageSize', params.pageSize.toString());
+      }
+      if (params.search && params.search.trim()) {
+        searchParams.append('search', params.search.trim());
+      }
+
+      const response = await apiClient.get<CustomersResponse>(
+        `${API_ENDPOINTS.CUSTOMERS}?${searchParams.toString()}`
+      );
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const errorData = error.response.data as ApiErrorResponse;
+        throw new Error(errorData.message || errorData.error || 'Failed to fetch customers');
+      }
+      throw new Error('Network error. Please check your connection.');
+    }
+  },
+
+  async getCustomer(customerId: number): Promise<Customer> {
+    try {
+      const response = await apiClient.get<Customer>(`${API_ENDPOINTS.CUSTOMERS}/${customerId}`);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const errorData = error.response.data as ApiErrorResponse;
+        throw new Error(errorData.message || errorData.error || 'Failed to fetch customer');
+      }
+      throw new Error('Network error. Please check your connection.');
+    }
+  },
+
+  async createCustomer(customerData: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phoneNumber: string;
+    address: string;
+    city: string;
+    zipCode: string;
+    country: string;
+    notes: string;
+  }): Promise<Customer> {
+    try {
+      const response = await apiClient.post<Customer>(API_ENDPOINTS.CUSTOMERS, customerData);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const errorData = error.response.data as ApiErrorResponse;
+        throw new Error(errorData.message || errorData.error || 'Failed to create customer');
+      }
+      throw new Error('Network error. Please check your connection.');
+    }
+  },
+
+  async deleteCustomer(customerId: number): Promise<void> {
+    try {
+      await apiClient.delete(`${API_ENDPOINTS.CUSTOMERS}/${customerId}`);
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const errorData = error.response.data as ApiErrorResponse;
+        throw new Error(errorData.message || errorData.error || 'Failed to delete customer');
+      }
+      throw new Error('Network error. Please check your connection.');
+    }
+  },
+
+  async updateCustomer(customerData: {
+    customerId: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phoneNumber: string;
+    address: string;
+    city: string;
+    zipCode: string;
+    country: string;
+    notes: string;
+  }): Promise<Customer> {
+    try {
+      const response = await apiClient.put<Customer>(API_ENDPOINTS.CUSTOMERS, customerData);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const errorData = error.response.data as ApiErrorResponse;
+        throw new Error(errorData.message || errorData.error || 'Failed to update customer');
+      }
+      throw new Error('Network error. Please check your connection.');
+    }
+  },
+
+  async getCustomerTasks(customerId: number): Promise<TasksResponse> {
+    try {
+      const response = await apiClient.get<TasksResponse>(`${API_ENDPOINTS.CUSTOMERS}/${customerId}/tasks`);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const errorData = error.response.data as ApiErrorResponse;
+        throw new Error(errorData.message || errorData.error || 'Failed to fetch customer tasks');
+      }
+      throw new Error('Network error. Please check your connection.');
+    }
+  },
+
+  async getCustomerOffers(customerId: number): Promise<OffersResponse> {
+    try {
+      const response = await apiClient.get<OffersResponse>(`${API_ENDPOINTS.CUSTOMERS}/${customerId}/offers`);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const errorData = error.response.data as ApiErrorResponse;
+        throw new Error(errorData.message || errorData.error || 'Failed to fetch customer offers');
+      }
+      throw new Error('Network error. Please check your connection.');
+    }
+  },
+};
+
+/**
+ * Offers API calls
+ */
+export const offersApi = {
+  async getOfferDetails(offerId: number): Promise<OfferDetails> {
+    try {
+      const response = await apiClient.get<OfferDetails>(`/offers/${offerId}`);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const errorData = error.response.data as ApiErrorResponse;
+        throw new Error(errorData.message || errorData.error || 'Failed to fetch offer details');
+      }
+      throw new Error('Network error. Please check your connection.');
+    }
+  },
+};
+
+/**
+ * Tasks API calls
+ */
+export const tasksApi = {
+  async getTaskDetails(taskId: number): Promise<TaskDetails> {
+    try {
+      const response = await apiClient.get<TaskDetails>(`/Task/${taskId}`);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const errorData = error.response.data as ApiErrorResponse;
+        throw new Error(errorData.message || errorData.error || 'Failed to fetch task details');
+      }
+      throw new Error('Network error. Please check your connection.');
+    }
+  },
+};
+
+/**
  * TanStack Query configuration
  */
 export const queryClient = new QueryClient({
@@ -320,9 +666,15 @@ export const queryKeys = {
   companyDetails: (id: number) => ['companies', 'details', id] as const,
   clients: (companyId: string) => ['clients', companyId] as const,
   client: (id: string) => ['clients', 'detail', id] as const,
+  customers: (params?: CustomerQueryParams) => ['customers', params] as const,
+  customer: (id: number) => ['customers', 'detail', id] as const,
+  customerTasks: (id: number) => ['customers', 'tasks', id] as const,
+  customerOffers: (id: number) => ['customers', 'offers', id] as const,
   employees: (companyId: string) => ['employees', companyId] as const,
+  offerDetails: (id: number) => ['offers', 'details', id] as const,
   tasks: (filters?: Record<string, unknown>) => ['tasks', filters] as const,
   task: (id: string) => ['tasks', id] as const,
+  taskDetails: (id: number) => ['tasks', 'details', id] as const,
   quotes: (companyId: string) => ['quotes', companyId] as const,
   quote: (id: string) => ['quotes', id] as const,
   invoices: (companyId: string) => ['invoices', companyId] as const,
@@ -331,6 +683,7 @@ export const queryKeys = {
   revenues: (companyId: string) => ['revenues', companyId] as const,
   subscriptions: ['subscriptions'] as const,
   notifications: ['notifications'] as const,
+  dashboard: ['dashboard'] as const,
 } as const; 
 
 /**
@@ -342,4 +695,62 @@ export interface Notification {
   type: string;
   createdAt: string;
   isRead: boolean;
-} 
+}
+
+/**
+ * Dashboard data interface
+ */
+export interface DashboardData {
+  topCards: {
+    currentMonthIncome: number;
+    currentMonthProfit: number;
+    profitChangeFromLastMonth: number;
+    totalIncome: number;
+    totalExpenses: number;
+    totalProfit: number;
+    totalOffers: number;
+    pendingOffers: number;
+    totalCustomers: number;
+    newCustomersThisMonth: number;
+  };
+  monthlyFinanceChart: Array<{
+    month: string;
+    income: number;
+    expenses: number;
+    profit: number;
+  }>;
+  offerStatusChart: {
+    accepted: number;
+    pending: number;
+    rejected: number;
+  };
+  revenueByService: Array<{
+    serviceType: string;
+    revenue: number;
+  }>;
+  importantTasks: Array<{
+    id: string;
+    title: string;
+    dueDate: string;
+    priority: string;
+    status: string;
+  }>;
+}
+
+/**
+ * Dashboard API calls
+ */
+export const dashboardApi = {
+  async getDashboardData(): Promise<DashboardData> {
+    try {
+      const response = await apiClient.get<DashboardData>(API_ENDPOINTS.COMPANY_DASHBOARD);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const errorData = error.response.data as ApiErrorResponse;
+        throw new Error(errorData.message || errorData.error || 'Failed to fetch dashboard data');
+      }
+      throw new Error('Network error. Please check your connection.');
+    }
+  },
+}; 
