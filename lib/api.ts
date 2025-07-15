@@ -26,7 +26,7 @@ export const API_ENDPOINTS = {
   COMPANIES: '/companies',
   CLIENTS: '/clients',
   CUSTOMERS: '/customer',
-  EMPLOYEES: '/employees',
+  EMPLOYEES: '/Employees',
   
   // Business operations
   TASKS: '/tasks',
@@ -671,6 +671,8 @@ export const queryKeys = {
   customerTasks: (id: number) => ['customers', 'tasks', id] as const,
   customerOffers: (id: number) => ['customers', 'offers', id] as const,
   employees: (companyId: string) => ['employees', companyId] as const,
+  employeeDetails: (id: number) => ['employees', 'details', id] as const,
+  employeeTasks: (id: number) => ['employees', 'tasks', id] as const,
   offerDetails: (id: number) => ['offers', 'details', id] as const,
   tasks: (filters?: Record<string, unknown>) => ['tasks', filters] as const,
   task: (id: string) => ['tasks', id] as const,
@@ -749,6 +751,101 @@ export const dashboardApi = {
       if (axios.isAxiosError(error) && error.response?.data) {
         const errorData = error.response.data as ApiErrorResponse;
         throw new Error(errorData.message || errorData.error || 'Failed to fetch dashboard data');
+      }
+      throw new Error('Network error. Please check your connection.');
+    }
+  },
+}; 
+
+/**
+ * Employee types
+ */
+export interface Employee {
+  id: number;
+  fullName: string;
+  email: string;
+  userName: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface EmployeeDetails {
+  fullName: string;
+  email: string;
+  userName: string;
+  isActive: boolean;
+  createdAt: string;
+  permissions: string[];
+  relatedTaskCount: number;
+  inProgressTaskCount: number;
+  completedTaskCount: number;
+  pendingTaskCount: number;
+  completionrateTaskCount: number;
+}
+
+export interface EmployeesResponse {
+  employees: Employee[];
+  totalCount: number;
+}
+
+export interface EmployeeQueryParams {
+  pageIndex?: number;
+  pageSize?: number;
+  search?: string;
+}
+
+/**
+ * Employee API calls
+ */
+export const employeeApi = {
+  async getEmployees(params: EmployeeQueryParams = {}): Promise<EmployeesResponse> {
+    try {
+      const searchParams = new URLSearchParams();
+      
+      if (params.pageIndex !== undefined) {
+        searchParams.append('pageIndex', params.pageIndex.toString());
+      }
+      if (params.pageSize !== undefined) {
+        searchParams.append('pageSize', params.pageSize.toString());
+      }
+      if (params.search && params.search.trim()) {
+        searchParams.append('search', params.search.trim());
+      }
+
+      const response = await apiClient.get<EmployeesResponse>(
+        `${API_ENDPOINTS.EMPLOYEES}?${searchParams.toString()}`
+      );
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const errorData = error.response.data as ApiErrorResponse;
+        throw new Error(errorData.message || errorData.error || 'Failed to fetch employees');
+      }
+      throw new Error('Network error. Please check your connection.');
+    }
+  },
+
+  async getEmployeeDetails(employeeId: number): Promise<EmployeeDetails> {
+    try {
+      const response = await apiClient.get<EmployeeDetails>(`${API_ENDPOINTS.EMPLOYEES}/${employeeId}`);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const errorData = error.response.data as ApiErrorResponse;
+        throw new Error(errorData.message || errorData.error || 'Failed to fetch employee details');
+      }
+      throw new Error('Network error. Please check your connection.');
+    }
+  },
+
+  async getEmployeeTasks(employeeId: number): Promise<TasksResponse> {
+    try {
+      const response = await apiClient.get<TasksResponse>(`${API_ENDPOINTS.EMPLOYEES}/${employeeId}/tasks`);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const errorData = error.response.data as ApiErrorResponse;
+        throw new Error(errorData.message || errorData.error || 'Failed to fetch employee tasks');
       }
       throw new Error('Network error. Please check your connection.');
     }

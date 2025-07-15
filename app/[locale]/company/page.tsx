@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { useTranslations } from 'next-intl'
-import { DollarSign, Briefcase, Users, TrendingUp, TrendingDown, Loader2 } from 'lucide-react'
+import { DollarSign, Users, TrendingUp, TrendingDown, Loader2 } from 'lucide-react'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -106,13 +106,13 @@ const Page = () => {
 
   // Tasks doughnut chart data from API
   const tasksChartData = dashboardData ? {
-    labels: [t('tasksChart.acceptedOffers'), t('tasksChart.pendingOffers'), t('tasksChart.rejectedOffers')],
+    labels: [t('tasksChart.acceptedOffers'), t('tasksChart.pendingOffers'), t('tasksChart.newUsers')],
     datasets: [
       {
         data: [
           dashboardData.offerStatusChart.accepted,
           dashboardData.offerStatusChart.pending,
-          dashboardData.offerStatusChart.rejected
+          dashboardData.topCards.newCustomersThisMonth || 0
         ],
         backgroundColor: [
           '#ef4444', // Red
@@ -185,7 +185,7 @@ const Page = () => {
 
   // Format currency values
   const formatCurrency = (amount: number) => {
-    return `CHF ${Math.abs(amount).toLocaleString('de-CH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+    return `CHF ${Math.abs(amount).toLocaleString('de-CH', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
   }
 
   // Calculate percentage change indicator
@@ -194,7 +194,7 @@ const Page = () => {
       return {
         icon: TrendingUp,
         color: 'text-green-600',
-        text: `+${change.toFixed(1)}%`
+        text: `${change.toFixed(1)}%`
       }
     } else if (change < 0) {
       return {
@@ -230,57 +230,97 @@ const Page = () => {
 
       {/* KPI Cards */}
       <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-8'>
-        {/* Current Month Income */}
-        <div className='bg-white rounded-lg p-6 shadow-sm border'>
-          <div className='flex items-center justify-between mb-4'>
-            <div className='w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center'>
-              <DollarSign className='text-red-600 w-6 h-6' />
+        {/* Current Month Performance */}
+        <div className='bg-white rounded-2xl p-6 border border-blue-200 shadow-sm'>
+          <div className='flex items-start justify-between mb-6'>
+            <div className='w-14 h-14 bg-red-100 rounded-2xl flex items-center justify-center'>
+              <DollarSign className='text-red-600 w-7 h-7' />
             </div>
             <div className='flex items-center gap-1'>
               <profitChange.icon className={`w-4 h-4 ${profitChange.color}`} />
               <span className={`text-sm font-medium ${profitChange.color}`}>{profitChange.text}</span>
             </div>
           </div>
-          <h3 className='text-gray-600 text-sm mb-1'>{t('kpi.localTransport.title')}</h3>
-          <p className='text-2xl font-bold text-gray-900 mb-2'>{formatCurrency(dashboardData.topCards.currentMonthIncome)}</p>
-          <p className='text-xs text-gray-500'>{t('kpi.localTransport.monthlyRevenue')}</p>
-          <p className='text-xs text-gray-500'>{t('kpi.localTransport.julyReports')}</p>
-        </div>
-
-        {/* Total Profit */}
-        <div className='bg-white rounded-lg p-6 shadow-sm border'>
-          <div className='flex items-center justify-between mb-4'>
-            <div className='w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center'>
-              <Briefcase className='text-blue-600 w-6 h-6' />
+          
+          <h3 className='text-gray-700 text-base font-medium mb-4'>{t('cards.currentMonth.title')}</h3>
+          
+          <div className='space-y-3'>
+            <div className='flex justify-between items-center'>
+              <span className='text-sm text-gray-600'>{t('cards.currentMonth.monthlyIncome')}:</span>
+              <span className='text-sm font-semibold text-red-600'>{formatCurrency(dashboardData.topCards.currentMonthIncome)}</span>
             </div>
-            <div className='flex items-center gap-1'>
-              <TrendingUp className='w-4 h-4 text-green-600' />
-              <span className='text-green-600 text-sm font-medium'>+8.2%</span>
+            <div className='flex justify-between items-center'>
+              <span className='text-sm text-gray-600'>{t('cards.currentMonth.expenses')}:</span>
+              <span className='text-sm font-semibold text-green-600'>{formatCurrency(dashboardData.topCards.totalExpenses)}</span>
             </div>
           </div>
-          <h3 className='text-gray-600 text-sm mb-1'>{t('kpi.businessConsulting.title')}</h3>
-          <p className='text-2xl font-bold text-gray-900 mb-2'>{formatCurrency(dashboardData.topCards.totalProfit)}</p>
-          <p className='text-xs text-gray-500'>{t('kpi.businessConsulting.businessProcesses')}</p>
-          <p className='text-xs text-gray-500'>{t('kpi.businessConsulting.strategyConsulting')}</p>
-          <p className='text-xs text-gray-500'>{t('kpi.businessConsulting.budgetForecast')}</p>
+          
+          <div className='mt-6 pt-4 border-t border-gray-100'>
+            <div className='flex justify-between items-center'>
+              <span className='text-sm font-medium text-gray-700'>{t('cards.currentMonth.netProfit')}</span>
+              <span className='text-lg font-bold text-red-600'>{formatCurrency(dashboardData.topCards.currentMonthProfit)}</span>
+            </div>
+            <p className='text-xs text-gray-500 mt-1'>{t('cards.currentMonth.profitChange')}</p>
+          </div>
         </div>
 
-        {/* Total Customers & Offers */}
-        <div className='bg-white rounded-lg p-6 shadow-sm border'>
-          <div className='flex items-center justify-between mb-4'>
-            <div className='w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center'>
-              <Users className='text-green-600 w-6 h-6' />
-            </div>
-            <div className='flex items-center gap-1'>
-              <TrendingUp className='w-4 h-4 text-green-600' />
-              <span className='text-green-600 text-sm font-medium'>+{dashboardData.topCards.newCustomersThisMonth}</span>
+        {/* Total Finance Performance */}
+        <div className='bg-white rounded-2xl p-6 border border-blue-200 shadow-sm'>
+          <div className='flex items-start justify-between mb-6'>
+            <div className='w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center'>
+              <TrendingUp className='text-blue-600 w-7 h-7' />
             </div>
           </div>
-          <h3 className='text-gray-600 text-sm mb-1'>{t('kpi.offersAndCustomers.title')}</h3>
-          <p className='text-2xl font-bold text-gray-900 mb-2'>{dashboardData.topCards.totalCustomers}K</p>
-          <p className='text-xs text-gray-500'>{t('kpi.offersAndCustomers.totalOffers')}: {dashboardData.topCards.totalOffers}</p>
-          <p className='text-xs text-gray-500'>{t('kpi.offersAndCustomers.openOffers')}: {dashboardData.topCards.pendingOffers}</p>
-          <p className='text-xs text-gray-500'>{t('kpi.offersAndCustomers.businessPerformance')}</p>
+          
+          <h3 className='text-gray-700 text-base font-medium mb-4'>{t('cards.totalFinance.title')}</h3>
+          
+          <div className='space-y-3'>
+            <div className='flex justify-between items-center'>
+              <span className='text-sm text-gray-600'>{t('cards.totalFinance.totalIncome')}</span>
+              <span className='text-sm font-semibold text-red-600'>{formatCurrency(dashboardData.topCards.totalIncome)}</span>
+            </div>
+            <div className='flex justify-between items-center'>
+              <span className='text-sm text-gray-600'>{t('cards.totalFinance.totalExpenses')}:</span>
+              <span className='text-sm font-semibold text-red-600'>{formatCurrency(dashboardData.topCards.totalExpenses)}</span>
+            </div>
+          </div>
+          
+          <div className='mt-6 pt-4 border-t border-gray-100'>
+            <div className='flex justify-between items-center'>
+              <span className='text-sm font-medium text-gray-700'>{t('cards.totalFinance.grossProfit')}</span>
+              <span className='text-lg font-bold text-red-600'>{formatCurrency(dashboardData.topCards.totalProfit)}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Offers and Customers */}
+        <div className='bg-white rounded-2xl p-6 border border-blue-200 shadow-sm'>
+          <div className='flex items-start justify-between mb-6'>
+            <div className='w-14 h-14 bg-green-100 rounded-2xl flex items-center justify-center'>
+              <Users className='text-green-600 w-7 h-7' />
+            </div>
+          </div>
+          
+          <h3 className='text-gray-700 text-base font-medium mb-4'>{t('cards.offersCustomers.title')}</h3>
+          
+          <div className='space-y-3'>
+            <div className='flex justify-between items-center'>
+              <span className='text-sm text-gray-600'>{t('cards.offersCustomers.totalOffers')} :</span>
+              <span className='text-sm font-semibold text-blue-600'>{dashboardData.topCards.totalOffers}</span>
+            </div>
+            <div className='flex justify-between items-center'>
+              <span className='text-sm text-gray-600'>{t('cards.offersCustomers.pendingOffers')} :</span>
+              <span className='text-sm font-semibold text-orange-600'>{dashboardData.topCards.pendingOffers}</span>
+            </div>
+            <div className='flex justify-between items-center'>
+              <span className='text-sm text-gray-600'>{t('cards.offersCustomers.totalCustomers')}</span>
+              <span className='text-sm font-semibold text-green-600'>{dashboardData.topCards.totalCustomers}</span>
+            </div>
+          </div>
+          
+          <div className='mt-6 pt-4 border-t border-gray-100'>
+            <p className='text-xs text-gray-500'>{t('cards.offersCustomers.newCustomersMonth', { count: dashboardData.topCards.newCustomersThisMonth })}</p>
+          </div>
         </div>
       </div>
 
@@ -332,34 +372,39 @@ const Page = () => {
         </div>
         <div className='space-y-3'>
           {dashboardData.importantTasks.length > 0 ? (
-            dashboardData.importantTasks.map((task) => (
-              <div key={task.id} className={`rounded-lg p-4 border-l-4 border-red-500 ${
-                task.status === 'overdue' ? 'bg-red-50' : 
-                task.priority === 'high' ? 'bg-gray-50' : 'bg-gray-100'
-              }`}>
-                <div className='flex justify-between items-start'>
-                  <div className='flex-1'>
-                    <h4 className='font-medium text-gray-900 mb-2'>{task.title}</h4>
-                    <div className='flex items-center gap-4'>
-                      <span className='text-sm text-gray-500'>{t('tasksList.taskStatus')}: {task.dueDate}</span>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                        task.priority === 'high' ? 'bg-red-100 text-red-700' :
-                        task.priority === 'medium' ? 'bg-orange-100 text-orange-700' :
-                        'bg-gray-200 text-gray-700'
-                      }`}>
-                        {task.priority === 'high' ? 'Hoch' : 
-                         task.priority === 'medium' ? 'Mittel' : 'Niedrig'}
-                      </span>
+            dashboardData.importantTasks.map((task, index) => {
+              // Check if task is overdue by comparing dueDate with current date
+              const isOverdue = new Date(task.dueDate) < new Date();
+              
+              return (
+                <div key={index} className={`rounded-lg p-4 border-l-4 border-red-500 ${
+                  isOverdue ? 'bg-red-50' : 
+                  task.priority === 'high' ? 'bg-gray-50' : 'bg-gray-100'
+                }`}>
+                  <div className='flex justify-between items-start'>
+                    <div className='flex-1'>
+                      <h4 className='font-medium text-gray-900 mb-2'>{task.title}</h4>
+                      <div className='flex items-center gap-4'>
+                        <span className='text-sm text-gray-500'>{t('tasksList.taskStatus')}: {new Date(task.dueDate).toLocaleDateString('de-DE')}</span>
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                          task.priority === 'high' ? 'bg-red-100 text-red-700' :
+                          task.priority === 'medium' ? 'bg-orange-100 text-orange-700' :
+                          'bg-gray-200 text-gray-700'
+                        }`}>
+                          {task.priority === 'high' ? t('tasksList.priority.high') : 
+                           task.priority === 'medium' ? t('tasksList.priority.medium') : t('tasksList.priority.low')}
+                        </span>
+                      </div>
                     </div>
+                    {isOverdue && (
+                      <div className='bg-red-500 text-white px-3 py-1 rounded-full text-xs font-medium ml-4'>
+                        {t('tasksList.overdue')}
+                      </div>
+                    )}
                   </div>
-                  {task.status === 'overdue' && (
-                    <div className='bg-red-500 text-white px-3 py-1 rounded-full text-xs font-medium ml-4'>
-                      Überfällig
-                    </div>
-                  )}
                 </div>
-              </div>
-            ))
+              );
+            })
           ) : (
             // Fallback to static tasks when no API tasks are available
             <>
@@ -419,38 +464,47 @@ const Page = () => {
       </div>
 
         {/* Tasks Doughnut Chart Section */}
-       <div className='grid grid-cols-1 lg:grid-cols-1 gap-6 mt-8'>
+       <div className='grid grid-cols-1 gap-6 mt-8'>
          <div className='bg-white rounded-lg p-6 shadow-sm border'>
            <div className='flex items-center mb-6'>
              <div className='w-1 h-6 bg-red-500 mr-3'></div>
              <h3 className='text-lg font-semibold text-gray-900'>{t('tasksChart.title')}</h3>
            </div>
-           <div className='flex items-center justify-between'>
+           <div className='flex items-center justify-center gap-12'>
              {/* Chart */}
-             <div className='w-48 h-48'>
+             <div className='w-64 h-64 flex-shrink-0'>
                <Doughnut data={tasksChartData} options={tasksChartOptions} />
              </div>
              
              {/* Legend */}
-             <div className='flex flex-col gap-4 ml-8'>
-               <div className='flex items-center gap-3'>
-                 <div className='w-4 h-4 bg-red-500 rounded-full'></div>
-                 <span className='text-sm text-gray-700'>{t('tasksChart.acceptedOffers')} ({dashboardData.offerStatusChart.accepted})</span>
-               </div>
-               <div className='flex items-center gap-3'>
-                 <div className='w-4 h-4 bg-red-300 rounded-full'></div>
-                 <span className='text-sm text-gray-700'>{t('tasksChart.pendingOffers')} ({dashboardData.offerStatusChart.pending})</span>
-               </div>
-               <div className='flex items-center gap-3'>
-                 <div className='w-4 h-4 bg-gray-700 rounded-full'></div>
-                 <span className='text-sm text-gray-700'>{t('tasksChart.rejectedOffers')} ({dashboardData.offerStatusChart.rejected})</span>
-               </div>
+             <div className='flex flex-col gap-6'>
+               {dashboardData && (() => {
+                 const newUsers = dashboardData.topCards.newCustomersThisMonth || 0;
+                 const total = dashboardData.offerStatusChart.accepted + dashboardData.offerStatusChart.pending + newUsers;
+                 const acceptedPercentage = total > 0 ? Math.round((dashboardData.offerStatusChart.accepted / total) * 100) : 0;
+                 const pendingPercentage = total > 0 ? Math.round((dashboardData.offerStatusChart.pending / total) * 100) : 0;
+                 const newUsersPercentage = total > 0 ? Math.round((newUsers / total) * 100) : 0;
+                 
+                 return (
+                   <>
+                     <div className='flex items-center gap-4'>
+                       <div className='w-4 h-4 bg-red-500 rounded-full flex-shrink-0'></div>
+                       <span className='text-sm font-medium text-gray-700'>{t('tasksChart.acceptedOffers')} {acceptedPercentage}%</span>
+                     </div>
+                     <div className='flex items-center gap-4'>
+                       <div className='w-4 h-4 bg-red-300 rounded-full flex-shrink-0'></div>
+                       <span className='text-sm font-medium text-gray-700'>{t('tasksChart.pendingOffers')} {pendingPercentage}%</span>
+                     </div>
+                     <div className='flex items-center gap-4'>
+                       <div className='w-4 h-4 bg-gray-700 rounded-full flex-shrink-0'></div>
+                       <span className='text-sm font-medium text-gray-700'>{t('tasksChart.newUsers')} {newUsersPercentage}%</span>
+                     </div>
+                   </>
+                 );
+               })()}
              </div>
            </div>
          </div>
-
-         {/* Empty space or can add another chart later */}
-         <div></div>
        </div>
     </div>
   )

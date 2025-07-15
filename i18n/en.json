@@ -490,6 +490,84 @@
           "hours": "hours"
         }
       }
+    },
+    "employees": {
+      "title": "Employee Management",
+      "subtitle": "Manage employee accounts and their permissions",
+      "addEmployee": "Add New Employee",
+      "searchPlaceholder": "Search by employee name or email address",
+      "employeeName": "Employee Name",
+      "username": "Username",
+      "email": "Email",
+      "creationDate": "Creation Date",
+      "city": "City",
+      "status": "Status",
+      "actions": "Actions",
+      "active": "Active",
+      "deactivated": "Deactivated",
+      "noEmployeesFound": "No employees found",
+      "noEmployeesForSearch": "No employees found for your search.",
+      "noEmployees": "No employees available.",
+      "perPage": "/Page",
+      "showingResults": "{from} - {to} of {total} results",
+      "previous": "Previous",
+      "next": "Next",
+      "loading": "Loading employees...",
+      "errorLoading": "Error loading employees",
+      "errorUnknown": "An unknown error occurred",
+      "retry": "Retry",
+      "viewEmployee": "View employee",
+      "editEmployee": "Edit employee",
+      "deleteEmployee": "Delete employee",
+      "viewModal": {
+        "title": "Employee Details: {employeeName}",
+        "subtitle": "Overview of employee data and activities",
+        "edit": "Edit",
+        "delete": "Delete",
+        "loading": "Loading employee data...",
+        "errorTitle": "Error Loading",
+        "errorUnknown": "Unknown error occurred",
+        "close": "Close",
+        "basicInformation": "Basic Information",
+        "fullName": "Full Name",
+        "email": "Email",
+        "username": "Username",
+        "creationDate": "Creation Date",
+        "accountStatus": "Account Status",
+        "active": "Active",
+        "inactive": "Inactive",
+        "permissions": "Permissions",
+        "taskStatistics": "Task Statistics",
+        "relatedTasks": "Related Tasks",
+        "inProgressTasks": "In Progress",
+        "completedTasks": "Completed",
+        "pendingTasks": "Pending",
+        "completionRate": "Completion Rate",
+        "permissionsList": {
+          "can_manage_tasks": "Can manage tasks",
+          "can_view_reports": "Can view reports",
+          "can_manage_customers": "Can manage customers",
+          "can_create_offers": "Can create offers",
+          "can_manage_finances": "Can manage finances"
+        },
+        "buttons": {
+          "offers": "Offers",
+          "tasks": "Tasks"
+        },
+        "tasksTable": {
+          "title": "Linked Tasks",
+          "taskTitle": "Task Title",
+          "assignedTo": "Assigned To",
+          "priority": "Priority",
+          "status": "Status",
+          "dueDate": "Due Date",
+          "customer": "Customer",
+          "actions": "Actions",
+          "loading": "Loading tasks...",
+          "errorUnknown": "Failed to load tasks",
+          "noTasks": "No tasks found for this employee"
+        }
+      }
     }
   },
 
@@ -612,6 +690,29 @@
     "july": "July",
     "date": "Monday, July 14, 2024",
     
+    "cards": {
+      "currentMonth": {
+        "title": "Current Month Performance",
+        "monthlyIncome": "Monthly Income",
+        "expenses": "Expenses",
+        "netProfit": "Net Profit",
+        "profitChange": "Profit change compared to previous month"
+      },
+      "totalFinance": {
+        "title": "Total Financial Performance",
+        "totalIncome": "Total Income",
+        "totalExpenses": "Total Expenses",
+        "grossProfit": "Gross Profit"
+      },
+      "offersCustomers": {
+        "title": "Offers and Customers",
+        "totalOffers": "Total Offers",
+        "pendingOffers": "Pending Offers",
+        "totalCustomers": "Total Customers",
+        "newCustomersMonth": "{count} new customers were acquired this month"
+      }
+    },
+    
     "kpi": {
       "localTransport": {
         "title": "Local Transport",
@@ -651,9 +752,9 @@
     
     "tasksChart": {
       "title": "Pending and Overdue Tasks",
-      "acceptedOffers": "Accepted Offers 60%",
-      "pendingOffers": "Pending Offers 30%",
-      "newUsers": "New Users 10%",
+      "acceptedOffers": "Accepted Offers ",
+      "pendingOffers": "Pending Offers ",
+      "newUsers": "New Users ",
       "rejectedOffers": "Rejected Offers"
     },
     
@@ -667,6 +768,12 @@
         "contractReview": "Review of expired contracts"
       },
       "taskStatus": "Task Status",
+      "priority": {
+        "high": "High",
+        "medium": "Medium",
+        "low": "Low"
+      },
+      "overdue": "Overdue",
       "status": {
         "new": "New",
         "overdue": "Overdue",

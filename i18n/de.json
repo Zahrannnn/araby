@@ -465,6 +465,84 @@
           "notesNotInOffer": "Interne Notizen"
         }
       }
+    },
+    "employees": {
+      "title": "Mitarbeiterverwaltung",
+      "subtitle": "Verwaltung von Mitarbeiterkonten und deren Berechtigungen",
+      "addEmployee": "Neuen Mitarbeiter hinzufügen",
+      "searchPlaceholder": "Suche nach Mitarbeitername oder E-Mail-Adresse",
+      "employeeName": "Name des Mitarbeiters",
+      "username": "Benutzername",
+      "email": "E-Mail",
+      "creationDate": "Erstellungsdatum",
+      "city": "Stadt",
+      "status": "Status",
+      "actions": "Aktion",
+      "active": "Aktiv",
+      "deactivated": "Deaktiviert",
+      "noEmployeesFound": "Keine Mitarbeiter gefunden",
+      "noEmployeesForSearch": "Keine Mitarbeiter für Ihre Suche gefunden.",
+      "noEmployees": "Keine Mitarbeiter verfügbar.",
+      "perPage": "/Seite",
+      "showingResults": "{from} - {to} von {total} Ergebnissen",
+      "previous": "Zurück",
+      "next": "Weiter",
+      "loading": "Mitarbeiter werden geladen...",
+      "errorLoading": "Fehler beim Laden der Mitarbeiter",
+      "errorUnknown": "Ein unbekannter Fehler ist aufgetreten",
+      "retry": "Wiederholen",
+      "viewEmployee": "Mitarbeiter anzeigen",
+      "editEmployee": "Mitarbeiter bearbeiten",
+      "deleteEmployee": "Mitarbeiter löschen",
+      "viewModal": {
+        "title": "Mitarbeiterdetails: {employeeName}",
+        "subtitle": "Übersicht der Mitarbeiterdaten und Aktivitäten",
+        "edit": "Bearbeiten",
+        "delete": "Löschen",
+        "loading": "Mitarbeiterdaten werden geladen...",
+        "errorTitle": "Fehler beim Laden",
+        "errorUnknown": "Unbekannter Fehler aufgetreten",
+        "close": "Schließen",
+        "basicInformation": "Grundlegende Informationen",
+        "fullName": "Vollständiger Name",
+        "email": "E-Mail",
+        "username": "Benutzername",
+        "creationDate": "Erstellungsdatum",
+        "accountStatus": "Kontostatus",
+        "active": "Aktiv",
+        "inactive": "Inaktiv",
+        "permissions": "Berechtigungen",
+        "taskStatistics": "Aufgabenstatistiken",
+        "relatedTasks": "Verwandte Aufgaben",
+        "inProgressTasks": "In Bearbeitung",
+        "completedTasks": "Abgeschlossen",
+        "pendingTasks": "Ausstehend",
+        "completionRate": "Abschlussrate",
+        "permissionsList": {
+          "can_manage_tasks": "Kann Aufgaben verwalten",
+          "can_view_reports": "Kann Berichte anzeigen",
+          "can_manage_customers": "Kann Kunden verwalten",
+          "can_create_offers": "Kann Angebote erstellen",
+          "can_manage_finances": "Kann Finanzen verwalten"
+        },
+        "buttons": {
+          "offers": "Angebote",
+          "tasks": "Aufgaben"
+        },
+        "tasksTable": {
+          "title": "Verknüpfte Aufgaben",
+          "taskTitle": "Aufgabentitel",
+          "assignedTo": "Zugewiesen an",
+          "priority": "Priorität",
+          "status": "Status",
+          "dueDate": "Fälligkeitsdatum",
+          "customer": "Kunde",
+          "actions": "Aktionen",
+          "loading": "Aufgaben werden geladen...",
+          "errorUnknown": "Fehler beim Laden der Aufgaben",
+          "noTasks": "Keine Aufgaben für diesen Mitarbeiter gefunden"
+        }
+      }
     }
   },
 
@@ -587,6 +665,29 @@
     "july": "Juli",
     "date": "Montag, 14. Juli 2024",
     
+    "cards": {
+      "currentMonth": {
+        "title": "Leistung des laufenden Monats",
+        "monthlyIncome": "Monatliches Einkommen",
+        "expenses": "Ausgaben",
+        "netProfit": "Nettogewinn",
+        "profitChange": "Änderung des Gewinns im Vergleich zum Vormonat"
+      },
+      "totalFinance": {
+        "title": "Gesamtfinanzleistung",
+        "totalIncome": "Gesamteinnahmen",
+        "totalExpenses": "Gesamtausgaben",
+        "grossProfit": "Bruttogewinn"
+      },
+      "offersCustomers": {
+        "title": "Angebote und Kunden",
+        "totalOffers": "Gesamtangebote",
+        "pendingOffers": "Offene Angebote",
+        "totalCustomers": "Gesamtkundenanzahl",
+        "newCustomersMonth": "Es wurden in diesem Monat {count} neue Kunden gewonnen"
+      }
+    },
+    
     "kpi": {
       "localTransport": {
         "title": "Lokaler Transport",
@@ -626,9 +727,9 @@
     
     "tasksChart": {
       "title": "Ausstehende und überfällige Aufgaben",
-      "acceptedOffers": "Angenommene Angebote 60%",
-      "pendingOffers": "Ausstehende Angebote 30%",
-      "newUsers": "Neue Benutzer 10%",
+      "acceptedOffers": "Angenommene Angebote ",
+      "pendingOffers": "Ausstehende Angebote ",
+      "newUsers": "Neue Benutzer ",
       "rejectedOffers": "Abgelehnte Angebote"
     },
     
@@ -642,6 +743,12 @@
         "contractReview": "Überprüfung abgelaufener Verträge"
       },
       "taskStatus": "Aufgabenstatus",
+      "priority": {
+        "high": "Hoch",
+        "medium": "Mittel",
+        "low": "Niedrig"
+      },
+      "overdue": "Überfällig",
       "status": {
         "new": "Neu",
         "overdue": "Überfällig",

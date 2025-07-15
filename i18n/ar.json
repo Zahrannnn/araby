@@ -591,6 +591,84 @@
           "hours": "ساعات"
         }
       }
+    },
+    "employees": {
+      "title": "إدارة الموظفين",
+      "subtitle": "إدارة حسابات الموظفين وصلاحياتهم",
+      "addEmployee": "إضافة موظف جديد",
+      "searchPlaceholder": "البحث باسم الموظف أو عنوان البريد الإلكتروني",
+      "employeeName": "اسم الموظف",
+      "username": "اسم المستخدم",
+      "email": "البريد الإلكتروني",
+      "creationDate": "تاريخ الإنشاء",
+      "city": "المدينة",
+      "status": "الحالة",
+      "actions": "الإجراءات",
+      "active": "نشط",
+      "deactivated": "معطل",
+      "noEmployeesFound": "لم يتم العثور على موظفين",
+      "noEmployeesForSearch": "لم يتم العثور على موظفين لبحثك.",
+      "noEmployees": "لا يوجد موظفون متاحون.",
+      "perPage": "/صفحة",
+      "showingResults": "{from} - {to} من {total} نتيجة",
+      "previous": "السابق",
+      "next": "التالي",
+      "loading": "جاري تحميل الموظفين...",
+      "errorLoading": "خطأ في تحميل الموظفين",
+      "errorUnknown": "حدث خطأ غير معروف",
+      "retry": "إعادة المحاولة",
+      "viewEmployee": "عرض الموظف",
+      "editEmployee": "تعديل الموظف",
+      "deleteEmployee": "حذف الموظف",
+      "viewModal": {
+        "title": "تفاصيل الموظف: {employeeName}",
+        "subtitle": "نظرة عامة على بيانات الموظف والأنشطة",
+        "edit": "تعديل",
+        "delete": "حذف",
+        "loading": "جاري تحميل بيانات الموظف...",
+        "errorTitle": "خطأ في التحميل",
+        "errorUnknown": "حدث خطأ غير معروف",
+        "close": "إغلاق",
+        "basicInformation": "المعلومات الأساسية",
+        "fullName": "الاسم الكامل",
+        "email": "البريد الإلكتروني",
+        "username": "اسم المستخدم",
+        "creationDate": "تاريخ الإنشاء",
+        "accountStatus": "حالة الحساب",
+        "active": "نشط",
+        "inactive": "غير نشط",
+        "permissions": "الصلاحيات",
+        "taskStatistics": "إحصائيات المهام",
+        "relatedTasks": "المهام ذات الصلة",
+        "inProgressTasks": "قيد التنفيذ",
+        "completedTasks": "مكتملة",
+        "pendingTasks": "معلقة",
+        "completionRate": "معدل الإنجاز",
+        "permissionsList": {
+          "can_manage_tasks": "يمكن إدارة المهام",
+          "can_view_reports": "يمكن عرض التقارير",
+          "can_manage_customers": "يمكن إدارة العملاء",
+          "can_create_offers": "يمكن إنشاء العروض",
+          "can_manage_finances": "يمكن إدارة الماليات"
+        },
+        "buttons": {
+          "offers": "العروض",
+          "tasks": "المهام"
+        },
+        "tasksTable": {
+          "title": "المهام المرتبطة",
+          "taskTitle": "عنوان المهمة",
+          "assignedTo": "مُسند إلى",
+          "priority": "الأولوية",
+          "status": "الحالة",
+          "dueDate": "تاريخ الاستحقاق",
+          "customer": "العميل",
+          "actions": "الإجراءات",
+          "loading": "جاري تحميل المهام...",
+          "errorUnknown": "فشل في تحميل المهام",
+          "noTasks": "لا توجد مهام لهذا الموظف"
+        }
+      }
     }
   },
 
@@ -601,6 +679,29 @@
     "monday": "الاثنين",
     "july": "يوليو",
     "date": "الاثنين، 14 يوليو 2024",
+    
+    "cards": {
+      "currentMonth": {
+        "title": "أداء الشهر الجاري",
+        "monthlyIncome": "الدخل الشهري",
+        "expenses": "المصروفات",
+        "netProfit": "صافي الربح",
+        "profitChange": "تغيير الربح مقارنة بالشهر السابق"
+      },
+      "totalFinance": {
+        "title": "الأداء المالي الإجمالي",
+        "totalIncome": "إجمالي الدخل",
+        "totalExpenses": "إجمالي المصروفات",
+        "grossProfit": "إجمالي الربح"
+      },
+      "offersCustomers": {
+        "title": "العروض والعملاء",
+        "totalOffers": "إجمالي العروض",
+        "pendingOffers": "العروض المعلقة",
+        "totalCustomers": "إجمالي العملاء",
+        "newCustomersMonth": "تم اكتساب {count} عملاء جدد هذا الشهر"
+      }
+    },
     
     "kpi": {
       "localTransport": {
@@ -641,9 +742,9 @@
     
     "tasksChart": {
       "title": "المهام المعلقة والمتأخرة",
-      "acceptedOffers": "العروض المقبولة 60%",
-      "pendingOffers": "العروض المعلقة 30%",
-      "newUsers": "المستخدمون الجدد 10%",
+      "acceptedOffers": "العروض المقبولة ",
+      "pendingOffers": "العروض المعلقة ",
+      "newUsers": "المستخدمون الجدد ",
       "rejectedOffers": "العروض المرفوضة"
     },
     
@@ -657,6 +758,12 @@
         "contractReview": "مراجعة العقود المنتهية الصلاحية"
       },
       "taskStatus": "حالة المهمة",
+      "priority": {
+        "high": "عالي",
+        "medium": "متوسط",
+        "low": "منخفض"
+      },
+      "overdue": "متأخر",
       "status": {
         "new": "جديد",
         "overdue": "متأخر",
