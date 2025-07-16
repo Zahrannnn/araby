@@ -15,7 +15,8 @@ import {
   BellIcon,
   ArrowRightOnRectangleIcon,
   Bars3Icon,
-  XMarkIcon
+  XMarkIcon,
+  Cog6ToothIcon
 } from '@heroicons/react/24/outline';
 import { Button } from './button';
 import { cn } from '@/lib/utils';
@@ -80,6 +81,12 @@ const sidebarItems: SidebarItem[] = [
     translationKey: 'employees',
     href: '/company/employees',
     icon: UserGroupIcon,
+  },
+  {
+    name: 'Einstellungen',
+    translationKey: 'settings',
+    href: '/company/company-settings',
+    icon: Cog6ToothIcon,
   },
 ];
 

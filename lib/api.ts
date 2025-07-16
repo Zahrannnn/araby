@@ -935,3 +935,48 @@ export const expensesApi = {
     return data;
   },
 }; 
+
+export const companyApi = {
+  async getCurrentCompanySettings(): Promise<CompanyDetailsResponse> {
+    try {
+      const response = await apiClient.get<CompanyDetailsResponse>(
+        '/CompanySettings/GetCompany'
+      );
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const errorData = error.response.data as ApiErrorResponse;
+        throw new Error(errorData.message || errorData.error || 'Failed to fetch company settings');
+      }
+      throw new Error('Network error. Please check your connection.');
+    }
+  },
+  async getStripeKeys(): Promise<{ publishableKey: string; secretKey: string } | null> {
+    try {
+      const response = await apiClient.get<{ publishableKey: string; secretKey: string }>(
+        '/CompanySettings/stripe-keys'
+      );
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        return null;
+      }
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const errorData = error.response.data as ApiErrorResponse;
+        throw new Error(errorData.message || errorData.error || 'Failed to fetch Stripe keys');
+      }
+      throw new Error('Network error. Please check your connection.');
+    }
+  },
+  async setStripeKeys(keys: { publishableKey: string; secretKey: string }): Promise<void> {
+    try {
+      await apiClient.post('/CompanySettings/stripe-keys', keys);
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const errorData = error.response.data as ApiErrorResponse;
+        throw new Error(errorData.message || errorData.error || 'Failed to save Stripe keys');
+      }
+      throw new Error('Network error. Please check your connection.');
+    }
+  },
+}; 
