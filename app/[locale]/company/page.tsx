@@ -106,13 +106,13 @@ const Page = () => {
 
   // Tasks doughnut chart data from API
   const tasksChartData = dashboardData ? {
-    labels: [t('tasksChart.acceptedOffers'), t('tasksChart.pendingOffers'), t('tasksChart.newUsers')],
+    labels: [t('tasksChart.acceptedOffers'), t('tasksChart.pendingOffers'), t('tasksChart.rejectedOffers')],
     datasets: [
       {
         data: [
           dashboardData.offerStatusChart.accepted,
           dashboardData.offerStatusChart.pending,
-          dashboardData.topCards.newCustomersThisMonth || 0
+          dashboardData.offerStatusChart.rejected
         ],
         backgroundColor: [
           '#ef4444', // Red
@@ -479,11 +479,11 @@ const Page = () => {
              {/* Legend */}
              <div className='flex flex-col gap-6'>
                {dashboardData && (() => {
-                 const newUsers = dashboardData.topCards.newCustomersThisMonth || 0;
-                 const total = dashboardData.offerStatusChart.accepted + dashboardData.offerStatusChart.pending + newUsers;
+                 const rejected = dashboardData.offerStatusChart.rejected || 0;
+                 const total = dashboardData.offerStatusChart.accepted + dashboardData.offerStatusChart.pending + rejected;
                  const acceptedPercentage = total > 0 ? Math.round((dashboardData.offerStatusChart.accepted / total) * 100) : 0;
                  const pendingPercentage = total > 0 ? Math.round((dashboardData.offerStatusChart.pending / total) * 100) : 0;
-                 const newUsersPercentage = total > 0 ? Math.round((newUsers / total) * 100) : 0;
+                 const rejectedPercentage = total > 0 ? Math.round((rejected / total) * 100) : 0;
                  
                  return (
                    <>
@@ -497,7 +497,7 @@ const Page = () => {
                      </div>
                      <div className='flex items-center gap-4'>
                        <div className='w-4 h-4 bg-gray-700 rounded-full flex-shrink-0'></div>
-                       <span className='text-sm font-medium text-gray-700'>{t('tasksChart.newUsers')} {newUsersPercentage}%</span>
+                       <span className='text-sm font-medium text-gray-700'>{t('tasksChart.rejectedOffers')} {rejectedPercentage}%</span>
                      </div>
                    </>
                  );
