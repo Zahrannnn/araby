@@ -67,7 +67,7 @@ export function UpdateEmployeeModal({
   })
 
   const [selectedPermissions, setSelectedPermissions] = useState<number[]>([])
-  const [errors, setErrors] = useState<Partial<Record<keyof EmployeeFormData, string>>>({})
+  const [errors, setErrors] = useState<Partial<Record<keyof EmployeeFormData | 'submit', string>>>({})
   const [isActive, setIsActive] = useState(true)
 
   // Initialize form data when employee prop changes

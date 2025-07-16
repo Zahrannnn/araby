@@ -33,6 +33,8 @@ export const API_ENDPOINTS = {
   QUOTES: '/quotes',
   INVOICES: '/invoices',
   EXPENSES: '/expenses',
+  EXPENSES_CATEGORY_CHART: '/Expenses/category-chart',
+  EXPENSES_MONTHLY_CHART: '/Expenses/monthly-chart',
   REVENUES: '/revenues',
   
   // Dashboard
@@ -815,6 +817,21 @@ export interface EmployeeQueryParams {
   search?: string;
 }
 
+// Employee details type for api/Employees/id
+export interface EmployeeDetails {
+  fullName: string;
+  email: string;
+  userName: string;
+  isActive: boolean;
+  createdAt: string;
+  permissions: string[];
+  relatedTaskCount: number;
+  inProgressTaskCount: number;
+  completedTaskCount: number;
+  pendingTaskCount: number;
+  completionrateTaskCount: number;
+}
+
 /**
  * Employee API calls
  */
@@ -870,5 +887,51 @@ export const employeeApi = {
       }
       throw new Error('Network error. Please check your connection.');
     }
+  },
+}; 
+
+/**
+ * Expenses API calls
+ */
+export interface AddExpensePayload {
+  description: string;
+  amountCHF: number;
+  expenseDate: string;
+  category: string;
+}
+
+export interface UpdateExpensePayload {
+  expenseId: number;
+  description: string;
+  amountCHF: number;
+  expenseDate: string;
+  category: string;
+}
+
+export const expensesApi = {
+  async getCategoryChart() {
+    const { data } = await apiClient.get(API_ENDPOINTS.EXPENSES_CATEGORY_CHART);
+    return data;
+  },
+  async getMonthlyChart() {
+    const { data } = await apiClient.get(API_ENDPOINTS.EXPENSES_MONTHLY_CHART);
+    return data;
+  },
+  async getExpenses(params = { page: 1, pageSize: 10 }) {
+    const { data } = await apiClient.get(API_ENDPOINTS.EXPENSES, { params });
+    return data;
+  },
+  async addExpense(payload: AddExpensePayload) {
+    const { data } = await apiClient.post(API_ENDPOINTS.EXPENSES, payload);
+    return data;
+  },
+  async updateExpense(payload: UpdateExpensePayload) {
+    const { expenseId, ...rest } = payload;
+    const { data } = await apiClient.put(`${API_ENDPOINTS.EXPENSES}/${expenseId}`, rest);
+    return data;
+  },
+  async deleteExpense(expenseId: number) {
+    const { data } = await apiClient.delete(`${API_ENDPOINTS.EXPENSES}/${expenseId}`);
+    return data;
   },
 }; 

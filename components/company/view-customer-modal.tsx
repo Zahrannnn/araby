@@ -9,7 +9,7 @@ import { useCustomer, useCustomerTasks, useCustomerOffers } from '@/hooks/useCus
 import { DeleteCustomerModal } from './delete-customer-modal'
 import { ViewOfferModal } from './view-offer-modal'
 import { ViewTaskModal } from './view-task-modal'
-import type { Customer, Task, Offer } from '@/lib/api'
+import type { Customer, Offer } from '@/lib/api'
 
 interface ViewCustomerModalProps {
   isOpen: boolean;
@@ -17,6 +17,17 @@ interface ViewCustomerModalProps {
   onEdit?: (customer: Customer) => void;
   onDelete?: (customer: Customer) => void;
   customer: Customer | null;
+}
+
+// Type for customer tasks endpoint (api/Customer/id/tasks)
+export interface CustomerTaskListItem {
+  taskItemId: number;
+  taskTitle: string;
+  taskStatus: string;
+  priority: string;
+  dueDate: string;
+  assignedTo: string;
+  createdAt: string;
 }
 
 export function ViewCustomerModal({ 
@@ -316,7 +327,8 @@ export function ViewCustomerModal({
       );
     }
 
-    const tasks = tasksData?.items || [];
+    // Use correct type for customer tasks
+    const tasks = (tasksData?.items ?? []) as unknown as CustomerTaskListItem[];
 
     // Debug: Log the tasks data structure
     console.log('=== TASKS DATA DEBUG ===');
@@ -342,7 +354,7 @@ export function ViewCustomerModal({
       );
     }
 
-    const handleViewTask = (taskId: number, taskData: Task) => {
+    const handleViewTask = (taskId: number, taskData: CustomerTaskListItem) => {
       console.log('handleViewTask called with taskId:', taskId, 'taskData:', taskData);
       
       setSelectedTaskId(taskId);
@@ -366,7 +378,7 @@ export function ViewCustomerModal({
               </tr>
             </thead>
             <tbody>
-              {tasks.map((task: Task, index: number) => (
+              {tasks.map((task, index) => (
                 <tr key={task.taskItemId || index} className="hover:bg-gray-50 border-b border-gray-100">
                   <td className="px-6 py-4 text-sm text-gray-900 font-medium">{task.taskTitle}</td>
                   <td className="px-6 py-4 text-sm text-gray-900">{task.assignedTo}</td>
@@ -401,7 +413,7 @@ export function ViewCustomerModal({
                         );
                         console.log('Possible ID fields found:', possibleIdFields);
                         possibleIdFields.forEach(field => {
-                          console.log(`${field}:`, task[field as keyof Task]);
+                          console.log(`${field}:`, task[field as keyof CustomerTaskListItem]);
                         });
                         
                         // Use taskItemId if it exists and is a valid number, otherwise show error
@@ -415,7 +427,7 @@ export function ViewCustomerModal({
                           console.warn('Available task data:', task);
                           
                           // Try to find another ID field or show an alert
-                          const taskWithIds = task as Task & { id?: number; taskId?: number; itemId?: number };
+                          const taskWithIds = task as CustomerTaskListItem & { id?: number; taskId?: number; itemId?: number };
                           const alternativeId = taskWithIds.id || taskWithIds.taskId || taskWithIds.itemId;
                           if (alternativeId) {
                             taskId = alternativeId;

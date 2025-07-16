@@ -51,7 +51,7 @@ export function AddEmployeeModal({ isOpen, onClose, onSuccess }: AddEmployeeModa
   })
 
   const [selectedPermissions, setSelectedPermissions] = useState<number[]>([])
-  const [errors, setErrors] = useState<Partial<Record<keyof EmployeeFormData, string>>>({})
+  const [errors, setErrors] = useState<Partial<Record<keyof EmployeeFormData | 'submit', string>>>({})
 
   const handleChange = (field: keyof EmployeeFormData) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({ ...prev, [field]: e.target.value }))
