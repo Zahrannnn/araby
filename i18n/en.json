@@ -516,32 +516,84 @@
     },
     "employees": {
       "title": "Employee Management",
-      "subtitle": "Manage employee accounts and their permissions",
-      "addEmployee": "Add New Employee",
-      "searchPlaceholder": "Search by employee name or email address",
-      "employeeName": "Employee Name",
+      "subtitle": "Manage your employees and their permissions",
+      "addEmployee": "Add Employee",
+      "searchPlaceholder": "Search for employee...",
+      "employeeName": "Name",
       "username": "Username",
-      "email": "Email",
       "creationDate": "Creation Date",
       "city": "City",
-      "status": "Status",
       "actions": "Actions",
       "active": "Active",
       "deactivated": "Deactivated",
+      "errorLoading": "Error loading employees",
+      "errorUnknown": "Unknown error occurred",
+      "retry": "Try again",
       "noEmployeesFound": "No employees found",
-      "noEmployeesForSearch": "No employees found for your search.",
-      "noEmployees": "No employees available.",
-      "perPage": "/Page",
-      "showingResults": "{from} - {to} of {total} results",
+      "noEmployeesForSearch": "No employees found for this search",
+      "noEmployees": "No employees yet",
+      "perPage": "per page",
+      "showingResults": "Showing {from} to {to} of {total} employees",
       "previous": "Previous",
       "next": "Next",
-      "loading": "Loading employees...",
-      "errorLoading": "Error loading employees",
-      "errorUnknown": "An unknown error occurred",
-      "retry": "Retry",
       "viewEmployee": "View employee",
       "editEmployee": "Edit employee",
       "deleteEmployee": "Delete employee",
+      "deleteError": {
+        "description": "Error deleting employee"
+      },
+      "deleteConfirmation": {
+        "title": "Delete Employee",
+        "description": "Are you sure you want to delete this employee? This action cannot be undone."
+      },
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "updateModal": {
+        "title": "Edit Employee",
+        "breadcrumb": "Employees > Edit",
+        "employeeInformation": "Employee Information",
+        "fields": {
+          "firstName": "First Name",
+          "lastName": "Last Name",
+          "email": "Email",
+          "userName": "Username",
+          "newPassword": "New Password",
+          "confirmPassword": "Confirm Password",
+          "isActive": "Active"
+        },
+        "placeholders": {
+          "firstName": "Enter first name",
+          "lastName": "Enter last name",
+          "email": "Enter email",
+          "userName": "Enter username",
+          "newPassword": "Enter new password",
+          "confirmPassword": "Confirm password"
+        },
+        "permissions": {
+          "title": "Permissions",
+          "can_view_offers": "View Offers",
+          "can_edit_customers": "Edit Customers",
+          "can_manage_tasks": "Manage Tasks",
+          "can_view_reports": "View Reports",
+          "can_manage_users": "Manage Users",
+          "can_manage_invoices": "Manage Invoices"
+        },
+        "errors": {
+          "firstNameRequired": "First name is required",
+          "lastNameRequired": "Last name is required",
+          "emailRequired": "Email is required",
+          "userNameRequired": "Username is required",
+          "newPasswordRequired": "New password is required",
+          "confirmPasswordRequired": "Please confirm your new password",
+          "passwordMismatch": "Passwords do not match",
+          "updateFailed": "Update failed"
+        },
+        "actions": {
+          "cancel": "Cancel",
+          "update": "Update",
+          "updating": "Updating..."
+        }
+      },
       "viewModal": {
         "title": "Employee Details: {employeeName}",
         "subtitle": "Overview of employee data and activities",
@@ -562,43 +614,86 @@
         "assignedTasksCount": "Number of Assigned Tasks",
         "notSpecified": "Not specified",
         "grantedPermissions": "Granted Permissions",
-        "viewCustomers": "View Customers",
-        "inProgress": "In Progress",
-        "completedTasks": "Completed Tasks",
-        "pendingTasks": "Pending",
-        "completionRate": "Completion Rate",
-        "permissions": "Permissions",
-        "taskStatistics": "Task Statistics",
-        "relatedTasks": "Related Tasks",
-        "inProgressTasks": "In Progress",
-        "pendingTasks": "Pending",
         "permissionsList": {
-          "can_manage_tasks": "Can manage tasks",
-          "can_view_reports": "Can view reports",
-          "can_manage_customers": "Can manage customers",
-          "can_create_offers": "Can create offers",
-          "can_manage_finances": "Can manage finances"
-        },
-        "buttons": {
-          "offers": "Offers",
-          "tasks": "Tasks"
+          "can_view_offers": "View Offers",
+          "can_edit_customers": "Edit Customers",
+          "can_manage_tasks": "Manage Tasks",
+          "can_view_reports": "View Reports",
+          "can_manage_users": "Manage Users",
+          "can_manage_invoices": "Manage Invoices"
         },
         "tasksTable": {
-          "title": "Linked Tasks",
+          "title": "Tasks",
+          "loading": "Loading tasks...",
+          "noTasks": "No tasks found",
           "taskTitle": "Task Title",
-          "taskStatus": "Task Status",
+          "taskStatus": "Status",
           "priority": "Priority",
           "dueDate": "Due Date",
           "customer": "Customer",
-          "processingTime": "Processing Time",
-          "assignedTo": "Assigned To",
-          "createdAt": "Created At",
-          "actions": "Actions",
-          "actionsLabel": "Show actions",
-          "loading": "Loading tasks...",
-          "errorUnknown": "Failed to load tasks",
-          "noTasks": "No tasks found for this employee",
-          "hour": "Hour"
+          "createdAt": "Created At"
+        },
+        "tabs": {
+          "tasks": "Tasks",
+          "performance": "Performance"
+        },
+        "performance": {
+          "loading": "Loading performance data...",
+          "completionRate": "Task Completion Rate",
+          "totalHours": "Total Hours Worked",
+          "avgHoursPerTask": "Average Hours per Task",
+          "taskStatus": "Task Status",
+          "completed": "Completed",
+          "inProgress": "In Progress",
+          "pending": "Pending",
+          "overdueTasks": "Overdue Tasks",
+          "overdueTasksDesc": "Tasks past their due date"
+        }
+      },
+      "modal": {
+        "title": "Add New Employee",
+        "breadcrumb": "Add a new employee to your company",
+        "employeeInformation": "Employee Information",
+        "customerInformation": "Employee Information",
+        "fields": {
+          "firstName": "First Name",
+          "lastName": "Last Name",
+          "email": "Email",
+          "userName": "Username",
+          "password": "Password",
+          "confirmPassword": "Confirm Password",
+          "isActive": "Active"
+        },
+        "placeholders": {
+          "firstName": "Enter first name",
+          "lastName": "Enter last name",
+          "email": "Enter email",
+          "userName": "Enter username",
+          "password": "Enter password",
+          "confirmPassword": "Confirm password"
+        },
+        "permissions": {
+          "title": "Permissions",
+          "can_view_offers": "View Offers",
+          "can_edit_customers": "Edit Customers",
+          "can_manage_tasks": "Manage Tasks",
+          "can_view_reports": "View Reports",
+          "can_manage_users": "Manage Users",
+          "can_manage_invoices": "Manage Invoices"
+        },
+        "errors": {
+          "firstNameRequired": "First name is required",
+          "lastNameRequired": "Last name is required",
+          "emailRequired": "Email is required",
+          "userNameRequired": "Username is required",
+          "passwordRequired": "Password is required",
+          "confirmPasswordRequired": "Please confirm your password",
+          "createFailed": "Failed to create employee"
+        },
+        "actions": {
+          "save": "Save",
+          "saving": "Saving...",
+          "cancel": "Cancel"
         }
       }
     },

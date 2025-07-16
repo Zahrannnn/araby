@@ -3,9 +3,32 @@
 import React from 'react'
 import { useTranslations } from 'next-intl'
 import { Button } from "@/components/ui/button"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ChevronLeftIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
-import { useEmployeeDetails, useEmployeeTasks } from '@/hooks/useEmployees'
-import type { Employee, Task } from '@/lib/api'
+import { useEmployeeDetails, useEmployeeTasks, useEmployeePerformance } from '@/hooks/useEmployees'
+import type { Employee } from '@/lib/api'
+
+interface TaskItem {
+  taskItemId: number;
+  taskTitle: string;
+  taskStatus: string;
+  priority: string;
+  dueDate: string;
+  customerName: string;
+  createdAt: string;
+}
+
+interface TasksResponse {
+  pageIndex: number;
+  totalPages: number;
+  totalCount: number;
+  items: TaskItem[];
+}
+
+interface EmployeeDetails extends Employee {
+  relatedTaskCount: number;
+  permissions: string[];
+}
 
 interface ViewEmployeeModalProps {
   isOpen: boolean;
@@ -32,9 +55,28 @@ export function ViewEmployeeModal({
     data: tasksData, 
     isLoading: isTasksLoading, 
     error: tasksError 
-  } = useEmployeeTasks(employee?.id || null);
+  } = useEmployeeTasks(employee?.id || null) as { 
+    data: TasksResponse | undefined; 
+    isLoading: boolean; 
+    error: unknown; 
+  };
+
+  // Fetch employee performance data
+  const {
+    data: performanceData,
+    isLoading: isPerformanceLoading,
+    error: performanceError
+  } = useEmployeePerformance(employee?.id || null);
 
   if (!isOpen) return null;
+
+  // Error handling helper
+  const getErrorMessage = (error: unknown): string => {
+    if (error && typeof error === 'object' && 'message' in error) {
+      return String(error.message);
+    }
+    return t('errorUnknown');
+  };
 
   // Loading state
   if (isLoading) {
@@ -62,9 +104,7 @@ export function ViewEmployeeModal({
               </svg>
             </div>
             <h3 className="text-lg font-medium text-gray-900 mb-2">{t('errorTitle')}</h3>
-            <p className="text-gray-600 mb-4">
-              {error instanceof Error ? error.message : t('errorUnknown')}
-            </p>
+            <p className="text-gray-600 mb-4">{getErrorMessage(error)}</p>
             <div className="flex gap-2 justify-center">
               <Button onClick={onClose} variant="outline">
                 {t('close')}
@@ -143,7 +183,193 @@ export function ViewEmployeeModal({
     }
   };
 
-  const tasks = tasksData?.items || [];
+  // Tasks Table Content
+  const renderTasksTable = () => {
+    if (isTasksLoading) {
+      return (
+        <div className="p-8">
+          <div className="flex items-center justify-center">
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-red-500 mr-3"></div>
+            <span className="text-gray-700">{t('tasksTable.loading')}</span>
+          </div>
+        </div>
+      );
+    }
+
+    if (tasksError) {
+      return (
+        <div className="p-8">
+          <div className="text-center text-gray-500">
+            <p>{getErrorMessage(tasksError)}</p>
+          </div>
+        </div>
+      );
+    }
+
+    const tasks = tasksData?.items || [];
+
+    if (tasks.length === 0) {
+      return (
+        <div className="p-8">
+          <div className="text-center text-gray-500">
+            <p>{t('tasksTable.noTasks')}</p>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="overflow-x-auto">
+        <table className="w-full">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                {t('tasksTable.taskTitle')}
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                {t('tasksTable.taskStatus')}
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                {t('tasksTable.priority')}
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                {t('tasksTable.dueDate')}
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                {t('tasksTable.customer')}
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                {t('tasksTable.createdAt')}
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {tasks.map((task: TaskItem) => (
+              <tr key={task.taskItemId} className="hover:bg-gray-50">
+                <td className="px-4 py-3 text-sm text-gray-900">
+                  {task.taskTitle}
+                </td>
+                <td className="px-4 py-3">
+                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(task.taskStatus)}`}>
+                    {task.taskStatus}
+                  </span>
+                </td>
+                <td className="px-4 py-3">
+                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getPriorityColor(task.priority)}`}>
+                    {task.priority}
+                  </span>
+                </td>
+                <td className="px-4 py-3 text-sm text-gray-900">
+                  {formatDate(task.dueDate)}
+                </td>
+                <td className="px-4 py-3 text-sm text-gray-900">
+                  {task.customerName || '-'}
+                </td>
+                <td className="px-4 py-3 text-sm text-gray-900">
+                  {formatDate(task.createdAt)}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
+
+  // Performance Tab Content
+  const renderPerformanceContent = () => {
+    if (isPerformanceLoading) {
+      return (
+        <div className="p-8">
+          <div className="flex items-center justify-center">
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-red-500 mr-3"></div>
+            <span className="text-gray-700">{t('performance.loading')}</span>
+          </div>
+        </div>
+      );
+    }
+
+    if (performanceError) {
+      return (
+        <div className="p-8">
+          <div className="text-center text-gray-500">
+            <p>{getErrorMessage(performanceError)}</p>
+          </div>
+        </div>
+      );
+    }
+
+    if (!performanceData) return null;
+
+    return (
+      <div className="space-y-6">
+        {/* Performance Rating */}
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <div className="text-center">
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">
+              {performanceData.performanceRatingText}
+            </h3>
+            <div className="text-5xl font-bold text-red-500 mb-4">
+              {performanceData.completionRatePercentage}%
+            </div>
+            <p className="text-gray-600">
+              {t('performance.completionRate')}
+            </p>
+          </div>
+        </div>
+
+        {/* Performance Metrics */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Hours */}
+          <div className="bg-white rounded-lg border border-gray-200 p-4">
+            <h4 className="text-sm font-medium text-gray-500 mb-2">
+              {t('performance.totalHours')}
+            </h4>
+            <div className="text-2xl font-bold text-gray-900">
+              {performanceData.totalHoursWorked}
+            </div>
+            <p className="text-sm text-gray-600 mt-1">
+              {t('performance.avgHoursPerTask')}: {performanceData.averageHoursPerTask}
+            </p>
+          </div>
+
+          {/* Task Status */}
+          <div className="bg-white rounded-lg border border-gray-200 p-4">
+            <h4 className="text-sm font-medium text-gray-500 mb-2">
+              {t('performance.taskStatus')}
+            </h4>
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span className="text-gray-600">{t('performance.completed')}</span>
+                <span className="font-medium text-gray-900">{performanceData.completedCount}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">{t('performance.inProgress')}</span>
+                <span className="font-medium text-gray-900">{performanceData.inProgressCount}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">{t('performance.pending')}</span>
+                <span className="font-medium text-gray-900">{performanceData.pendingCount}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Overdue Tasks */}
+          <div className="bg-white rounded-lg border border-gray-200 p-4">
+            <h4 className="text-sm font-medium text-gray-500 mb-2">
+              {t('performance.overdueTasks')}
+            </h4>
+            <div className="text-2xl font-bold text-gray-900">
+              {performanceData.overdueCount}
+            </div>
+            <p className="text-sm text-gray-600 mt-1">
+              {t('performance.overdueTasksDesc')}
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="fixed inset-0 backdrop-blur-sm bg-black/50 flex items-center justify-center z-50 p-4">
@@ -223,7 +449,7 @@ export function ViewEmployeeModal({
                 <label className="block text-sm font-medium text-gray-500 mb-1">
                   {t('assignedTasksCount')}:
                 </label>
-                <p className="text-gray-900 font-bold">{employeeDetails.relatedTaskCount}</p>
+                <p className="text-gray-900 font-bold">{(employeeDetails as EmployeeDetails).relatedTaskCount}</p>
               </div>
               
               <div>
@@ -245,7 +471,7 @@ export function ViewEmployeeModal({
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {[t('viewCustomers'), t('viewCustomers'), t('viewCustomers')].map((permission, index) => (
+              {(employeeDetails as EmployeeDetails).permissions.map((permission: string, index: number) => (
                 <div key={index} className="flex items-center gap-2">
                   <input 
                     type="checkbox" 
@@ -254,167 +480,36 @@ export function ViewEmployeeModal({
                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
                     aria-label={`Permission: ${permission}`}
                   />
-                  <span className="text-sm text-gray-900">{permission}</span>
+                  <span className="text-sm text-gray-900">{t(`permissionsList.${permission}`)}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Task Statistics Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            {/* In Progress Tasks */}
-            <div className="bg-blue-50 rounded-lg p-4 text-center border border-blue-200">
-              <div className="flex items-center justify-center mb-2">
-                <svg className="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <p className="text-2xl font-bold text-blue-900 mb-1">
-                {employeeDetails.inProgressTaskCount}
-              </p>
-              <p className="text-sm text-blue-600">{t('inProgress')}</p>
-            </div>
+          {/* Tabs */}
+          <Tabs defaultValue="tasks" className="w-full">
+            <TabsList className="mb-6">
+              <TabsTrigger value="tasks">{t('tabs.tasks')}</TabsTrigger>
+              <TabsTrigger value="performance">{t('tabs.performance')}</TabsTrigger>
+            </TabsList>
 
-            {/* Completed Tasks */}
-            <div className="bg-green-50 rounded-lg p-4 text-center border border-green-200">
-              <div className="flex items-center justify-center mb-2">
-                <svg className="h-8 w-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <p className="text-2xl font-bold text-green-900 mb-1">
-                {employeeDetails.completedTaskCount}
-              </p>
-              <p className="text-sm text-green-600">{t('completedTasks')}</p>
-            </div>
-
-            {/* Pending Tasks */}
-            <div className="bg-red-50 rounded-lg p-4 text-center border border-red-200">
-              <div className="flex items-center justify-center mb-2">
-                <svg className="h-8 w-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <p className="text-2xl font-bold text-red-900 mb-1">
-                {employeeDetails.pendingTaskCount}
-              </p>
-              <p className="text-sm text-red-600">{t('pendingTasks')}</p>
-            </div>
-
-            {/* Completion Rate */}
-            <div className="bg-yellow-50 rounded-lg p-4 text-center border border-yellow-200">
-              <div className="flex items-center justify-center mb-2">
-                <svg className="h-8 w-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
-              </div>
-              <p className="text-2xl font-bold text-yellow-900 mb-1">
-                {employeeDetails.completionrateTaskCount}%
-              </p>
-              <p className="text-sm text-yellow-600">{t('completionRate')}</p>
-            </div>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex gap-4 mb-6">
-            <Button 
-              className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-md"
-            >
-              {t('buttons.offers')}
-            </Button>
-            <Button 
-              variant="outline"
-              className="border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-2 rounded-md"
-            >
-              {t('buttons.tasks')}
-            </Button>
-          </div>
-
-          {/* Tasks Table */}
-          <div className="bg-white rounded-lg border border-gray-200">
-            <div className="flex items-center gap-2 p-4 border-b border-gray-200">
-              <div className="w-1 h-6 bg-red-500"></div>
-              <h3 className="text-lg font-semibold text-gray-900">
-                {t('tasksTable.title')}
-              </h3>
-            </div>
-            
-            {isTasksLoading ? (
-              <div className="p-8">
-                <div className="flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-red-500 mr-3"></div>
-                  <span className="text-gray-700">{t('tasksTable.loading')}</span>
+            <TabsContent value="tasks">
+              {/* Tasks Table */}
+              <div className="bg-white rounded-lg border border-gray-200">
+                <div className="flex items-center gap-2 p-4 border-b border-gray-200">
+                  <div className="w-1 h-6 bg-red-500"></div>
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    {t('tasksTable.title')}
+                  </h3>
                 </div>
+                {renderTasksTable()}
               </div>
-            ) : tasksError ? (
-              <div className="p-8">
-                <div className="text-center text-gray-500">
-                  <p>{tasksError instanceof Error ? tasksError.message : t('tasksTable.errorUnknown')}</p>
-                </div>
-              </div>
-            ) : tasks.length === 0 ? (
-              <div className="p-8">
-                <div className="text-center text-gray-500">
-                  <p>{t('tasksTable.noTasks')}</p>
-                </div>
-              </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        {t('tasksTable.taskTitle')}
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        {t('tasksTable.taskStatus')}
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        {t('tasksTable.priority')}
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        {t('tasksTable.dueDate')}
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        {t('tasksTable.customer')}
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        {t('tasksTable.processingTime')}
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {tasks.map((task: Task, index: number) => (
-                      <tr key={task.taskItemId || index} className="hover:bg-gray-50">
-                        <td className="px-4 py-3 text-sm text-gray-900">
-                          {task.taskTitle}
-                        </td>
-                        <td className="px-4 py-3">
-                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(task.taskStatus)}`}>
-                            {task.taskStatus}
-                          </span>
-                        </td>
-                        <td className="px-4 py-3">
-                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getPriorityColor(task.priority)}`}>
-                            {task.priority}
-                          </span>
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-900">
-                          {formatDate(task.dueDate)}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-900">
-                          {task.assignedTo}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-900">
-                          {t('tasksTable.hour')}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
+            </TabsContent>
+
+            <TabsContent value="performance">
+              {renderPerformanceContent()}
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </div>

@@ -4,10 +4,13 @@ import React, { useState, useMemo } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { PlusIcon, MagnifyingGlassIcon, EyeIcon, PencilIcon, TrashIcon, AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline'
-import { useEmployees } from '@/hooks/useEmployees'
+import { useEmployees, useDeleteEmployee } from '@/hooks/useEmployees'
 import { useDebounce } from '@/hooks/useDebounce'
 import { useTranslations } from 'next-intl'
 import { ViewEmployeeModal } from '@/components/company/view-employee-modal'
+import { DeleteEmployeeModal } from '@/components/company/delete-employee-modal'
+import { AddEmployeeModal } from '@/components/company/add-employee-modal'
+import { UpdateEmployeeModal } from '@/components/company/update-employee-modal'
 import type { Employee } from '@/lib/api'
 
 const Page = () => {
@@ -17,6 +20,12 @@ const Page = () => {
   const [itemsPerPage, setItemsPerPage] = useState(10)
   const [isViewModalOpen, setIsViewModalOpen] = useState(false)
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [employeeToDelete, setEmployeeToDelete] = useState<Employee | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false)
+  const [employeeToUpdate, setEmployeeToUpdate] = useState<Employee | null>(null)
 
   // Debounce search term to avoid excessive API calls
   const debouncedSearchTerm = useDebounce(searchTerm, 500)
@@ -36,6 +45,9 @@ const Page = () => {
     refetch,
   } = useEmployees(queryParams)
 
+  // Use delete employee mutation
+  const deleteEmployee = useDeleteEmployee()
+
   const employees = data?.employees || []
   const totalCount = data?.totalCount || 0
   const totalPages = Math.ceil(totalCount / itemsPerPage)
@@ -52,16 +64,43 @@ const Page = () => {
     setIsViewModalOpen(true)
   }
 
-  // Handle edit employee (placeholder)
+  // Handle edit employee
   const handleEditEmployee = (employee: Employee) => {
-    console.log('Edit employee:', employee)
-    // TODO: Implement edit functionality
+    // Split the full name into first and last name if they're not already present
+    const employeeData = {
+      ...employee,
+      firstName: employee.firstName || employee.fullName.split(' ')[0],
+      lastName: employee.lastName || employee.fullName.split(' ').slice(1).join(' '),
+    }
+    setEmployeeToUpdate(employeeData)
+    setIsUpdateModalOpen(true)
   }
 
-  // Handle delete employee (placeholder)
+  // Handle delete employee
   const handleDeleteEmployee = (employee: Employee) => {
-    console.log('Delete employee:', employee)
-    // TODO: Implement delete functionality
+    setEmployeeToDelete(employee)
+    setIsDeleteModalOpen(true)
+  }
+
+  // Handle confirm delete
+  const handleConfirmDelete = async () => {
+    if (!employeeToDelete) return
+
+    try {
+      setIsDeleting(true)
+      await deleteEmployee.mutateAsync(employeeToDelete.id)
+      
+      // Close modal and reset state
+      setIsDeleteModalOpen(false)
+      setEmployeeToDelete(null)
+      
+    } catch (error) {
+      console.error('Error deleting employee:', error)
+      // Show error in the UI
+      alert(t('deleteError.description'))
+    } finally {
+      setIsDeleting(false)
+    }
   }
 
   // Format date
@@ -119,7 +158,7 @@ const Page = () => {
                 {t('errorLoading')}
               </div>
               <p className="text-gray-600 mb-4">
-                {error.message || t('errorUnknown')}
+                {error instanceof Error ? error.message : t('errorUnknown')}
               </p>
               <Button onClick={() => refetch()} className="bg-blue-500 hover:bg-blue-600 text-white">
                 {t('retry')}
@@ -147,6 +186,7 @@ const Page = () => {
             </div>
             <Button 
               className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md flex items-center gap-2"
+              onClick={() => setIsAddModalOpen(true)}
             >
               <PlusIcon className="h-4 w-4" />
               {t('addEmployee')}
@@ -371,6 +411,43 @@ const Page = () => {
         onEdit={handleEditEmployee}
         onDelete={handleDeleteEmployee}
         employee={selectedEmployee}
+      />
+
+      {/* Delete Confirmation Modal */}
+      <DeleteEmployeeModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => {
+          setIsDeleteModalOpen(false)
+          setEmployeeToDelete(null)
+        }}
+        onConfirm={handleConfirmDelete}
+        employee={employeeToDelete}
+        isDeleting={isDeleting}
+      />
+
+      {/* Add Employee Modal */}
+      <AddEmployeeModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onSuccess={() => {
+          setIsAddModalOpen(false)
+          refetch()
+        }}
+      />
+
+      {/* Update Employee Modal */}
+      <UpdateEmployeeModal
+        isOpen={isUpdateModalOpen}
+        onClose={() => {
+          setIsUpdateModalOpen(false)
+          setEmployeeToUpdate(null)
+        }}
+        onSuccess={() => {
+          setIsUpdateModalOpen(false)
+          setEmployeeToUpdate(null)
+          refetch()
+        }}
+        employee={employeeToUpdate}
       />
     </div>
   )

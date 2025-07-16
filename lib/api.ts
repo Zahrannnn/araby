@@ -322,12 +322,12 @@ export interface CustomerQueryParams {
  * Task types
  */
 export interface Task {
-  taskItemId?: number; // Added for task identification
+  taskItemId: number;
   taskTitle: string;
-  taskStatus: 'Pending' | 'InProgress' | 'Completed' | 'Cancelled';
-  priority: 'Low' | 'Medium' | 'High';
+  taskStatus: string;
+  priority: string;
   dueDate: string;
-  assignedTo: string;
+  customerName: string;
   createdAt: string;
 }
 
@@ -794,25 +794,14 @@ export const dashboardApi = {
  */
 export interface Employee {
   id: number;
+  firstName: string;
+  lastName: string;
   fullName: string;
   email: string;
   userName: string;
   isActive: boolean;
   createdAt: string;
-}
-
-export interface EmployeeDetails {
-  fullName: string;
-  email: string;
-  userName: string;
-  isActive: boolean;
-  createdAt: string;
-  permissions: string[];
-  relatedTaskCount: number;
-  inProgressTaskCount: number;
-  completedTaskCount: number;
-  pendingTaskCount: number;
-  completionrateTaskCount: number;
+  permissionIds: number[];
 }
 
 export interface EmployeesResponse {

@@ -666,13 +666,28 @@
           "customer": "العميل",
           "processingTime": "وقت المعالجة",
           "assignedTo": "مُسند إلى",
-          "createdAt": "تاريخ الإنشاء",
+          "createdAt": "تم الإنشاء في",
           "actions": "الإجراءات",
           "actionsLabel": "عرض الإجراءات",
           "loading": "جاري تحميل المهام...",
           "errorUnknown": "فشل في تحميل المهام",
-          "noTasks": "لا توجد مهام لهذا الموظف",
-          "hour": "ساعة"
+          "noTasks": "لم يتم العثور على مهام لهذا الموظف"
+        },
+        "tabs": {
+          "tasks": "المهام",
+          "performance": "الأداء"
+        },
+        "performance": {
+          "loading": "جاري تحميل بيانات الأداء...",
+          "completionRate": "معدل إنجاز المهام",
+          "totalHours": "إجمالي ساعات العمل",
+          "avgHoursPerTask": "متوسط الساعات لكل مهمة",
+          "taskStatus": "تفصيل حالة المهام",
+          "completed": "مكتملة",
+          "inProgress": "قيد التنفيذ",
+          "pending": "معلقة",
+          "overdueTasks": "المهام المتأخرة",
+          "overdueTasksDesc": "المهام التي تجاوزت موعد استحقاقها"
         }
       }
     },
