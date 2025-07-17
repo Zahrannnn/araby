@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { User, UserRole } from '@/lib/auth';
+import { cookieUtils } from '@/lib/utils/cookies';
 
 /**
  * Custom hook for managing user role and permissions
@@ -16,10 +17,9 @@ export function useUserRole() {
     
     const fetchUser = async () => {
       try {
-        // Placeholder - replace with actual auth logic
-        const userData = localStorage.getItem('user');
+        const userData = cookieUtils.getUserData();
         if (userData) {
-          setUser(JSON.parse(userData));
+          setUser(userData as User);
         }
       } catch (error) {
         console.error('Error fetching user:', error);
@@ -27,7 +27,6 @@ export function useUserRole() {
         setLoading(false);
       }
     };
-
     fetchUser();
   }, []);
 
@@ -40,7 +39,7 @@ export function useUserRole() {
   };
 
   const isAdmin = (): boolean => {
-    return user?.role === 'super-admin' || user?.role === 'company';
+    return user?.role === 'super-admin' || user?.role === 'Manager';
   };
 
   const canAccessCompany = (companyId: string): boolean => {
@@ -58,4 +57,4 @@ export function useUserRole() {
     canAccessCompany,
     setUser, // For login/logout
   };
-} 
+}

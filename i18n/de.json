@@ -567,6 +567,36 @@
       }
     },
     "tasks": {
+      "title": "Aufgabenverwaltung",
+      "description": "Alle Aufgaben in Ihrem Unternehmen anzeigen und verwalten",
+      "search": "Aufgaben suchen...",
+      "filterByStatus": "Nach Status filtern",
+      "filterByPriority": "Nach Priorität filtern",
+      "allStatuses": "Alle Status",
+      "allPriorities": "Alle Prioritäten",
+      "taskTitle": "Aufgabentitel",
+      "status": "Status",
+      "priority": "Priorität",
+      "dueDate": "Fälligkeitsdatum",
+      "customer": "Kunde",
+      "createdAt": "Erstellt am",
+      "actions": "Aktionen",
+      "viewDetails": "Details anzeigen",
+      "noTasks": "Keine Aufgaben gefunden",
+      "noTasksDescription": "Es gibt keine Aufgaben, die Ihren aktuellen Filtern entsprechen",
+      "showing": "Anzeige",
+      "of": "von",
+      "status": {
+        "pending": "Ausstehend",
+        "inProgress": "In Bearbeitung",
+        "completed": "Abgeschlossen",
+        "cancelled": "Abgebrochen"
+      },
+      "priority": {
+        "low": "Niedrig",
+        "medium": "Mittel",
+        "high": "Hoch"
+      },
       "viewModal": {
         "title": "Aufgabendetails: {taskTitle}",
         "subtitle": "Zugewiesen an {assignedTo}",

@@ -23,6 +23,8 @@ import { cn } from '@/lib/utils';
 import { LanguageSwitcher } from './language-switcher';
 import { useNotifications } from '@/hooks/useNotifications';
 import Image from 'next/image';
+import { cookieUtils } from '@/lib/utils/cookies';
+import { User } from '@/types/user';
 
 interface CompanySidebarProps {
   locale: string;
@@ -37,6 +39,7 @@ interface SidebarItem {
   href: string;
   icon: React.ComponentType<{ className?: string }>;
   badge?: string | number;
+  requiredPermission?: string; // Add permission requirement
 }
 
 const sidebarItems: SidebarItem[] = [
@@ -45,48 +48,56 @@ const sidebarItems: SidebarItem[] = [
     translationKey: 'dashboard',
     href: '/company',
     icon: HomeIcon,
+    requiredPermission: 'can_view_reports'  // Dashboard access tied to reports viewing
   },
   {
     name: 'Kunden',
     translationKey: 'customers',
     href: '/company/customers',
     icon: UsersIcon,
+    requiredPermission: 'can_edit_customers'
   },
   {
     name: 'Angebote',
     translationKey: 'offers',
     href: '/company/offers',
     icon: DocumentTextIcon,
+    requiredPermission: 'can_view_offers'
   },
   {
     name: 'Rechnungen',
     translationKey: 'invoices',
     href: '/company/invoices',
     icon: ReceiptPercentIcon,
+    requiredPermission: 'can_manage_invoices'
   },
   {
     name: 'Aufgaben',
     translationKey: 'tasks',
     href: '/company/tasks',
     icon: CheckCircleIcon,
+    requiredPermission: 'can_manage_tasks'
   },
   {
     name: 'Ausgaben',
     translationKey: 'expenses',
     href: '/company/expenses',
     icon: CreditCardIcon,
+    requiredPermission: 'can_view_reports'  // Expenses tied to reports viewing
   },
   {
     name: 'Mitarbeiter',
     translationKey: 'employees',
     href: '/company/employees',
     icon: UserGroupIcon,
+    requiredPermission: 'can_manage_users'
   },
   {
     name: 'Einstellungen',
     translationKey: 'settings',
     href: '/company/company-settings',
     icon: Cog6ToothIcon,
+    requiredPermission: 'can_manage_users'  // Settings typically requires user management permission
   },
 ];
 
@@ -100,6 +111,38 @@ export function CompanySidebar({
   const t = useTranslations();
   const { getUnreadCount } = useNotifications();
 
+  // Get user data from cookies
+  const getUserData = (): User | null => {
+    const userData = cookieUtils.getUserData();
+    return userData as User | null;
+  };
+
+  const user = getUserData();
+
+  // Get initials from name
+  const getInitials = (name: string) => {
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+  };
+
+  // Get user permissions from localStorage
+  const getUserPermissions = (): string[] => {
+    if (typeof window === 'undefined') return [];
+    const permissions = localStorage.getItem('userPermissions');
+    return permissions ? JSON.parse(permissions) : [];
+  };
+
+  // Filter sidebar items based on permissions
+  const filteredSidebarItems = sidebarItems.filter(item => {
+    // If no permission is required, show the item
+    if (!item.requiredPermission) return true;
+    
+    // Get user permissions
+    const userPermissions = getUserPermissions();
+    
+    // Show item if user has the required permission
+    return userPermissions.includes(item.requiredPermission);
+  });
+
   const isActiveRoute = (href: string) => {
     const pathWithoutLocale = pathname.replace(`/${locale}`, '');
     return pathWithoutLocale === href || pathWithoutLocale.startsWith(href + '/');
@@ -112,8 +155,14 @@ export function CompanySidebar({
   };
 
   const handleLogout = () => {
+    // Clear cookies
     document.cookie = 'auth-token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
     document.cookie = 'user-data=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+    
+    // Clear permissions from localStorage
+    localStorage.removeItem('userPermissions');
+    
+    // Redirect to login
     window.location.href = '/login';
   };
 
@@ -156,7 +205,14 @@ export function CompanySidebar({
               height={40}
               className="object-contain"
             />
-            <p className="text-sm text-gray-600 font-medium">{t('roles.companyManager')}</p>
+            <p className="text-sm text-gray-600 font-medium">
+              {user?.role ? (
+                user.role === 'Manager' ? t('roles.companyManager') :
+                user.role === 'employee' ? t('roles.employee') :
+                user.role === 'super-admin' ? t('roles.superAdmin') :
+                user.role
+              ) : t('roles.companyManager')}
+            </p>
           </div>
         )}
         
@@ -176,10 +232,21 @@ export function CompanySidebar({
         <div className="p-4 mx-4 my-4 bg-gray-50 rounded-lg">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
-              <span className="text-gray-700 font-semibold text-lg">M</span>
+              <span className="text-gray-700 font-semibold text-lg">
+                {user ? getInitials(user.name) : ''}
+              </span>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm text-gray-900 truncate">Geschäftsführer@Firma.com</p>
+              {user && (
+                <>
+                  <p className="text-sm font-medium text-gray-900 truncate">
+                    {user.name}
+                  </p>
+                  <p className="text-sm text-gray-600 truncate">
+                    {user.email}
+                  </p>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -187,7 +254,7 @@ export function CompanySidebar({
 
       {/* Navigation */}
       <nav className="flex-1 px-4 py-2 space-y-1">
-        {sidebarItems.map((item) => {
+        {filteredSidebarItems.map((item) => {
           const isActive = isActiveRoute(item.href);
 
           return (
@@ -231,23 +298,14 @@ export function CompanySidebar({
             {/* Separator */}
             <div className="border-t border-gray-100"></div>
             
-            {/* Notifications */}
-            <div className="flex items-center space-x-3 px-2 py-2 text-gray-600 hover:bg-gray-50 rounded-lg cursor-pointer">
-              <div className="relative">
-                <BellIcon className="h-5 w-5" />
-                {getUnreadCount() > 0 && (
-                  <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full flex items-center justify-center">
-                    <span className="text-xs text-white font-bold">•</span>
-                  </span>
-                )}
-              </div>
-              <span className="text-sm">{t('notifications.button') || 'Notifications'}</span>
-              {getUnreadCount() > 0 && (
-                <span className="ml-auto inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-red-500 text-white">
-                  {getUnreadCount()}
-                </span>
-              )}
-            </div>
+        <div>
+          <Link href="/company/my-tasks">
+            <Button variant="ghost" className="w-full justify-start text-gray-600 hover:bg-gray-50 text-sm px-2">
+              <CheckCircleIcon className="h-5 w-5 mr-3" />
+              {t('My Tasks')}
+            </Button>
+          </Link>
+        </div>
             
             {/* Log out */}
             <Button 

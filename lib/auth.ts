@@ -1,5 +1,5 @@
 // Role verification utilities
-export type UserRole = 'super-admin' | 'company' | 'employee';
+export type UserRole = 'super-admin' | 'Manager' | 'employee';
 
 export interface User {
   id: string;
@@ -22,7 +22,7 @@ export function hasRole(user: User | null, requiredRole: UserRole): boolean {
  */
 export function isAdmin(user: User | null): boolean {
   if (!user) return false;
-  return user.role === 'super-admin' || user.role === 'company';
+  return user.role === 'super-admin' || user.role === 'Manager';
 }
 
 /**
@@ -32,11 +32,11 @@ export function getDefaultRedirectPath(role: UserRole): string {
   switch (role) {
     case 'super-admin':
       return '/super-admin/companies';
-    case 'company':
-      return '/company/clients';
+    case 'Manager':
+      return '/company';
     case 'employee':
       return '/employee/tasks';
     default:
       return '/dashboard';
   }
-} 
+}

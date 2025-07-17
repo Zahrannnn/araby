@@ -1,6 +1,6 @@
 // User-related type definitions
 
-export type UserRole = 'super-admin' | 'company' | 'employee';
+export type UserRole = 'super-admin' | 'Manager' | 'employee';
 
 export interface User {
   id: string;
@@ -63,4 +63,4 @@ export interface Subscription {
   endDate: Date;
   price: number;
   features: string[];
-} 
+}

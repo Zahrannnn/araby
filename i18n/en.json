@@ -286,6 +286,117 @@
   },
 
   "company": {
+    "tasks": {
+      "tasks": "Tasks",
+      "title": "Tasks Management",
+      "description": "View and manage all tasks in your company",
+      "search": "Search tasks...",
+      "filterByStatus": "Filter by status",
+      "filterByPriority": "Filter by priority",
+      "allStatuses": "All statuses",
+      "allPriorities": "All priorities",
+      "taskTitle": "Task Title",
+      "statusLabel": "Status",
+      "priorityLabel": "Priority",
+      "dueDate": "Due Date",
+      "actions": "Actions",
+      "createdAt": "Created At",
+      "view": "View",
+      "edit": "Edit",
+      "delete": "Delete",
+      "addTask": "Add Task",
+      "status": {
+        "pending": "Pending",
+        "inprogress": "In Progress",
+        "completed": "Completed",
+        "cancelled": "Cancelled"
+      },
+      "priority": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High"
+      },
+      "viewModal": {
+        "title": "Task Details: {taskTitle}",
+        "subtitle": "Assigned to {assignedTo}",
+        "basicInfo": "Basic Task Information",
+        "basicInfoNote": "This is basic task information from the customer tasks list. Detailed task information is only available for tasks with specific IDs.",
+        "limitedInfo": "Limited Information Available",
+        "limitedInfoMessage": "Detailed task information is not available for this task. Only basic information from the customer tasks list can be displayed.",
+        "taskId": "Task ID",
+        "assignedTo": "Assigned To",
+        "priority": "Priority",
+        "status": "Status",
+        "dueDate": "Due Date",
+        "createdAt": "Created At",
+        "startedAt": "Started At",
+        "completedAt": "Completed At",
+        "timeSpent": "Time Spent",
+        "description": "Description",
+        "notes": "Notes",
+        "requirementFiles": "Requirement Files",
+        "resultFiles": "Result Files",
+        "downloadFile": "Download {fileName}",
+        "close": "Back to Tasks",
+        "notSet": "Not set",
+        "hours": "hours",
+        "taskStarted": "Task started successfully",
+        "errorStarting": "Error starting task",
+        "taskCompleted": "Task completed successfully",
+        "errorCompleting": "Error completing task",
+        "completing": "Completing...",
+        "complete": "Complete Task",
+        "starting": "Starting...",
+        "start": "Start Task",
+        "createdBy": "Created By",
+        "customer": "Customer"
+      },
+      "taskStats": "Task Statistics",
+      "averageTimeToComplete": "Avg. Time to Complete",
+      "hours": "hours",
+      "topUsersByCompletedTasks": "Top Users by Completed Tasks",
+      "viewTopEmployees": "View Top 5 Employees",
+      "topEmployeesModalTitle": "Top 5 Employees Stats",
+      "topEmployeesModalDesc": "These are the top 5 employees by completed tasks.",
+      "noTopEmployees": "No employee stats available.",
+      "addTaskModal": {
+        "title": "Add New Task",
+        "subtitle": "Create a new task and assign it to an employee",
+        "sectionTitle": "Task Details",
+        "fields": {
+          "title": "Task Title",
+          "titlePlaceholder": "Enter task title",
+          "description": "Description",
+          "descriptionPlaceholder": "Detailed description of the task...",
+          "employee": "Responsible Employee",
+          "employeePlaceholder": "Select employee",
+          "customer": "Related Customer",
+          "customerPlaceholder": "Select customer",
+          "priority": "Priority",
+          "priorityPlaceholder": "Medium / High",
+          "dueDate": "Due Date",
+          "dueDatePlaceholder": "DD/MM/YYYY",
+          "notes": "Notes",
+          "notesPlaceholder": "Additional notes...",
+          "fileUpload": "Upload files (requirements/references)",
+          "fileUploadHint": "Click to upload or drag files here",
+          "fileUploadTypes": "PNG, JPG, PDF up to 10MB"
+        },
+        "actions": {
+          "save": "Save Task",
+          "cancel": "Cancel"
+        }
+      },
+      "loading": "Loading tasks...",
+      "errorTitle": "Error Loading Tasks",
+      "noTasks": "No tasks found.",
+      "showing": "Showing",
+      "of": "of",
+      "myTasks": "My Tasks",
+      "myTasksDescription": "View and manage your assigned tasks",
+      "editTitle": "Edit Task",
+      "editSubtitle": "Update task details and assignments"
+    },
     "customers": {
       "title": "Customer Management",
       "subtitle": "Manage and view all company customers",
@@ -731,34 +842,6 @@
           "cancel": "Cancel"
         }
       }
-    },
-
-    "tasks": {
-      "viewModal": {
-        "title": "Task Details: {taskTitle}",
-        "subtitle": "Assigned to {assignedTo}",
-        "basicInfo": "Basic Task Information",
-        "basicInfoNote": "This is basic task information from the customer tasks list. Detailed task information is only available for tasks with specific IDs.",
-        "limitedInfo": "Limited Information Available",
-        "limitedInfoMessage": "Detailed task information is not available for this task. Only basic information from the customer tasks list can be displayed.",
-        "taskId": "Task ID",
-        "assignedTo": "Assigned To",
-        "priority": "Priority",
-        "status": "Status",
-        "dueDate": "Due Date",
-        "createdAt": "Created At",
-        "startedAt": "Started At",
-        "completedAt": "Completed At",
-        "timeSpent": "Time Spent",
-        "description": "Description",
-        "notes": "Notes",
-        "requirementFiles": "Requirement Files",
-        "resultFiles": "Result Files",
-        "downloadFile": "Download {fileName}",
-        "close": "Close",
-        "notSet": "Not set",
-        "hours": "hours"
-      }
     }
   },
 
@@ -972,4 +1055,4 @@
       }
     }
   }
-} 
+}

@@ -97,10 +97,11 @@ export function parseUserFromToken(token: string): Partial<User> | null {
   let normalizedRole: UserRole;
   switch (role.toLowerCase()) {
     case 'superadmin':
+    case 'super-admin':
       normalizedRole = 'super-admin';
       break;
-    case 'companymanager':
-      normalizedRole = 'company';
+    case 'manager':
+      normalizedRole = 'Manager';
       break;
     case 'employee':
       normalizedRole = 'employee';

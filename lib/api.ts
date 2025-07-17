@@ -189,6 +189,11 @@ export const authApi = {
         cookieUtils.setUserData(userFromToken, rememberMe);
         cookieUtils.setRememberMe(rememberMe);
 
+        // Store permissions in localStorage
+        if (typeof window !== 'undefined' && response.data.permissions) {
+          localStorage.setItem('userPermissions', JSON.stringify(response.data.permissions));
+        }
+
         // Return parsed response with user data
         return {
           ...response.data,
@@ -213,8 +218,11 @@ export const authApi = {
       // Continue with local cleanup even if API call fails
       console.warn('Logout API call failed:', error);
     } finally {
-      // Clear all cookies
+      // Clear all cookies and localStorage
       cookieUtils.clearAll();
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('userPermissions');
+      }
     }
   },
 
@@ -331,6 +339,8 @@ export interface Task {
   dueDate: string;
   customerName: string;
   createdAt: string;
+  assignedToUserId?: number;
+  customerId?: number;
 }
 
 export interface TasksResponse {
@@ -662,6 +672,138 @@ export const tasksApi = {
       throw new Error('Network error. Please check your connection.');
     }
   },
+
+  async startTask(taskId: number): Promise<void> {
+    try {
+      await apiClient.post(`/Task/${taskId}/start`);
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const errorData = error.response.data as ApiErrorResponse;
+        throw new Error(errorData.message || errorData.error || 'Failed to start task');
+      }
+      throw new Error('Network error. Please check your connection.');
+    }
+  },
+
+  async completeTask(taskId: number, resultFiles?: File[]): Promise<void> {
+    try {
+      const formData = new FormData();
+      
+      if (resultFiles) {
+        resultFiles.forEach(file => {
+          formData.append('resultFiles', file);
+        });
+      }
+
+      await apiClient.post(`/Task/${taskId}/complete`, formData);
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const errorData = error.response.data as ApiErrorResponse;
+        throw new Error(errorData.message || errorData.error || 'Failed to complete task');
+      }
+      throw new Error('Network error. Please check your connection.');
+    }
+  },
+  async createTask(payload: {
+    AssignedToUserId: number;
+    CustomerId?: number; // Made optional to match C# DTO
+    TaskTitle: string;
+    Description: string;
+    Priority: string;
+    DueDate: string | Date; // Allow both string and Date
+    Notes: string;
+    requirementFiles: File[];
+  }): Promise<unknown> {
+    try {
+      // Validate required fields before creating FormData
+      if (!payload.TaskTitle?.trim()) {
+        throw new Error('Task title is required');
+      }
+      if (!payload.Description?.trim()) {
+        throw new Error('Description is required');
+      }
+      if (!payload.Priority?.trim()) {
+        throw new Error('Priority is required');
+      }
+      if (!payload.Notes?.trim()) {
+        throw new Error('Notes is required');
+      }
+      if (!payload.requirementFiles?.length) {
+        throw new Error('At least one requirement file is required');
+      }
+      if (!payload.AssignedToUserId) {
+        throw new Error('AssignedToUserId is required');
+      }
+      if (!payload.CustomerId) {
+        throw new Error('CustomerId is required');
+      }
+      if (!payload.DueDate) {
+        throw new Error('DueDate is required');
+      }
+
+      const formData = new FormData();
+
+      // Add all task data fields directly to FormData
+      formData.append('AssignedToUserId', payload.AssignedToUserId.toString());
+      formData.append('CustomerId', payload.CustomerId.toString());
+      formData.append('TaskTitle', payload.TaskTitle.trim());
+      formData.append('Description', payload.Description.trim());
+      formData.append('Priority', payload.Priority.trim());
+      formData.append('DueDate', new Date(payload.DueDate).toISOString());
+      formData.append('Notes', payload.Notes.trim());
+
+      // Add files
+      payload.requirementFiles.forEach(file => {
+        formData.append('requirementFiles', file);
+      });
+
+      // Set proper headers for multipart/form-data
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      };
+
+      // Debug log
+      console.log('API_BASE_URL:', API_BASE_URL);
+      console.log('FormData being sent:');
+      for (const pair of formData.entries()) {
+        console.log(pair[0], pair[1]);
+      }
+
+      const response = await apiClient.post('/Task/AddTask', formData, config);
+
+      return response.data;
+    } catch (error) {
+      console.error('Full error object:', error);
+      
+      if (axios.isAxiosError(error)) {
+        console.error('API Error Details:', {
+          status: error.response?.status,
+          statusText: error.response?.statusText,
+          data: error.response?.data,
+          config: {
+            url: error.config?.url,
+            method: error.config?.method,
+            headers: error.config?.headers
+          }
+        });
+
+        if (error.response?.data) {
+          const errorData = error.response.data as { errors?: Record<string, string[]>; message?: string; error?: string; };
+          if (errorData.errors && typeof errorData.errors === 'object') {
+            const messages = Object.values(errorData.errors)
+              .flat()
+              .join(' ');
+            throw new Error(messages || 'Failed to create task');
+          }
+          throw new Error(errorData.message || errorData.error || 'Failed to create task');
+        }
+      }
+      
+      throw new Error(`Network error (${API_BASE_URL}). Please check your connection and try again.`);
+    }
+  },
 };
 
 /**
@@ -979,4 +1121,4 @@ export const companyApi = {
       throw new Error('Network error. Please check your connection.');
     }
   },
-}; 
+};
