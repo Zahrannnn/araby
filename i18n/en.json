@@ -362,6 +362,8 @@
       "addTaskModal": {
         "title": "Add New Task",
         "subtitle": "Create a new task and assign it to an employee",
+        "editTitle": "Edit Task",
+        "editSubtitle": "Update task details and assignments",
         "sectionTitle": "Task Details",
         "fields": {
           "title": "Task Title",
@@ -372,8 +374,13 @@
           "employeePlaceholder": "Select employee",
           "customer": "Related Customer",
           "customerPlaceholder": "Select customer",
-          "priority": "Priority",
-          "priorityPlaceholder": "Medium / High",
+          "priorityPlaceholder": "Select priority",
+          "priorityy": "Select priority",
+          "priority": {
+            "low": "Low Priority",
+            "medium": "Medium Priority",
+            "high": "High Priority"
+          },
           "dueDate": "Due Date",
           "dueDatePlaceholder": "DD/MM/YYYY",
           "notes": "Notes",
@@ -382,8 +389,14 @@
           "fileUploadHint": "Click to upload or drag files here",
           "fileUploadTypes": "PNG, JPG, PDF up to 10MB"
         },
+        "priority": {
+            "low": "Low Priority",
+            "medium": "Medium Priority",
+            "high": "High Priority"
+          },
         "actions": {
           "save": "Save Task",
+          "update": "Update Task",
           "cancel": "Cancel"
         }
       },

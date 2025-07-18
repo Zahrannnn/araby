@@ -19,6 +19,26 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { tasksApi } from '@/lib/api';
 
+interface TopUser {
+  userName: string;
+  completedTaskCount: number;
+}
+
+interface TaskStats {
+  averageTimeToComplete: number;
+  completedTasks: number;
+  totalTasks: number;
+  topUsersByCompletedTasks: TopUser[];
+}
+
+interface TasksResponse {
+  pageIndex: number;
+  totalPages: number;
+  totalCount: number;
+  items: Task[];
+  stats: TaskStats;
+}
+
 interface TaskModalProps {
   open: boolean;
   onOpenChange: (v: boolean) => void;
@@ -216,7 +236,7 @@ function TaskModal({ open, onOpenChange, taskToEdit }: TaskModalProps) {
             </div>
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex-1">
-                <Label className="my-2" htmlFor="priority">{t('fields.priority')}</Label>
+                <Label className="my-2" htmlFor="priority">{t('fields.priorityPlaceholder')}</Label>
                 <select title='peririty' id="priority" className="w-full border rounded px-3 py-2" value={priority} onChange={e => setPriority(e.target.value)}>
                   <option value="">{t('fields.priorityPlaceholder')}</option>
                   <option value="Low">{t('priority.low')}</option>
@@ -281,9 +301,14 @@ export default function TasksPage() {
   const pageSize = 10;
   const [selectedTask, setSelectedTask] = useState<Task | undefined>();
   const [showTaskModal, setShowTaskModal] = useState(false);
+  const [showTopUsersModal, setShowTopUsersModal] = useState(false);
 
   // Fetch all tasks
-  const { data, isLoading, error } = useTasks();
+  const { data, isLoading, error } = useTasks() as { 
+    data: TasksResponse | undefined; 
+    isLoading: boolean; 
+    error: Error | null;
+  };
 
   // Filter and paginate tasks on the client side
   const filteredAndPaginatedTasks = useMemo(() => {
@@ -448,6 +473,48 @@ export default function TasksPage() {
           <CardDescription>{t('description')}</CardDescription>
         </CardHeader>
         <CardContent>
+          {/* Stats Section */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div className="bg-white p-4 rounded-lg border shadow-sm">
+              <h3 className="text-sm font-medium text-gray-500">{t('taskStats')}</h3>
+              <div className="mt-2">
+                <p className="text-2xl font-semibold text-gray-900">{data?.stats?.totalTasks || 0}</p>
+                <p className="text-sm text-gray-600">{t('tasks')}</p>
+              </div>
+            </div>
+            
+            <div className="bg-white p-4 rounded-lg border shadow-sm">
+              <h3 className="text-sm font-medium text-gray-500">{t('status.completed')}</h3>
+              <div className="mt-2">
+                <p className="text-2xl font-semibold text-green-600">{data?.stats?.completedTasks || 0}</p>
+                <p className="text-sm text-gray-600">{t('tasks')}</p>
+              </div>
+            </div>
+
+            <div className="bg-white p-4 rounded-lg border shadow-sm">
+              <h3 className="text-sm font-medium text-gray-500">{t('averageTimeToComplete')}</h3>
+              <div className="mt-2">
+                <p className="text-2xl font-semibold text-blue-600">
+                  {data?.stats?.averageTimeToComplete?.toFixed(2) || 0}
+                </p>
+                <p className="text-sm text-gray-600">{t('hours')}</p>
+              </div>
+            </div>
+
+            <div className="bg-white p-4 rounded-lg border shadow-sm">
+              <h3 className="text-sm font-medium text-gray-500">{t('topUsersByCompletedTasks')}</h3>
+              <div className="mt-2">
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => setShowTopUsersModal(true)}
+                >
+                  {t('viewTopEmployees')}
+                </Button>
+              </div>
+            </div>
+          </div>
+
           {/* Search and filters */}
           <div className="flex flex-col md:flex-row gap-4 mb-6">
             <div className="relative w-full md:w-1/3">
@@ -493,6 +560,19 @@ export default function TasksPage() {
                 </select>
               </div>
             </div>
+            {canManageTasks && (
+              <div className="w-full md:w-auto">
+                <Button 
+                  className="w-full md:w-auto bg-red-500 hover:bg-red-600 text-white px-20"
+                  onClick={() => {
+                    setSelectedTask(undefined);
+                    setShowTaskModal(true);
+                  }}
+                >
+                  {t('addTask')}
+                </Button>
+              </div>
+            )}
           </div>
 
           {/* Tasks table */}
@@ -604,6 +684,41 @@ export default function TasksPage() {
         onOpenChange={setShowTaskModal}
         taskToEdit={selectedTask}
       />
+
+      {/* Top Users Modal */}
+            <Dialog open={showTopUsersModal} onOpenChange={setShowTopUsersModal}>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>{t('topEmployeesModalTitle')}</DialogTitle>
+                  <DialogDescription>{t('topEmployeesModalDesc')}</DialogDescription>
+                </DialogHeader>
+                <div className="py-4">
+                  {data?.stats?.topUsersByCompletedTasks?.length ? (
+                    <div className="space-y-4">
+                      {data?.stats?.topUsersByCompletedTasks?.map((user: TopUser, index: number) => (
+                        <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                          <div className="flex items-center space-x-4">
+                            <div className="h-10 w-10 rounded-full bg-red-100 flex items-center justify-center">
+                              <span className="text-red-600 font-semibold">{index + 1}</span>
+                            </div>
+                            <div>
+                              <p className="font-medium text-gray-900">{user.userName}</p>
+                              <p className="text-sm text-gray-500">
+                                {user.completedTaskCount} {t('tasks')}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-4 text-gray-500">
+                      {t('noTopEmployees')}
+                    </div>
+                  )}
+                </div>
+              </DialogContent>
+            </Dialog>
     </div>
   );
 }

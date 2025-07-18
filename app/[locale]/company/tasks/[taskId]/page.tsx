@@ -210,8 +210,9 @@ export default function TaskDetailsPage() {
               <div className="space-y-2">
                 {[...task.requirementFiles, ...task.resultFiles].map((file) => (
                   <a
-                    key={file.fileUrl}
-                    href={file.fileUrl}
+                    key={`https://crmproject.runasp.net/${file.fileUrl}`}
+                    href={`https://crmproject.runasp.net/${file.fileUrl}`}
+                    download
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors group"
