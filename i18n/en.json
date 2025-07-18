@@ -888,6 +888,8 @@
   },
 
   "home": {
+    "title": "NEDX - Business Management Platform",
+    "subtitle": "Streamline your business operations with our comprehensive management platform",
     "hero": {
       "heading": "Streamline Your Business Operations",
       "subheading": "An all-in-one platform for managing clients, tasks, and team collaboration",
