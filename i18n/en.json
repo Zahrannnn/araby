@@ -503,6 +503,8 @@
         }
       },
       "viewModal": {
+        "showing": "Showing",
+        "of": "of",
         "title": "Customer Details: {customerName}",
         "subtitle": "Overview of customer data and activities",
         "edit": "Edit",
@@ -864,7 +866,7 @@
     "emailAddress": "Email address",
     "emailPlaceholder": "Enter your email",
     "password": "Password",
-    "passwordPlaceholder": "Enter your password",
+    "passwordPlaceholder": "••••••••••••",
     "rememberMe": "Remember me",
     "forgotPassword": "Forgot your password?",
     "signIn": "Sign in",
@@ -878,57 +880,54 @@
       "invalidCredentials": "Invalid email or password",
       "networkError": "Network error. Please check your connection.",
       "serverError": "Server error. Please try again later."
+    },
+    "loginPage": {
+      "title": "YOUR CRM. YOUR ADVANTAGE",
+      "copyright": "© 2025 CRM System. All rights reserved."
     }
   },
 
   "home": {
-    "title": "Araby - Business Management Platform",
-    "subtitle": "Streamline your business operations with our comprehensive management solution",
     "hero": {
-      "heading": "Manage Your Business with Confidence",
-      "subheading": "From client management to invoicing, handle all your business needs in one powerful platform",
+      "heading": "Streamline Your Business Operations",
+      "subheading": "An all-in-one platform for managing clients, tasks, and team collaboration",
       "getStarted": "Get Started",
       "learnMore": "Learn More"
     },
     "features": {
-      "title": "Everything You Need to Grow Your Business",
-      "subtitle": "Powerful features designed to streamline your workflow",
+      "title": "Powerful Features",
+      "subtitle": "Everything you need to manage your business efficiently",
       "clientManagement": {
         "title": "Client Management",
-        "description": "Keep track of your clients, their projects, and communication history in one place"
-      },
-      "invoicing": {
-        "title": "Smart Invoicing",
-        "description": "Create professional invoices and quotes with automated calculations and tax handling"
-      },
-      "taskTracking": {
-        "title": "Task Tracking",
-        "description": "Organize your work with priority-based task management and deadline tracking"
-      },
-      "reporting": {
-        "title": "Financial Reports",
-        "description": "Get insights into your business performance with detailed financial analytics"
+        "description": "Efficiently manage your client relationships and interactions"
       },
       "multiLanguage": {
         "title": "Multi-Language Support",
-        "description": "Work in Arabic, German, or English with full RTL/LTR support"
+        "description": "Work seamlessly across different languages and regions"
       },
       "teamWork": {
         "title": "Team Collaboration",
-        "description": "Manage employees, assign tasks, and track progress across your organization"
+        "description": "Enhance productivity with powerful team collaboration tools"
+      },
+      "taskTracking": {
+        "title": "Task Tracking",
+        "description": "Keep track of all your tasks and projects in one place"
+      },
+      "invoicing": {
+        "title": "Invoicing",
+        "description": "Create and manage professional invoices effortlessly"
+      },
+      "reporting": {
+        "title": "Reporting",
+        "description": "Generate comprehensive reports and analytics"
       }
     },
     "cta": {
       "title": "Ready to Transform Your Business?",
-      "subtitle": "Join thousands of businesses already using Araby to streamline their operations",
-      "startTrial": "Start Free Trial",
-      "contactSales": "Contact Sales"
+      "subtitle": "Join thousands of businesses already using our platform"
     },
     "footer": {
-      "copyright": "© 2024 Araby. All rights reserved.",
-      "privacy": "Privacy Policy",
-      "terms": "Terms of Service",
-      "support": "Support"
+      "copyright": "© 2024 NEDX. All rights reserved."
     }
   },
 
@@ -1068,4 +1067,5 @@
       }
     }
   }
+ 
 }

@@ -494,6 +494,8 @@
         }
       },
       "viewModal": {
+        "showing": "Zeige",
+        "of": "von",
         "title": "Kundendetails: {customerName}",
         "subtitle": "Übersicht über Kundendaten und -aktivitäten",
         "edit": "Bearbeiten",
@@ -854,7 +856,7 @@
     "emailAddress": "E-Mail-Adresse",
     "emailPlaceholder": "Geben Sie Ihre E-Mail-Adresse ein",
     "password": "Passwort",
-    "passwordPlaceholder": "Geben Sie Ihr Passwort ein",
+    "passwordPlaceholder": "••••••••••••",
     "rememberMe": "Angemeldet bleiben",
     "forgotPassword": "Passwort vergessen?",
     "signIn": "Anmelden",
@@ -868,56 +870,53 @@
       "invalidCredentials": "Ungültige E-Mail-Adresse oder Passwort",
       "networkError": "Netzwerkfehler. Bitte überprüfen Sie Ihre Verbindung.",
       "serverError": "Serverfehler. Bitte versuchen Sie es später erneut."
+    },
+    "loginPage": {
+      "title": "DEIN CRM. DEIN VORSPRUNG",
+      "copyright": "© 2025 CRM System. Alle Rechte vorbehalten."
     }
   },
   "home": {
-    "title": "Araby - Unternehmensverwaltungsplattform",
-    "subtitle": "Optimieren Sie Ihre Geschäftsabläufe mit unserer umfassenden Managementlösung",
     "hero": {
-      "heading": "Führen Sie Ihr Unternehmen mit Zuversicht",
-      "subheading": "Von der Kundenverwaltung bis zur Rechnungsstellung – erledigen Sie alle Ihre geschäftlichen Anforderungen auf einer leistungsstarken Plattform",
-      "getStarted": "Jetzt loslegen",
-      "learnMore": "Mehr erfahren"
+      "heading": "Optimieren Sie Ihre Geschäftsprozesse",
+      "subheading": "Eine All-in-One-Plattform für Kundenmanagement, Aufgabenverwaltung und Teamzusammenarbeit",
+      "getStarted": "Jetzt Starten",
+      "learnMore": "Mehr Erfahren"
     },
     "features": {
-      "title": "Alles, was Sie zum Wachstum Ihres Unternehmens benötigen",
-      "subtitle": "Leistungsstarke Funktionen zur Optimierung Ihres Arbeitsablaufs",
+      "title": "Leistungsstarke Funktionen",
+      "subtitle": "Alles, was Sie für die effiziente Verwaltung Ihres Unternehmens benötigen",
       "clientManagement": {
-        "title": "Kundenverwaltung",
-        "description": "Behalten Sie den Überblick über Ihre Kunden, deren Projekte und die Kommunikationshistorie an einem Ort"
-      },
-      "invoicing": {
-        "title": "Intelligente Rechnungsstellung",
-        "description": "Erstellen Sie professionelle Rechnungen und Angebote mit automatisierten Berechnungen und Steuerabwicklung"
-      },
-      "taskTracking": {
-        "title": "Aufgabenverfolgung",
-        "description": "Organisieren Sie Ihre Arbeit mit priorisierter Aufgabenverwaltung und Fristenverfolgung"
-      },
-      "reporting": {
-        "title": "Finanzberichte",
-        "description": "Erhalten Sie Einblicke in Ihre Geschäftsleistung mit detaillierten Finanzanalysen"
+        "title": "Kundenmanagement",
+        "description": "Verwalten Sie Ihre Kundenbeziehungen und Interaktionen effizient"
       },
       "multiLanguage": {
         "title": "Mehrsprachige Unterstützung",
-        "description": "Arbeiten Sie auf Arabisch, Deutsch oder Englisch mit voller RTL/LTR-Unterstützung"
+        "description": "Arbeiten Sie nahtlos über verschiedene Sprachen und Regionen hinweg"
       },
       "teamWork": {
-        "title": "Teamzusammenarbeit",
-        "description": "Mitarbeiter verwalten, Aufgaben zuweisen und den Fortschritt in Ihrer gesamten Organisation verfolgen"
+        "title": "Team-Zusammenarbeit",
+        "description": "Steigern Sie die Produktivität mit leistungsstarken Kollaborationstools"
+      },
+      "taskTracking": {
+        "title": "Aufgabenverfolgung",
+        "description": "Behalten Sie alle Ihre Aufgaben und Projekte an einem Ort im Überblick"
+      },
+      "invoicing": {
+        "title": "Rechnungsstellung",
+        "description": "Erstellen und verwalten Sie professionelle Rechnungen mühelos"
+      },
+      "reporting": {
+        "title": "Berichterstattung",
+        "description": "Generieren Sie umfassende Berichte und Analysen"
       }
     },
     "cta": {
       "title": "Bereit, Ihr Unternehmen zu transformieren?",
-      "subtitle": "Schließen Sie sich Tausenden von Unternehmen an, die Araby bereits zur Optimierung ihrer Abläufe nutzen",
-      "startTrial": "Kostenlose Testversion starten",
-      "contactSales": "Vertrieb kontaktieren"
+      "subtitle": "Schließen Sie sich Tausenden von Unternehmen an, die bereits unsere Plattform nutzen"
     },
     "footer": {
-      "copyright": "© 2024 Araby. Alle Rechte vorbehalten.",
-      "privacy": "Datenschutzrichtlinie",
-      "terms": "Nutzungsbedingungen",
-      "support": "Support"
+      "copyright": "© 2024 NEDX. Alle Rechte vorbehalten."
     }
   },
   "ui": {

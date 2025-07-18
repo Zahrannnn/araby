@@ -611,9 +611,15 @@ export const customerApi = {
     }
   },
 
-  async getCustomerTasks(customerId: number): Promise<TasksResponse> {
+  async getCustomerTasks(customerId: number, pageIndex: number = 1, pageSize: number = 3): Promise<TasksResponse> {
     try {
-      const response = await apiClient.get<TasksResponse>(`${API_ENDPOINTS.CUSTOMERS}/${customerId}/tasks`);
+      const searchParams = new URLSearchParams();
+      searchParams.append('pageIndex', pageIndex.toString());
+      searchParams.append('pageSize', pageSize.toString());
+
+      const response = await apiClient.get<TasksResponse>(
+        `${API_ENDPOINTS.CUSTOMERS}/${customerId}/tasks?${searchParams.toString()}`
+      );
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.data) {
@@ -624,9 +630,15 @@ export const customerApi = {
     }
   },
 
-  async getCustomerOffers(customerId: number): Promise<OffersResponse> {
+  async getCustomerOffers(customerId: number, pageIndex: number = 1, pageSize: number = 10): Promise<OffersResponse> {
     try {
-      const response = await apiClient.get<OffersResponse>(`${API_ENDPOINTS.CUSTOMERS}/${customerId}/offers`);
+      const searchParams = new URLSearchParams();
+      searchParams.append('pageIndex', pageIndex.toString());
+      searchParams.append('pageSize', pageSize.toString());
+
+      const response = await apiClient.get<OffersResponse>(
+        `${API_ENDPOINTS.CUSTOMERS}/${customerId}/offers?${searchParams.toString()}`
+      );
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.data) {
@@ -844,8 +856,10 @@ export const queryKeys = {
   client: (id: string) => ['clients', 'detail', id] as const,
   customers: (params?: CustomerQueryParams) => ['customers', params] as const,
   customer: (id: number) => ['customers', 'detail', id] as const,
-  customerTasks: (id: number) => ['customers', 'tasks', id] as const,
-  customerOffers: (id: number) => ['customers', 'offers', id] as const,
+  customerTasks: (id: number, params?: { pageIndex: number; pageSize: number }) => 
+    ['customers', 'tasks', id, params] as const,
+  customerOffers: (id: number, params?: { pageIndex: number; pageSize: number }) => 
+    ['customers', 'offers', id, params] as const,
   employees: (companyId: string) => ['employees', companyId] as const,
   employeeDetails: (id: number) => ['employees', 'details', id] as const,
   employeeTasks: (id: number) => ['employees', 'tasks', id] as const,

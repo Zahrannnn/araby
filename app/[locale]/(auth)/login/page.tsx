@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,26 +14,29 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { authApi } from "@/lib/api";
 
-// Login form validation schema
-const loginSchema = z.object({
+// Login form validation schema with translations
+const createLoginSchema = (t: (key: string) => string) => z.object({
   email: z
     .string()
-    .min(1, "Email is required")
-    .email("Please enter a valid email address"),
+    .min(1, t("auth.errors.emailRequired"))
+    .email(t("auth.errors.emailInvalid")),
   password: z
     .string()
-    .min(1, "Password is required")
-    .min(6, "Password must be at least 6 characters"),
+    .min(1, t("auth.errors.passwordRequired"))
+    .min(6, t("auth.errors.passwordMinLength")),
   rememberMe: z.boolean().optional(),
 });
 
-type LoginFormData = z.infer<typeof loginSchema>;
+type LoginFormData = z.infer<ReturnType<typeof createLoginSchema>>;
 
 const LoginPage = () => {
+  const t = useTranslations();
   const [showPassword, setShowPassword] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string>("");
   const router = useRouter();
+
+  const loginSchema = createLoginSchema(t);
 
   const {
     register,
@@ -56,23 +60,13 @@ const LoginPage = () => {
     setError("");
 
     try {
-      // Call the login API
       const response = await authApi.login(
         { email: data.email, password: data.password },
         data.rememberMe || false
       );
 
-      // The authApi.login already stores the token and user data in cookies
-      console.log("Login successful:", {
-        user: response.user,
-        role: response.role,
-        expireAt: response.expireAt,
-      });
-
-      // Redirect to dashboard based on user role
       let redirectPath = "/dashboard";
 
-      // You can customize redirect based on role if needed
       switch (response.role) {
         case "SuperAdmin":
           redirectPath = "/super-admin";
@@ -91,7 +85,7 @@ const LoginPage = () => {
     } catch (error) {
       console.error("Login error:", error);
       const errorMessage =
-        error instanceof Error ? error.message : "An unexpected error occurred";
+        error instanceof Error ? error.message : t("auth.errors.serverError");
       setError(errorMessage);
     } finally {
       setIsLoading(false);
@@ -118,7 +112,7 @@ const LoginPage = () => {
         <div className="rounded-lg">
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-gray-900 mb-2">
-              DEIN CRM. DEIN VORSPRUNG
+              {t("auth.loginPage.title")}
             </h1>
           </div>
 
@@ -133,14 +127,14 @@ const LoginPage = () => {
             {/* Email Field */}
             <div>
               <Label htmlFor="email" className="text-gray-700 mb-2 block">
-                Email
+                {t("auth.emailAddress")}
               </Label>
               <Input
                 id="email"
                 {...register("email")}
                 type="email"
                 autoComplete="email"
-                placeholder="user@example.com"
+                placeholder={t("auth.emailPlaceholder")}
                 className={`h-12 text-base ${
                   errors.email ? "border-red-500" : ""
                 }`}
@@ -156,7 +150,7 @@ const LoginPage = () => {
             {/* Password Field */}
             <div>
               <Label htmlFor="password" className="text-gray-700 mb-2 block">
-                Password
+                {t("auth.password")}
               </Label>
               <div className="relative">
                 <Input
@@ -164,7 +158,7 @@ const LoginPage = () => {
                   {...register("password")}
                   type={showPassword ? "text" : "password"}
                   autoComplete="current-password"
-                  placeholder="••••••••••••"
+                  placeholder={t("auth.passwordPlaceholder")}
                   className={`h-12 text-base pr-12 ${
                     errors.password ? "border-red-500" : ""
                   }`}
@@ -200,7 +194,7 @@ const LoginPage = () => {
                 disabled={isLoading}
               />
               <Label htmlFor="remember-me" className="text-sm text-gray-700">
-                Remember me
+                {t("auth.rememberMe")}
               </Label>
             </div>
 
@@ -211,7 +205,7 @@ const LoginPage = () => {
                 className="w-full h-12 bg-red-500 hover:bg-red-600 text-white font-medium text-base shadow-sm transition-colors"
                 disabled={isLoading}
               >
-                {isLoading ? "Signing in..." : "Login"}
+                {isLoading ? t("auth.signingIn") : t("auth.signIn")}
               </Button>
             </div>
           </form>
@@ -220,7 +214,7 @@ const LoginPage = () => {
         {/* Footer */}
         <div className="mt-8 text-center">
           <p className="text-xs text-gray-500">
-            © 2025 CRM System. All rights reserved. | Alle Rechte vorbehalten.
+            {t("auth.loginPage.copyright")}
           </p>
         </div>
       </div>

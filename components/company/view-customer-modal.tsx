@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { Button } from "@/components/ui/button"
+import { Pagination } from "@/components/ui/pagination";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { ChevronLeftIcon, PencilIcon, TrashIcon, EyeIcon } from '@heroicons/react/24/outline'
 import { useCustomer, useCustomerTasks, useCustomerOffers } from '@/hooks/useCustomers'
@@ -44,6 +45,10 @@ export function ViewCustomerModal({
   const [isOfferModalOpen, setIsOfferModalOpen] = useState(false);
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
+  const [offersPage, setOffersPage] = useState(1);
+  const [tasksPage, setTasksPage] = useState(1);
+  const offersPageSize = 3;
+  const tasksPageSize = 3;
   
   
   // Fetch detailed customer data from API if needed
@@ -54,14 +59,14 @@ export function ViewCustomerModal({
     data: tasksData, 
     isLoading: isTasksLoading, 
     error: tasksError 
-  } = useCustomerTasks(customer?.customerId || null);
+  } = useCustomerTasks(customer?.customerId || null, tasksPage, tasksPageSize);
 
   // Fetch customer offers
   const { 
     data: offersData, 
     isLoading: isOffersLoading, 
     error: offersError 
-  } = useCustomerOffers(customer?.customerId || null);
+  } = useCustomerOffers(customer?.customerId || null, offersPage, offersPageSize);
 
   // Use API data if available, otherwise fall back to basic customer data
   const displayData = React.useMemo(() => {
@@ -255,7 +260,7 @@ export function ViewCustomerModal({
     };
 
     return (
-      <div className="bg-white rounded-lg border overflow-hidden">
+      <div className="bg-white rounded-lg border">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gray-50 border-b">
@@ -294,6 +299,21 @@ export function ViewCustomerModal({
             </tbody>
           </table>
         </div>
+        
+        {/* Add pagination */}
+        {offersData && offersData.totalPages > 1 && (
+          <div className="flex items-center justify-between px-6 py-4 border-t">
+            <div className="text-sm text-gray-500">
+              {t('showing')} {((offersPage - 1) * offersPageSize) + 1}-
+              {Math.min(offersPage * offersPageSize, offersData.totalCount)} {t('of')} {offersData.totalCount}
+            </div>
+            <Pagination
+              currentPage={offersPage}
+              totalPages={offersData.totalPages}
+              onPageChange={setOffersPage}
+            />
+          </div>
+        )}
       </div>
     );
   };
@@ -327,19 +347,7 @@ export function ViewCustomerModal({
       );
     }
 
-    // Use correct type for customer tasks
     const tasks = (tasksData?.items ?? []) as unknown as CustomerTaskListItem[];
-
-    // Debug: Log the tasks data structure
-    console.log('=== TASKS DATA DEBUG ===');
-    console.log('tasksData:', tasksData);
-    console.log('tasks array:', tasks);
-    console.log('tasks length:', tasks.length);
-    if (tasks.length > 0) {
-      console.log('First task sample:', tasks[0]);
-      console.log('First task keys:', Object.keys(tasks[0]));
-    }
-    console.log('=== TASKS DATA DEBUG END ===');
 
     if (tasks.length === 0) {
       return (
@@ -457,6 +465,21 @@ export function ViewCustomerModal({
             </tbody>
           </table>
         </div>
+
+        {/* Add pagination */}
+        {tasksData && tasksData.totalPages > 1 && (
+          <div className="flex items-center justify-between px-6 py-4 border-t">
+            <div className="text-sm text-gray-500">
+              {t('showing')} {((tasksPage - 1) * tasksPageSize) + 1}-
+              {Math.min(tasksPage * tasksPageSize, tasksData.totalCount)} {t('of')} {tasksData.totalCount}
+            </div>
+            <Pagination
+              currentPage={tasksPage}
+              totalPages={tasksData.totalPages}
+              onPageChange={setTasksPage}
+            />
+          </div>
+        )}
       </div>
     );
   };

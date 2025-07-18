@@ -53,12 +53,12 @@ export function useCustomer(customerId: number | null) {
 }
 
 /**
- * Custom hook for fetching customer tasks
+ * Custom hook for fetching customer tasks with pagination
  */
-export function useCustomerTasks(customerId: number | null) {
+export function useCustomerTasks(customerId: number | null, pageIndex: number = 1, pageSize: number = 3) {
   return useQuery({
-    queryKey: queryKeys.customerTasks(customerId || 0),
-    queryFn: () => customerApi.getCustomerTasks(customerId!),
+    queryKey: queryKeys.customerTasks(customerId || 0, { pageIndex, pageSize }),
+    queryFn: () => customerApi.getCustomerTasks(customerId!, pageIndex, pageSize),
     enabled: !!customerId, // Only run query if customerId is provided
     staleTime: 2 * 60 * 1000, // 2 minutes - shorter for tasks data
     gcTime: 5 * 60 * 1000, // 5 minutes
@@ -76,12 +76,12 @@ export function useCustomerTasks(customerId: number | null) {
 }
 
 /**
- * Custom hook for fetching customer offers
+ * Custom hook for fetching customer offers with pagination
  */
-export function useCustomerOffers(customerId: number | null) {
+export function useCustomerOffers(customerId: number | null, pageIndex: number = 1, pageSize: number = 10) {
   return useQuery({
-    queryKey: queryKeys.customerOffers(customerId || 0),
-    queryFn: () => customerApi.getCustomerOffers(customerId!),
+    queryKey: queryKeys.customerOffers(customerId || 0, { pageIndex, pageSize }),
+    queryFn: () => customerApi.getCustomerOffers(customerId!, pageIndex, pageSize),
     enabled: !!customerId, // Only run query if customerId is provided
     staleTime: 2 * 60 * 1000, // 2 minutes - shorter for offers data
     gcTime: 5 * 60 * 1000, // 5 minutes
