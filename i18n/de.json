@@ -1047,5 +1047,19 @@
         "completed": "Abgeschlossen"
       }
     }
+  },
+  "Expense Categories": {
+    "Fuel": "Kraftstoff",
+    "Salaries / Wages": "Gehälter / Löhne",
+    "Rent": "Miete",
+    "Utility Bills": "Nebenkosten",
+    "Vehicle Maintenance": "Fahrzeugwartung",
+    "Supplies (Cleaning / Packing)": "Verbrauchsmaterial (Reinigung / Verpackung)",
+    "Marketing & Advertising": "Marketing & Werbung",
+    "Office Supplies": "Bürobedarf",
+    "Software / Subscriptions": "Software / Abonnements",
+    "Travel / Transportation": "Reise / Transport",
+    "Other / Miscellaneous": "Sonstiges / Verschiedenes",
+    "Select Category": "Kategorie auswählen"
   }
 }

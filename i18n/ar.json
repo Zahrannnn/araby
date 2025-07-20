@@ -848,5 +848,20 @@
         "completed": "مكتمل"
       }
     }
+  },
+
+  "Expense Categories": {
+    "Fuel": "وقود",
+    "Salaries / Wages": "رواتب / أجور",
+    "Rent": "إيجار",
+    "Utility Bills": "فواتير المرافق",
+    "Vehicle Maintenance": "صيانة المركبات",
+    "Supplies (Cleaning / Packing)": "مستلزمات (تنظيف / تعبئة)",
+    "Marketing & Advertising": "تسويق وإعلان",
+    "Office Supplies": "مستلزمات مكتبية",
+    "Software / Subscriptions": "برمجيات / اشتراكات",
+    "Travel / Transportation": "سفر / نقل",
+    "Other / Miscellaneous": "أخرى / متنوعة",
+    "Select Category": "اختر الفئة"
   }
 }

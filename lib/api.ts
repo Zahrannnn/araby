@@ -308,6 +308,7 @@ export interface Customer {
   phoneNumber: string;
   address: string;
   city: string;
+  fullAddress: string;
   zipCode: string;
   country: string;
   createdAt: string;
@@ -376,6 +377,7 @@ export interface TaskDetails {
   isItForAssignedEmployee: boolean;
   requirementFiles: TaskFile[];
   resultFiles: TaskFile[];
+  customerName: string;
 }
 
 /**

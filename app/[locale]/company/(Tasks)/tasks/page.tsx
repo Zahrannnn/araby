@@ -193,7 +193,7 @@ function TaskModal({ open, onOpenChange, taskToEdit }: TaskModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-2xl w-full sm:max-w-lg md:max-w-2xl px-2 sm:px-6">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">
             {taskToEdit ? t('editTitle') : t('title')}
@@ -214,19 +214,31 @@ function TaskModal({ open, onOpenChange, taskToEdit }: TaskModalProps) {
               <Label className="my-2" htmlFor="task-desc">{t('fields.description')}</Label>
               <Textarea id="task-desc" placeholder={t('fields.descriptionPlaceholder')} value={description} onChange={e => setDescription(e.target.value)} />
             </div>
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="flex-1">
+            <div className="flex flex-col gap-4 md:flex-row">
+              <div className="flex-1 min-w-0">
                 <Label className="my-2" htmlFor="employee">{t('fields.employee')}</Label>
-                <select id="employee" title={t('fields.employeePlaceholder')} className="w-full border rounded px-3 py-2" value={employeeId} onChange={e => setEmployeeId(e.target.value)}>
+                <select
+                  id="employee"
+                  title={t('fields.employeePlaceholder')}
+                  className="w-full border rounded px-3 py-2"
+                  value={employeeId}
+                  onChange={e => setEmployeeId(e.target.value)}
+                >
                   <option value="">{t('fields.employeePlaceholder')}</option>
                   {employees?.employees?.map(emp => (
                     <option key={emp.id} value={emp.id}>{emp.fullName}</option>
                   ))}
                 </select>
               </div>
-              <div className="flex-1">
+              <div className="flex-1 min-w-0">
                 <Label className="my-2" htmlFor="customer">{t('fields.customer')}</Label>
-                <select id="customer" title={t('fields.customerPlaceholder')} className="w-full border rounded px-3 py-2" value={customerId} onChange={e => setCustomerId(e.target.value)}>
+                <select
+                  id="customer"
+                  title={t('fields.customerPlaceholder')}
+                  className="w-full border rounded px-3 py-2"
+                  value={customerId}
+                  onChange={e => setCustomerId(e.target.value)}
+                >
                   <option value="">{t('fields.customerPlaceholder')}</option>
                   {customers?.customers?.map(cust => (
                     <option key={cust.customerId} value={cust.customerId}>{cust.fullName}</option>
@@ -234,19 +246,31 @@ function TaskModal({ open, onOpenChange, taskToEdit }: TaskModalProps) {
                 </select>
               </div>
             </div>
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="flex-1">
+            <div className="flex flex-col gap-4 md:flex-row">
+              <div className="flex-1 min-w-0">
                 <Label className="my-2" htmlFor="priority">{t('fields.priorityPlaceholder')}</Label>
-                <select title='peririty' id="priority" className="w-full border rounded px-3 py-2" value={priority} onChange={e => setPriority(e.target.value)}>
+                <select
+                  title="peririty"
+                  id="priority"
+                  className="w-full border rounded px-3 py-2"
+                  value={priority}
+                  onChange={e => setPriority(e.target.value)}
+                >
                   <option value="">{t('fields.priorityPlaceholder')}</option>
                   <option value="Low">{t('priority.low')}</option>
                   <option value="Medium">{t('priority.medium')}</option>
                   <option value="High">{t('priority.high')}</option>
                 </select>
               </div>
-              <div className="flex-1">
+              <div className="flex-1 min-w-0">
                 <Label className="my-2" htmlFor="due-date">{t('fields.dueDate')}</Label>
-                <Input id="due-date" type="datetime-local" placeholder={t('fields.dueDatePlaceholder')} value={dueDate} onChange={e => setDueDate(e.target.value)} />
+                <Input
+                  id="due-date"
+                  type="datetime-local"
+                  placeholder={t('fields.dueDatePlaceholder')}
+                  value={dueDate}
+                  onChange={e => setDueDate(e.target.value)}
+                />
               </div>
             </div>
             <div>
@@ -271,17 +295,27 @@ function TaskModal({ open, onOpenChange, taskToEdit }: TaskModalProps) {
                   </div>
                 </label>
                 {files.length > 0 && (
-                  <div className="mt-2 text-sm text-gray-700">
+                  <div className="mt-2 text-sm text-gray-700 break-words">
                     {files.map(file => <div key={file.name}>{file.name}</div>)}
                   </div>
                 )}
               </div>
             </div>
-            <div className="flex gap-2 mt-6">
-              <Button type="submit" className="bg-red-500 hover:bg-red-600" disabled={isSubmitting}>
+            <div className="flex flex-col sm:flex-row gap-2 mt-6">
+              <Button
+                type="submit"
+                className="bg-red-500 hover:bg-red-600 w-full sm:w-auto"
+                disabled={isSubmitting}
+              >
                 {isSubmitting ? 'Saving...' : taskToEdit ? t('actions.update') : t('actions.save')}
               </Button>
-              <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isSubmitting}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => onOpenChange(false)}
+                disabled={isSubmitting}
+                className="w-full sm:w-auto"
+              >
                 {t('actions.cancel')}
               </Button>
             </div>

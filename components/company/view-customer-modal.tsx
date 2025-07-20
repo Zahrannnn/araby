@@ -77,7 +77,7 @@ export function ViewCustomerModal({
       fullName: baseCustomer.fullName || 'N/A',
       email: baseCustomer.email || 'N/A',
       phoneNumber: baseCustomer.phoneNumber || 'N/A',
-      city: baseCustomer.city || 'N/A',
+      city: baseCustomer.fullAddress || 'N/A',
       address: baseCustomer.address || 'N/A',
       zipCode: baseCustomer.zipCode || 'N/A',
       country: baseCustomer.country || 'N/A',
@@ -86,7 +86,8 @@ export function ViewCustomerModal({
       // Use real API data for metrics
       offerCount: baseCustomer.offerCount || 0,
       taskCount: baseCustomer.taskCount || 0,
-      totalProfit: baseCustomer.totalProfit || 0
+      totalProfit: baseCustomer.totalProfit || 0,
+      customerNotes: baseCustomer.notes || 'No notes available'
     };
   }, [customerDetails, customer]);
 
@@ -545,7 +546,11 @@ export function ViewCustomerModal({
                     </div>
                     <div>
                       <p className="text-sm font-medium text-gray-700 mb-1">{t('city')}</p>
-                      <p className="text-gray-900">{displayData.city}</p>
+                      <p className="text-gray-900">
+                        {displayData.city.split(' : ').map((part, index, array) => (
+                          index === array.length - 1 ? part : part + ' • '
+                        ))}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -566,6 +571,10 @@ export function ViewCustomerModal({
                 <div>
                   <p className="text-sm font-medium text-gray-700 mb-1">{t('phoneNumber')}</p>
                   <p className="text-gray-900">{displayData.phoneNumber}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-700 mb-1">Notes</p>
+                  <p className="text-gray-900">{displayData.customerNotes}</p>
                 </div>
               </div>
             </div>

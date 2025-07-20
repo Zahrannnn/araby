@@ -6,6 +6,27 @@ import { Button } from "@/components/ui/button"
 import { useState, useEffect } from "react"
 import { useTranslations } from "next-intl"
 import { expensesApi, AddExpensePayload, UpdateExpensePayload, queryClient } from "@/lib/api"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
+const EXPENSE_CATEGORIES = [
+  "Fuel",
+  "Salaries / Wages",
+  "Rent",
+  "Utility Bills",
+  "Vehicle Maintenance",
+  "Supplies (Cleaning / Packing)",
+  "Marketing & Advertising",
+  "Office Supplies",
+  "Software / Subscriptions",
+  "Travel / Transportation",
+  "Other / Miscellaneous",
+] as const
 
 interface ExpenseModalProps {
   open: boolean
@@ -105,12 +126,22 @@ export function ExpenseModal({ open, onOpenChange, isEdit, initialData }: Expens
             onChange={e => setExpenseDate(e.target.value)}
             required
           />
-          <Input
-            placeholder={t("Category")}
+          <Select
             value={category}
-            onChange={e => setCategory(e.target.value)}
+            onValueChange={setCategory}
             required
-          />
+          >
+            <SelectTrigger>
+              <SelectValue placeholder={t("Expense Categories.Select Category")} />
+            </SelectTrigger>
+            <SelectContent>
+              {EXPENSE_CATEGORIES.map((cat) => (
+                <SelectItem key={cat} value={cat}>
+                  {t(`Expense Categories.${cat}`)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           {error && <div className="text-destructive text-sm">{error}</div>}
           <DialogFooter>
             <Button type="submit" variant="destructive" className="bg-[#f22e3e] text-white" disabled={loading}>

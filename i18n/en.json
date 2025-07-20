@@ -1068,6 +1068,21 @@
         "completed": "Completed"
       }
     }
+  },
+
+  "Expense Categories": {
+    "Fuel": "Fuel",
+    "Salaries / Wages": "Salaries / Wages",
+    "Rent": "Rent",
+    "Utility Bills": "Utility Bills",
+    "Vehicle Maintenance": "Vehicle Maintenance",
+    "Supplies (Cleaning / Packing)": "Supplies (Cleaning / Packing)",
+    "Marketing & Advertising": "Marketing & Advertising",
+    "Office Supplies": "Office Supplies",
+    "Software / Subscriptions": "Software / Subscriptions",
+    "Travel / Transportation": "Travel / Transportation",
+    "Other / Miscellaneous": "Other / Miscellaneous",
+    "Select Category": "Select Category"
   }
  
 }

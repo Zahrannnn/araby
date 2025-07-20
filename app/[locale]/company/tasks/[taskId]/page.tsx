@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import { format } from 'date-fns';
 import { ArrowLeftIcon, ClockIcon, CheckIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { tasksApi } from '@/lib/api';
+import { tasksApi, type TaskDetails } from '@/lib/api';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
@@ -22,10 +22,15 @@ export default function TaskDetailsPage() {
   const [elapsedTime, setElapsedTime] = useState('00:00:00');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { data: task } = useQuery({
+  const { data: task } = useQuery<TaskDetails>({
     queryKey: ['task', taskId],
     queryFn: () => tasksApi.getTaskDetails(taskId),
   });
+
+  // Add console log after the query
+  console.log('Task data:', task);
+  console.log('Requirement files:', task?.requirementFiles);
+  console.log('Result files:', task?.resultFiles);
 
   const startTaskMutation = useMutation({
     mutationFn: () => tasksApi.startTask(taskId),
@@ -173,13 +178,10 @@ export default function TaskDetailsPage() {
               <h3 className="text-sm text-gray-500 mb-1">{t('viewModal.assignedTo')}</h3>
               <p className="text-gray-900">{task.assignedToName}</p>
             </div>
-            <div>
-              <h3 className="text-sm text-gray-500 mb-1">{t('viewModal.createdBy')}</h3>
-              <p className="text-gray-900">Generaldirektor</p>
-            </div>
+           
             <div>
               <h3 className="text-sm text-gray-500 mb-1">{t('viewModal.customer')}</h3>
-              <p className="text-gray-900">Advanced Technology Company</p>
+              <p className="text-gray-900">{task.customerName}</p>
             </div>
             <div>
               <h3 className="text-sm text-gray-500 mb-1">{t('viewModal.createdAt')}</h3>
@@ -204,34 +206,78 @@ export default function TaskDetailsPage() {
           </div>
 
           {/* Files section */}
-          {(task.requirementFiles.length > 0 || task.resultFiles.length > 0) && (
-            <div>
+          {/* Requirement Files */}
+          {task.requirementFiles.filter(file => file.fileType === 'Requirement').length > 0 && (
+            <div className="mb-6">
               <h2 className="text-sm text-gray-500 mb-4">{t('viewModal.requirementFiles')}</h2>
               <div className="space-y-2">
-                {[...task.requirementFiles, ...task.resultFiles].map((file) => (
-                  <a
-                    key={`https://crmproject.runasp.net/${file.fileUrl}`}
-                    href={`https://crmproject.runasp.net/${file.fileUrl}`}
-                    download
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors group"
-                  >
-                    <div className="flex items-center bg-white rounded px-2 py-1 mr-3">
-                      <span className="text-xs font-medium text-gray-600 uppercase">PDF</span>
-                    </div>
-                    <span className="flex-1 text-sm text-gray-900">{file.fileName}</span>
-                    <svg 
-                      className="h-5 w-5 text-gray-400 group-hover:text-gray-600 transition-colors" 
-                      fill="none" 
-                      viewBox="0 0 24 24" 
-                      stroke="currentColor"
+                {task.requirementFiles
+                  .filter(file => file.fileType === 'Requirement')
+                  .map((file) => (
+                    <a
+                      key={`https://crmproject.runasp.net/${file.fileUrl}`}
+                      href={`https://crmproject.runasp.net/${file.fileUrl}`}
+                      download
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors group"
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                    </svg>
-                  </a>
-                ))}
+                      <div className="flex items-center bg-white rounded px-2 py-1 mr-3">
+                        <span className="text-xs font-medium text-gray-600 uppercase">PDF</span>
+                      </div>
+                      <span className="flex-1 text-sm text-gray-900">{file.fileName}</span>
+                      <svg 
+                        className="h-5 w-5 text-gray-400 group-hover:text-gray-600 transition-colors" 
+                        fill="none" 
+                        viewBox="0 0 24 24" 
+                        stroke="currentColor"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                      </svg>
+                    </a>
+                  ))}
               </div>
+            </div>
+          )}
+
+          {/* Result Files */}
+          {task.resultFiles.filter(file => file.fileType === 'Result').length > 0 && (
+            <div>
+              <h2 className="text-sm text-gray-500 mb-4">{t('viewModal.resultFiles')}</h2>
+              <div className="space-y-2">
+                {task.resultFiles
+                  .filter(file => file.fileType === 'Result')
+                  .map((file) => (
+                    <a
+                      key={`https://crmproject.runasp.net/${file.fileUrl}`}
+                      href={`https://crmproject.runasp.net/${file.fileUrl}`}
+                      download
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors group"
+                    >
+                      <div className="flex items-center bg-white rounded px-2 py-1 mr-3">
+                        <span className="text-xs font-medium text-gray-600 uppercase">PDF</span>
+                      </div>
+                      <span className="flex-1 text-sm text-gray-900">{file.fileName}</span>
+                      <svg 
+                        className="h-5 w-5 text-gray-400 group-hover:text-gray-600 transition-colors" 
+                        fill="none" 
+                        viewBox="0 0 24 24" 
+                        stroke="currentColor"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                      </svg>
+                    </a>
+                  ))}
+              </div>
+            </div>
+          )}
+
+          {/* No files message */}
+          {task.requirementFiles.length === 0 && task.resultFiles.length === 0 && (
+            <div className="text-gray-500 text-sm">
+              {t('viewModal.noFiles', { defaultValue: 'No files available' })}
             </div>
           )}
         </div>
