@@ -45,6 +45,9 @@ export const API_ENDPOINTS = {
   
   // Super Admin endpoints
   SUPER_ADMIN_NOTIFICATIONS: '/SuperAdmin/notifications',
+
+  // Google Calendar
+  GOOGLE_CALENDAR_CONNECT: '/GoogleCalendar/connect',
 } as const;
 
 /**
@@ -1133,6 +1136,24 @@ export const companyApi = {
       if (axios.isAxiosError(error) && error.response?.data) {
         const errorData = error.response.data as ApiErrorResponse;
         throw new Error(errorData.message || errorData.error || 'Failed to save Stripe keys');
+      }
+      throw new Error('Network error. Please check your connection.');
+    }
+  },
+};
+
+/**
+ * Google Calendar API calls
+ */
+export const googleCalendarApi = {
+  async getConnectUrl(): Promise<{ redirectUrl: string }> {
+    try {
+      const response = await apiClient.get<{ redirectUrl: string }>(API_ENDPOINTS.GOOGLE_CALENDAR_CONNECT);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const errorData = error.response.data as ApiErrorResponse;
+        throw new Error(errorData.message || errorData.error || 'Failed to get Google Calendar connect URL');
       }
       throw new Error('Network error. Please check your connection.');
     }

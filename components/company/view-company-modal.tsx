@@ -1,9 +1,9 @@
 "use client"
 import React, { useState, useRef } from 'react'
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query'
-import { companyApi } from '@/lib/api'
+import { companyApi, googleCalendarApi } from '@/lib/api'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription,  } from '@/components/ui/card'
-import { Building2, User2, BarChart2, Eye, EyeOff, Copy, Info, CheckCircle, AlertCircle, CreditCard, Calendar, Mail, Phone, MapPin, Hash, FileText, Clock, Shield, Key, Save,  } from 'lucide-react'
+import { Building2, User2, BarChart2, Eye, EyeOff, Copy, Info, CheckCircle, AlertCircle, CreditCard, Calendar, Mail, Phone, MapPin, Hash, FileText, Clock, Shield, Key, Save, Calendar as CalendarIcon } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 
@@ -52,6 +52,17 @@ const ViewCompanyPage: React.FC = () => {
     },
   })
 
+  const { mutate: connectGoogleCalendar, isPending: isConnecting } = useMutation({
+    mutationFn: googleCalendarApi.getConnectUrl,
+    onSuccess: (data) => {
+      window.location.href = data.redirectUrl
+    },
+    onError: (err: Error) => {
+      setFormError(err.message || 'Failed to connect to Google Calendar')
+      setFormSuccess(null)
+    },
+  })
+
   function handleStripeSubmit(e: React.FormEvent) {
     e.preventDefault()
     setFormError(null)
@@ -85,6 +96,23 @@ const ViewCompanyPage: React.FC = () => {
                   <CardDescription>Manage your company information and API keys</CardDescription>
                 </div>
               </div>
+              <Button
+                onClick={() => connectGoogleCalendar()}
+                disabled={isConnecting}
+                className="bg-white hover:bg-white/90 text-black border border-gray-200 shadow-sm flex items-center gap-2"
+              >
+                {isConnecting ? (
+                  <>
+                    <span className="animate-spin w-4 h-4 border-2 border-black/30 border-t-black rounded-full"></span>
+                    <span>Connecting...</span>
+                  </>
+                ) : (
+                  <>
+                    <CalendarIcon className="w-4 h-4" />
+                    <span>Connect Google Calendar</span>
+                  </>
+                )}
+              </Button>
             </div>
           </CardHeader>
           <CardContent className="pt-6">

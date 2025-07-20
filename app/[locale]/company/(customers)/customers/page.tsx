@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { PlusIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { useCustomers } from '@/hooks/useCustomers'
-import { useDebounce } from '@/hooks/useDebounce'
+import { useDebounce } from '@/app/hooks/useDebounce'
 import { AddCustomerModal } from '@/components/company/add-customer-modal'
 import { ViewCustomerModal } from '@/components/company/view-customer-modal'
 import { UpdateCustomerModal } from '@/components/company/update-customer-modal'
