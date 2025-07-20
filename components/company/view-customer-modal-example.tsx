@@ -23,7 +23,8 @@ export function ViewCustomerModalExample() {
     notes: "VIP Kunde",
     offerCount: 5,
     taskCount: 3,
-    totalProfit: 12500
+    totalProfit: 12500,
+    fullAddress: "Musterstraße 123, 8001 Zürich, Schweiz"
   }
 
   const handleEdit = (customer: Customer) => {
