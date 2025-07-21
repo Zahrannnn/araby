@@ -1,0 +1,206 @@
+Date : 2025-07-21 15:47:14
+Directory : d:\araby
+Total : 126 files,  30293 codes, 1039 comments, 1845 blanks, all 33177 lines
+
+Languages
++--------------------+------------+------------+------------+------------+------------+
+| language           | files      | code       | comment    | blank      | total      |
++--------------------+------------+------------+------------+------------+------------+
+| TypeScript JSX     |         77 |     15,874 |        572 |      1,377 |     17,823 |
+| JSON               |          7 |     11,079 |          0 |         51 |     11,130 |
+| TypeScript         |         32 |      3,152 |        467 |        389 |      4,008 |
+| CSS                |          1 |        117 |          0 |          6 |        123 |
+| JSON with Comments |          1 |         27 |          0 |          1 |         28 |
+| Markdown           |          1 |         23 |          0 |         14 |         37 |
+| JavaScript         |          2 |         16 |          0 |          7 |         23 |
+| XML                |          5 |          5 |          0 |          0 |          5 |
++--------------------+------------+------------+------------+------------+------------+
+
+Directories
++-----------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                            | files      | code       | comment    | blank      | total      |
++-----------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                               |        126 |     30,293 |      1,039 |      1,845 |     33,177 |
+| . (Files)                                                       |         10 |      7,969 |         26 |         55 |      8,050 |
+| app                                                             |         29 |      5,121 |        245 |        455 |      5,821 |
+| app (Files)                                                     |          5 |        200 |          1 |         20 |        221 |
+| app\[locale]                                                    |         22 |      4,813 |        232 |        419 |      5,464 |
+| app\[locale] (Files)                                            |          4 |        309 |         12 |         29 |        350 |
+| app\[locale]\(auth)                                             |          1 |        195 |          9 |         22 |        226 |
+| app\[locale]\(auth)\login                                       |          1 |        195 |          9 |         22 |        226 |
+| app\[locale]\admin                                              |          1 |          7 |          0 |          2 |          9 |
+| app\[locale]\admin\dashboard                                    |          1 |          7 |          0 |          2 |          9 |
+| app\[locale]\company                                            |         12 |      2,866 |        145 |        237 |      3,248 |
+| app\[locale]\company (Files)                                    |          2 |        471 |         20 |         41 |        532 |
+| app\[locale]\company\(Tasks)                                    |          1 |        688 |         24 |         47 |        759 |
+| app\[locale]\company\(Tasks)\tasks                              |          1 |        688 |         24 |         47 |        759 |
+| app\[locale]\company\(customers)                                |          1 |        341 |         23 |         27 |        391 |
+| app\[locale]\company\(customers)\customers                      |          1 |        341 |         23 |         27 |        391 |
+| app\[locale]\company\(employees)                                |          1 |        398 |         26 |         33 |        457 |
+| app\[locale]\company\(employees)\employees                      |          1 |        398 |         26 |         33 |        457 |
+| app\[locale]\company\company-settings                           |          3 |         56 |          0 |         13 |         69 |
+| app\[locale]\company\company-settings (Files)                   |          1 |          8 |          0 |          2 |         10 |
+| app\[locale]\company\company-settings\failure                   |          1 |          0 |          0 |          1 |          1 |
+| app\[locale]\company\company-settings\success                   |          1 |         48 |          0 |         10 |         58 |
+| app\[locale]\company\expenses                                   |          1 |         86 |          0 |          6 |         92 |
+| app\[locale]\company\my-tasks                                   |          1 |        270 |         14 |         16 |        300 |
+| app\[locale]\company\offers                                     |          1 |        283 |         17 |         23 |        323 |
+| app\[locale]\company\tasks                                      |          1 |        273 |         21 |         31 |        325 |
+| app\[locale]\company\tasks\[taskId]                             |          1 |        273 |         21 |         31 |        325 |
+| app\[locale]\super-admin                                        |          4 |      1,436 |         66 |        129 |      1,631 |
+| app\[locale]\super-admin (Files)                                |          2 |        631 |         18 |         37 |        686 |
+| app\[locale]\super-admin\companies                              |          1 |        464 |         28 |         45 |        537 |
+| app\[locale]\super-admin\settings                               |          1 |        341 |         20 |         47 |        408 |
+| app\hooks                                                       |          1 |         13 |          0 |          4 |         17 |
+| app\lib                                                         |          1 |         95 |         12 |         12 |        119 |
+| components                                                      |         51 |     10,946 |        324 |        938 |     12,208 |
+| components\auth                                                 |          1 |         15 |          5 |          5 |         25 |
+| components\company                                              |         20 |      6,124 |        203 |        449 |      6,776 |
+| components\company (Files)                                      |         15 |      5,558 |        187 |        416 |      6,161 |
+| components\company\expenses                                     |          5 |        566 |         16 |         33 |        615 |
+| components\layouts                                              |          1 |         30 |          0 |          4 |         34 |
+| components\super-admin                                          |          5 |      2,186 |         45 |        213 |      2,444 |
+| components\ui                                                   |         24 |      2,591 |         71 |        267 |      2,929 |
+| hooks                                                           |         11 |        751 |        113 |         96 |        960 |
+| i18n                                                            |          5 |      3,323 |          8 |         53 |      3,384 |
+| lib                                                             |         11 |      1,814 |        314 |        223 |      2,351 |
+| lib (Files)                                                     |          6 |      1,424 |        222 |        162 |      1,808 |
+| lib\api                                                         |          1 |         71 |          0 |         12 |         83 |
+| lib\schemas                                                     |          1 |        130 |         11 |         12 |        153 |
+| lib\utils                                                       |          3 |        189 |         81 |         37 |        307 |
+| public                                                          |          5 |          5 |          0 |          0 |          5 |
+| types                                                           |          4 |        364 |          9 |         25 |        398 |
++-----------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-----------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| filename                                                        | language           | code       | comment    | blank      | total      |
++-----------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| d:\araby\README.md                                              | Markdown           |         23 |          0 |         14 |         37 |
+| d:\araby\app\[locale]\(auth)\login\page.tsx                     | TypeScript JSX     |        195 |          9 |         22 |        226 |
+| d:\araby\app\[locale]\admin\dashboard\page.tsx                  | TypeScript JSX     |          7 |          0 |          2 |          9 |
+| d:\araby\app\[locale]\company\(Tasks)\tasks\page.tsx            | TypeScript JSX     |        688 |         24 |         47 |        759 |
+| d:\araby\app\[locale]\company\(customers)\customers\page.tsx    | TypeScript JSX     |        341 |         23 |         27 |        391 |
+| d:\araby\app\[locale]\company\(employees)\employees\page.tsx    | TypeScript JSX     |        398 |         26 |         33 |        457 |
+| d:\araby\app\[locale]\company\company-settings\failure\page.tsx | TypeScript JSX     |          0 |          0 |          1 |          1 |
+| d:\araby\app\[locale]\company\company-settings\page.tsx         | TypeScript JSX     |          8 |          0 |          2 |         10 |
+| d:\araby\app\[locale]\company\company-settings\success\page.tsx | TypeScript JSX     |         48 |          0 |         10 |         58 |
+| d:\araby\app\[locale]\company\expenses\page.tsx                 | TypeScript JSX     |         86 |          0 |          6 |         92 |
+| d:\araby\app\[locale]\company\layout.tsx                        | TypeScript JSX     |         17 |          0 |          2 |         19 |
+| d:\araby\app\[locale]\company\my-tasks\page.tsx                 | TypeScript JSX     |        270 |         14 |         16 |        300 |
+| d:\araby\app\[locale]\company\offers\page.tsx                   | TypeScript JSX     |        283 |         17 |         23 |        323 |
+| d:\araby\app\[locale]\company\page.tsx                          | TypeScript JSX     |        454 |         20 |         39 |        513 |
+| d:\araby\app\[locale]\company\tasks\[taskId]\page.tsx           | TypeScript JSX     |        273 |         21 |         31 |        325 |
+| d:\araby\app\[locale]\dictionaries.ts                           | TypeScript         |          8 |          0 |          2 |         10 |
+| d:\araby\app\[locale]\layout.tsx                                | TypeScript JSX     |         47 |          2 |          9 |         58 |
+| d:\araby\app\[locale]\not-found.tsx                             | TypeScript JSX     |         35 |          1 |          4 |         40 |
+| d:\araby\app\[locale]\page.tsx                                  | TypeScript JSX     |        219 |          9 |         14 |        242 |
+| d:\araby\app\[locale]\super-admin\companies\page.tsx            | TypeScript JSX     |        464 |         28 |         45 |        537 |
+| d:\araby\app\[locale]\super-admin\layout.tsx                    | TypeScript JSX     |         17 |          0 |          3 |         20 |
+| d:\araby\app\[locale]\super-admin\page.tsx                      | TypeScript JSX     |        614 |         18 |         34 |        666 |
+| d:\araby\app\[locale]\super-admin\settings\page.tsx             | TypeScript JSX     |        341 |         20 |         47 |        408 |
+| d:\araby\app\globals.css                                        | CSS                |        117 |          0 |          6 |        123 |
+| d:\araby\app\hooks\useDebounce.ts                               | TypeScript         |         13 |          0 |          4 |         17 |
+| d:\araby\app\layout.tsx                                         | TypeScript JSX     |         22 |          0 |          4 |         26 |
+| d:\araby\app\lib\api.ts                                         | TypeScript         |         95 |         12 |         12 |        119 |
+| d:\araby\app\not-found.tsx                                      | TypeScript JSX     |         33 |          1 |          4 |         38 |
+| d:\araby\app\page.tsx                                           | TypeScript JSX     |          5 |          0 |          2 |          7 |
+| d:\araby\app\providers.tsx                                      | TypeScript JSX     |         23 |          0 |          4 |         27 |
+| d:\araby\components.json                                        | JSON               |         21 |          0 |          0 |         21 |
+| d:\araby\components\auth\auth-provider.tsx                      | TypeScript JSX     |         15 |          5 |          5 |         25 |
+| d:\araby\components\company\add-customer-modal.tsx              | TypeScript JSX     |        313 |         20 |         31 |        364 |
+| d:\araby\components\company\add-employee-modal.tsx              | TypeScript JSX     |        254 |          4 |         25 |        283 |
+| d:\araby\components\company\delete-customer-modal.tsx           | TypeScript JSX     |        111 |          0 |         13 |        124 |
+| d:\araby\components\company\delete-employee-modal.tsx           | TypeScript JSX     |         60 |          0 |          4 |         64 |
+| d:\araby\components\company\edit-offer-modal.tsx                | TypeScript JSX     |        917 |         19 |         57 |        993 |
+| d:\araby\components\company\expenses\expense-modal.tsx          | TypeScript JSX     |        150 |          2 |          6 |        158 |
+| d:\araby\components\company\expenses\expenses-analytics.tsx     | TypeScript JSX     |        171 |          0 |         12 |        183 |
+| d:\araby\components\company\expenses\expenses-filter-bar.tsx    | TypeScript JSX     |         49 |         14 |          4 |         67 |
+| d:\araby\components\company\expenses\expenses-pagination.tsx    | TypeScript JSX     |         54 |          0 |          3 |         57 |
+| d:\araby\components\company\expenses\expenses-table.tsx         | TypeScript JSX     |        142 |          0 |          8 |        150 |
+| d:\araby\components\company\packing-material-modal.tsx          | TypeScript JSX     |        139 |          4 |         13 |        156 |
+| d:\araby\components\company\service-details-modal.tsx           | TypeScript JSX     |        762 |          4 |         29 |        795 |
+| d:\araby\components\company\update-customer-modal.tsx           | TypeScript JSX     |        333 |         21 |         33 |        387 |
+| d:\araby\components\company\update-employee-modal.tsx           | TypeScript JSX     |        345 |         12 |         36 |        393 |
+| d:\araby\components\company\view-company-modal.tsx              | TypeScript JSX     |        463 |          5 |         10 |        478 |
+| d:\araby\components\company\view-customer-modal-example.tsx     | TypeScript JSX     |         49 |          4 |          7 |         60 |
+| d:\araby\components\company\view-customer-modal.tsx             | TypeScript JSX     |        599 |         30 |         56 |        685 |
+| d:\araby\components\company\view-employee-modal.tsx             | TypeScript JSX     |        451 |         22 |         44 |        517 |
+| d:\araby\components\company\view-offer-modal.tsx                | TypeScript JSX     |        447 |         18 |         31 |        496 |
+| d:\araby\components\company\view-task-modal.tsx                 | TypeScript JSX     |        315 |         24 |         27 |        366 |
+| d:\araby\components\layouts\dashboard-layout.tsx                | TypeScript JSX     |         30 |          0 |          4 |         34 |
+| d:\araby\components\super-admin\add-company-modal.tsx           | TypeScript JSX     |        486 |          2 |         54 |        542 |
+| d:\araby\components\super-admin\delete-company-modal.tsx        | TypeScript JSX     |        146 |          1 |         15 |        162 |
+| d:\araby\components\super-admin\update-company-modal.tsx        | TypeScript JSX     |        591 |         18 |         61 |        670 |
+| d:\araby\components\super-admin\update-company-model.tsx        | TypeScript JSX     |        515 |         14 |         50 |        579 |
+| d:\araby\components\super-admin\view-company-modal.tsx          | TypeScript JSX     |        448 |         10 |         33 |        491 |
+| d:\araby\components\ui\alert.tsx                                | TypeScript JSX     |         60 |          0 |          7 |         67 |
+| d:\araby\components\ui\badge.tsx                                | TypeScript JSX     |         31 |          0 |          4 |         35 |
+| d:\araby\components\ui\button.tsx                               | TypeScript JSX     |         54 |          0 |          6 |         60 |
+| d:\araby\components\ui\calendar.tsx                             | TypeScript JSX     |         61 |          0 |          5 |         66 |
+| d:\araby\components\ui\card.tsx                                 | TypeScript JSX     |         71 |          0 |          8 |         79 |
+| d:\araby\components\ui\checkbox.tsx                             | TypeScript JSX     |         28 |          0 |          5 |         33 |
+| d:\araby\components\ui\company-sidebar.tsx                      | TypeScript JSX     |        316 |         26 |         34 |        376 |
+| d:\araby\components\ui\date-picker.tsx                          | TypeScript JSX     |         45 |          0 |          3 |         48 |
+| d:\araby\components\ui\dialog.tsx                               | TypeScript JSX     |        130 |          0 |         14 |        144 |
+| d:\araby\components\ui\dropdown-menu.tsx                        | TypeScript JSX     |        239 |          0 |         19 |        258 |
+| d:\araby\components\ui\input.tsx                                | TypeScript JSX     |         19 |          0 |          4 |         23 |
+| d:\araby\components\ui\label.tsx                                | TypeScript JSX     |         20 |          0 |          5 |         25 |
+| d:\araby\components\ui\language-switcher.tsx                    | TypeScript JSX     |         79 |          3 |          9 |         91 |
+| d:\araby\components\ui\navbar.tsx                               | TypeScript JSX     |        260 |         12 |         16 |        288 |
+| d:\araby\components\ui\notifications-sidebar.tsx                | TypeScript JSX     |        206 |          6 |         16 |        228 |
+| d:\araby\components\ui\pagination.tsx                           | TypeScript JSX     |         91 |          3 |         12 |        106 |
+| d:\araby\components\ui\popover.tsx                              | TypeScript JSX     |         25 |          0 |          6 |         31 |
+| d:\araby\components\ui\select.tsx                               | TypeScript JSX     |        172 |          0 |         14 |        186 |
+| d:\araby\components\ui\super-admin-sidebar.tsx                  | TypeScript JSX     |        341 |         21 |         37 |        399 |
+| d:\araby\components\ui\tabs.tsx                                 | TypeScript JSX     |        102 |          0 |         20 |        122 |
+| d:\araby\components\ui\textarea.tsx                             | TypeScript JSX     |         20 |          0 |          4 |         24 |
+| d:\araby\components\ui\time-picker.tsx                          | TypeScript JSX     |        113 |          0 |          5 |        118 |
+| d:\araby\components\ui\toggle-group.tsx                         | TypeScript JSX     |         66 |          0 |          8 |         74 |
+| d:\araby\components\ui\toggle.tsx                               | TypeScript JSX     |         42 |          0 |          6 |         48 |
+| d:\araby\eslint.config.mjs                                      | JavaScript         |         12 |          0 |          5 |         17 |
+| d:\araby\hooks\useAddCustomer.ts                                | TypeScript         |         26 |          6 |          6 |         38 |
+| d:\araby\hooks\useCompanyDetails.ts                             | TypeScript         |         22 |          4 |          3 |         29 |
+| d:\araby\hooks\useCustomers.ts                                  | TypeScript         |        144 |         33 |         12 |        189 |
+| d:\araby\hooks\useDashboard.ts                                  | TypeScript         |         25 |          9 |          3 |         37 |
+| d:\araby\hooks\useDebounce.ts                                   | TypeScript         |         13 |          0 |          4 |         17 |
+| d:\araby\hooks\useEmployees.ts                                  | TypeScript         |        163 |         30 |         17 |        210 |
+| d:\araby\hooks\useExpenses.ts                                   | TypeScript         |         32 |          0 |          4 |         36 |
+| d:\araby\hooks\useLogin.ts                                      | TypeScript         |         59 |          3 |         10 |         72 |
+| d:\araby\hooks\useNotifications.ts                              | TypeScript         |         82 |          9 |         11 |        102 |
+| d:\araby\hooks\useTasks.ts                                      | TypeScript         |        139 |         14 |         17 |        170 |
+| d:\araby\hooks\useUserRole.ts                                   | TypeScript         |         46 |          5 |          9 |         60 |
+| d:\araby\i18n.ts                                                | TypeScript         |         26 |          9 |          7 |         42 |
+| d:\araby\i18n\ar.json                                           | JSON               |        913 |          0 |         21 |        934 |
+| d:\araby\i18n\de.json                                           | JSON               |      1,065 |          0 |          0 |      1,065 |
+| d:\araby\i18n\en.json                                           | JSON               |      1,319 |          0 |         27 |      1,346 |
+| d:\araby\i18n\index.ts                                          | TypeScript         |         26 |          8 |          4 |         38 |
+| d:\araby\i18n\it.json                                           | JSON               |          0 |          0 |          1 |          1 |
+| d:\araby\lib\api.ts                                             | TypeScript         |        946 |        116 |         99 |      1,161 |
+| d:\araby\lib\api\employee.ts                                    | TypeScript         |         71 |          0 |         12 |         83 |
+| d:\araby\lib\auth.ts                                            | TypeScript         |         28 |         10 |          4 |         42 |
+| d:\araby\lib\providers.tsx                                      | TypeScript JSX     |         40 |         15 |          8 |         63 |
+| d:\araby\lib\schemas\offer.ts                                   | TypeScript         |        130 |         11 |         12 |        153 |
+| d:\araby\lib\store.ts                                           | TypeScript         |        190 |         38 |         28 |        256 |
+| d:\araby\lib\utils.ts                                           | TypeScript         |          5 |          0 |          2 |          7 |
+| d:\araby\lib\utils\auth.ts                                      | TypeScript         |         40 |         25 |          9 |         74 |
+| d:\araby\lib\utils\cookies.ts                                   | TypeScript         |         66 |         33 |         12 |        111 |
+| d:\araby\lib\utils\jwt.ts                                       | TypeScript         |         83 |         23 |         16 |        122 |
+| d:\araby\lib\validation.ts                                      | TypeScript         |        215 |         43 |         21 |        279 |
+| d:\araby\middleware.ts                                          | TypeScript         |         73 |         15 |         20 |        108 |
+| d:\araby\next.config.ts                                         | TypeScript         |         22 |          2 |          4 |         28 |
+| d:\araby\package-lock.json                                      | JSON               |      7,700 |          0 |          1 |      7,701 |
+| d:\araby\package.json                                           | JSON               |         61 |          0 |          1 |         62 |
+| d:\araby\postcss.config.mjs                                     | JavaScript         |          4 |          0 |          2 |          6 |
+| d:\araby\public\file.svg                                        | XML                |          1 |          0 |          0 |          1 |
+| d:\araby\public\globe.svg                                       | XML                |          1 |          0 |          0 |          1 |
+| d:\araby\public\next.svg                                        | XML                |          1 |          0 |          0 |          1 |
+| d:\araby\public\vercel.svg                                      | XML                |          1 |          0 |          0 |          1 |
+| d:\araby\public\window.svg                                      | XML                |          1 |          0 |          0 |          1 |
+| d:\araby\tsconfig.json                                          | JSON with Comments |         27 |          0 |          1 |         28 |
+| d:\araby\types\auth.ts                                          | TypeScript         |        139 |          6 |          8 |        153 |
+| d:\araby\types\quote.ts                                         | TypeScript         |         70 |          1 |          4 |         75 |
+| d:\araby\types\task.ts                                          | TypeScript         |         96 |          1 |          7 |        104 |
+| d:\araby\types\user.ts                                          | TypeScript         |         59 |          1 |          6 |         66 |
+| Total                                                           |                    |     30,293 |      1,039 |      1,845 |     33,177 |
++-----------------------------------------------------------------+--------------------+------------+------------+------------+------------+

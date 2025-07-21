@@ -166,17 +166,17 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
   const [isLoading, setIsLoading] = useState(false)
   const [offerData, setOfferData] = useState<OfferData>({
     customerId: 1,
-    viewAppointmentState: 'Fatto',
+    viewAppointmentState: '',
     notesInOffer: '',
     notesNotInOffer: '',
     costsIncludeVAT: true,
     costsExcludeVAT: false,
     vatFree: false,
     contactPersonInternalUserId: 5,
-    contactPersonFreeText: 'Lumi Alimi',
+    contactPersonFreeText: '',
     emailToCustomer: true,
-    customerEmail: 'mario.rossi@example.it',
-    languageCode: 'it',
+    customerEmail: '',
+    languageCode: '',
     locations: [{
       locationType: 'Origin',
       addressIndex: 1,
@@ -199,17 +199,17 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
         // Reset form for new offer
         setOfferData({
           customerId: 1,
-          viewAppointmentState: 'Fatto',
+          viewAppointmentState: '',
           notesInOffer: '',
           notesNotInOffer: '',
           costsIncludeVAT: true,
           costsExcludeVAT: false,
           vatFree: false,
           contactPersonInternalUserId: 5,
-          contactPersonFreeText: 'Lumi Alimi',
+          contactPersonFreeText: '',
           emailToCustomer: true,
-          customerEmail: 'mario.rossi@example.it',
-          languageCode: 'it',
+          customerEmail: '',
+          languageCode: '',
           locations: [{
             locationType: 'Origin',
             addressIndex: 1,

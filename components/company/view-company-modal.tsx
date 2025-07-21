@@ -447,6 +447,7 @@ const ViewCompanyPage: React.FC = () => {
                       </div>
                     )}
                     <Button 
+                      variant="default"
                       type="submit" 
                       disabled={isSaving} 
                       className={`w-fit min-w-[120px] transition gap-1.5 ${formError ? 'bg-red-500 hover:bg-red-600' : 'bg-primary hover:bg-primary/90'}`}
