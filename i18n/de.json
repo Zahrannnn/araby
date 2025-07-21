@@ -584,6 +584,7 @@
           "deleting": "Wird gelöscht..."
         },
         "offerDetails": {
+          "createdBy": "Erstellt von",
           "moveInDate": "Einzugdatum",
           "deliveryTime": "Lieferzeit",
           "deliveryDate": "Lieferdatum",

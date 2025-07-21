@@ -584,6 +584,7 @@
           "deleting": "Deleting..."
         },
         "offerDetails": {
+          "createdBy": "Created By",
           "moveInDate": "Move In Date",
           "deliveryTime": "Delivery Time",
           "deliveryDate": "Delivery Date",

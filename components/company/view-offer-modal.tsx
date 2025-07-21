@@ -482,6 +482,9 @@ export function ViewOfferModal({ isOpen, onClose, offerId }: ViewOfferModalProps
               <p className="text-sm text-gray-500 mt-1">
                 {t('subtitle', { customerName: offerDetails.customerName })}
               </p>
+              <p className="text-sm text-slate-100 mt-4 bg-red-600 px-2 py-1 rounded-full w-fit">
+                {t('createdBy')} : {offerDetails.createdByName}
+              </p>
             </div>
           </div>
           <div className="flex items-center gap-2">

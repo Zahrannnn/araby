@@ -511,6 +511,7 @@ export interface OfferDetails {
   locations: OfferLocation[];
   serviceLineItems: ServiceLineItem[];
   packingMaterials: PackingMaterial[];
+  createdByName: string;
 }
 
 /**

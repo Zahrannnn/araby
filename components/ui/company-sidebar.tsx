@@ -8,7 +8,7 @@ import {
   HomeIcon,
   UsersIcon,
   DocumentTextIcon,
-  ReceiptPercentIcon,
+
   CheckCircleIcon,
   CreditCardIcon,
   UserGroupIcon,
@@ -64,13 +64,7 @@ const sidebarItems: SidebarItem[] = [
     icon: DocumentTextIcon,
     requiredPermission: 'can_view_offers'
   },
-  {
-    name: 'Rechnungen',
-    translationKey: 'invoices',
-    href: '/company/invoices',
-    icon: ReceiptPercentIcon,
-    requiredPermission: 'can_manage_invoices'
-  },
+ 
   {
     name: 'Aufgaben',
     translationKey: 'tasks',
