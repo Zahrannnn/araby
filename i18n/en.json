@@ -584,6 +584,13 @@
           "deleting": "Deleting..."
         },
         "offerDetails": {
+          "moveInDate": "Move In Date",
+          "deliveryTime": "Delivery Time",
+          "deliveryDate": "Delivery Date",
+          "cost": "Cost",
+          "concession": "Concession",
+          "selectedHourlyTariffDescription": "Selected Hourly Tariff Description",
+          "notApplicable": "Not applicable",
           "title": "Offer Details: {offerNumber}",
           "subtitle": "Customer: {customerName}",
           "loading": "Loading offer details...",

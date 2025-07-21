@@ -584,6 +584,13 @@
           "deleting": "Wird gelöscht..."
         },
         "offerDetails": {
+          "moveInDate": "Einzugdatum",
+          "deliveryTime": "Lieferzeit",
+          "deliveryDate": "Lieferdatum",
+          "cost": "Kosten",
+          "concession": "Vorbehalt",
+          "selectedHourlyTariffDescription": "Beschreibung der ausgewählten Stundensatz",
+          "notApplicable": "Nicht anwendbar",
           "title": "Angebotsdetails: {offerNumber}",
           "subtitle": "Kunde: {customerName}",
           "loading": "Lade Angebotsdetails...",
