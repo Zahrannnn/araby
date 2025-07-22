@@ -347,7 +347,7 @@ export function ViewOfferModal({ isOpen, onClose, offerId }: ViewOfferModalProps
             ) : (
               <p><span className="font-medium">{t('startTime')}:</span> {t('notApplicable')}</p>
             )}
-            
+
             {details.estimatedVolumeM3 ? (
               <p><span className="font-medium">{t('estimatedVolume')}:</span> {details.estimatedVolumeM3} m³</p>
             ) : (
@@ -363,6 +363,49 @@ export function ViewOfferModal({ isOpen, onClose, offerId }: ViewOfferModalProps
             ) : (
               <p><span className="font-medium">{t('flatRate')}:</span> {t('notApplicable')}</p>
             )}
+
+            {details.selectedEmployeePlanTariffDescription ? (
+              <p><span className="font-medium">{t('tariff')}:</span> {details.selectedEmployeePlanTariffDescription}</p>
+            ) : (
+              <p><span className="font-medium">{t('tariff')}:</span> {t('notApplicable')}</p>
+            )}
+            {details.numberOfStaff ? (
+              <p><span className="font-medium">{t('numberOfStaff')}:</span> {details.numberOfStaff}</p>
+            ) : (
+              <p><span className="font-medium">{t('numberOfStaff')}:</span> {t('notApplicable')}</p>
+            )}
+            {details.numberOfDeliveryTrucks ? (
+              <p><span className="font-medium">{t('numberOfDeliveryTrucks')}:</span> {details.numberOfDeliveryTrucks}</p>
+            ) : (
+              <p><span className="font-medium">{t('numberOfDeliveryTrucks')}:</span> {t('notApplicable')}</p>
+            )}
+            {details.hourlyRateCHF ? (
+              <p><span className="font-medium">{t('hourlyRate')}:</span> {formatCurrency(details.hourlyRateCHF)}/h</p>
+            ) : (
+              <p><span className="font-medium">{t('hourlyRate')}:</span> {t('notApplicable')}</p>
+            )}
+            {details.durationHours ? (
+              <p><span className="font-medium">{t('duration')}:</span> {details.durationHours}h</p>
+            ) : (
+              <p><span className="font-medium">{t('duration')}:</span> {t('notApplicable')}</p>
+            )}
+            {details.roundTripCostCHF ? (
+              <p><span className="font-medium">{t('roundTripCost')}:</span> {formatCurrency(details.roundTripCostCHF)}</p>
+            ) : (
+              <p><span className="font-medium">{t('roundTripCost')}:</span> {t('notApplicable')}</p>
+            )}
+
+            {details.discount ? (
+              <p><span className="font-medium">{t('discount')}:</span> {formatCurrency(details.discount)}</p>
+            ) : (
+              <p><span className="font-medium">{t('discount')}:</span> {t('notApplicable')}</p>
+            )}
+            {details.furtherDiscounts ? (
+              <p className="md:col-span-2"><span className="font-medium">{t('furtherDiscounts')}:</span> {details.furtherDiscounts}</p>
+            ) : (
+              <p className="md:col-span-2"><span className="font-medium">{t('furtherDiscounts')}:</span> {t('notApplicable')}</p>
+            )}
+
             {details.additionalCostsText ? (
               <p className="md:col-span-2"><span className="font-medium">{t('additionalCosts')}:</span> {details.additionalCostsText}</p>
             ) : (
