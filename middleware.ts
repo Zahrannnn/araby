@@ -15,6 +15,8 @@ const publicRoutes = [
   '/payment-failed',
   '/offer/accepted',
   '/offer/rejected',
+  '/success',
+  "/failure"
 ];
 
 // Get the preferred locale, similar to the above or using a library

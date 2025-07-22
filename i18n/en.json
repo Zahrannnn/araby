@@ -226,6 +226,8 @@
         "cancel": "Cancel"
       },
       "viewModal": {
+        "completedDate": "Completed Date",
+        "timeSpentInHours": "Time Spent in Hours",
         "title": "Company Details",
         "companyDetails": "Company Details",
         "edit": "Edit",
@@ -317,6 +319,8 @@
         "high": "High"
       },
       "viewModal": {
+        "completedDate": "Completed Date",
+        "timeSpentInHours": "Time Spent in Hours",
         "title": "Task Details: {taskTitle}",
         "subtitle": "Assigned to {assignedTo}",
         "basicInfo": "Basic Task Information",

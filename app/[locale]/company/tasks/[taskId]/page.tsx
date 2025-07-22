@@ -195,6 +195,14 @@ export default function TaskDetailsPage() {
               <h3 className="text-sm text-gray-500 mb-1">{t('viewModal.dueDate')}</h3>
               <p className="text-gray-900">{format(new Date(task.dueDate), 'dd. MMMM yyyy um HH:mm')}</p>
             </div>
+            <div>
+              <h3 className="text-sm text-gray-500 mb-1">{t('viewModal.completedDate')}</h3>
+              <p className="text-gray-900">{format(new Date(task.completedDate!), 'dd. MMMM yyyy um HH:mm')}</p>
+            </div>
+            <div>
+              <h3 className="text-sm text-gray-500 mb-1">{t('viewModal.timeSpentInHours')}</h3>
+              <p className="text-gray-900">{task.timeSpentInHours ? task.timeSpentInHours : '-'}</p>
+            </div>
           </div>
 
           {/* Notes */}
