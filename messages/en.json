@@ -1,4 +1,14 @@
 {
+  "payment": {
+    "success": {
+      "title": "Payment Successful!",
+      "description": "Thank you for your payment. Your order has been confirmed.",
+      "orderNumber": "Order Number",
+      "emailConfirmation": "A confirmation email has been sent to your registered email address.",
+      "viewOrder": "View Order Details",
+      "continueShopping": "Continue Shopping"
+    }
+  },
   "company": {
     "offers": {
       "serviceDetails": {
