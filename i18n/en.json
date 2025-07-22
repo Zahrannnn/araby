@@ -941,6 +941,8 @@
           "noMaterialsYet":"No packing materials added yet. Click 'Add Material' to begin."
         },
       "editModal": {
+        "languageCode":"Language Code",
+        "searchCustomer":"Search customer",
         "street":"Street",
         "countryCode":"Country Code",
         "enterCountryCode":"Enter country code",

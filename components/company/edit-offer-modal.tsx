@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent } from "@/components/ui/card"
-import { ArchiveBoxIcon, ChevronLeftIcon, PlusIcon, SparklesIcon } from '@heroicons/react/24/outline'
+import { ArchiveBoxIcon, ChevronLeftIcon, PlusIcon, SparklesIcon, CheckIcon } from '@heroicons/react/24/outline'
 import { ArchiveIcon, PackageIcon, TrashIcon } from 'lucide-react'
 import { TruckIcon } from 'lucide-react'
 import { ServiceDetailsModal, ServiceType } from './service-details-modal'
@@ -16,9 +16,33 @@ import { PackingMaterialModal, type PackingMaterial } from './packing-material-m
 import { cookieUtils } from '@/lib/utils/cookies'
 import { apiClient } from '@/lib/api'
 import { useRouter } from 'next/navigation'
+import { cn } from '@/lib/utils'
+import { useDebounce } from '@/app/hooks/useDebounce'
+
+// Add status enum and options
+enum OfferStatus {
+  Pending = 0,
+  Sent = 1,
+  Accepted = 2,
+  Rejected = 3,
+  Canceled = 4
+}
+
+const STATUS_OPTIONS = [
+  { value: OfferStatus.Pending, label: 'Pending' },
+  { value: OfferStatus.Sent, label: 'Sent' },
+  { value: OfferStatus.Accepted, label: 'Accepted' },
+  { value: OfferStatus.Rejected, label: 'Rejected' },
+  { value: OfferStatus.Canceled, label: 'Canceled' }
+] as const;
+
+interface Customer {
+  id: number;
+  fullName: string;
+}
 
 interface Location {
-  locationType: 'Origin' | 'Destination';
+  locationType: string;
   addressIndex: number;
   street: string;
   zipCode: string;
@@ -50,8 +74,8 @@ interface MoveService {
 interface CleaningService {
   cleaningType: string;
   fixedPriceRateCHF: number;
-  hourlyRateCHFPerHour: number | null;
-  durationHours: number | null;
+  hourlyRateCHFPerHour: number;
+  durationHours: number;
   numberOfStaff: number;
   fillNailHoles: boolean;
   withHighPressureCleaner: boolean;
@@ -89,11 +113,11 @@ interface DisposalService {
   volumeRateCHFPerM3: number;
   flatRateDisposalCostCHF: number;
   estimatedVolumeM3: number;
-  selectedEmployeePlanTariffDescription: string | null;
-  numberOfStaff: number | null;
-  numberOfDeliveryTrucks: number | null;
-  hourlyRateCHF: number | null;
-  durationHours: number | null;
+  selectedEmployeePlanTariffDescription: string;
+  numberOfStaff: number;
+  numberOfDeliveryTrucks: number;
+  hourlyRateCHF: number;
+  durationHours: number;
   disposalDate: string;
   disposalStartTime: string;
   roundTripCostCHF: number;
@@ -113,11 +137,11 @@ interface StorageService {
 interface TransportService {
   transportTypeText: string;
   fixedRateCHF: number;
-  selectedHourlyTariffDescription: string | null;
+  selectedHourlyTariffDescription: string;
   numberOfStaff: number;
   numberOfDeliveryTrucks: number;
-  hourlyRateCHF: number | null;
-  durationHours: number | null;
+  hourlyRateCHF: number;
+  durationHours: number;
   transportDate: string;
   transportStartTime: string;
   roundTripCostCHF: number;
@@ -128,24 +152,14 @@ interface TransportService {
   furtherDiscounts: string;
 }
 
-interface EditOfferModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  offerId?: number;
-}
-
 interface OfferData {
   customerId: number;
-  viewAppointmentState: string;
   notesInOffer: string;
   notesNotInOffer: string;
   costsIncludeVAT: boolean;
   costsExcludeVAT: boolean;
   vatFree: boolean;
-  contactPersonInternalUserId: number;
-  contactPersonFreeText: string;
   emailToCustomer: boolean;
-  customerEmail: string;
   languageCode: string;
   locations: Location[];
   packingMaterials: PackingMaterial[];
@@ -156,7 +170,45 @@ interface OfferData {
   disposalService?: DisposalService;
   storageService?: StorageService;
   transportService?: TransportService;
+  status?: OfferStatus; // Added status field
 }
+
+const initialOfferData: OfferData = {
+  customerId: 0,
+  notesInOffer: '',
+  notesNotInOffer: '',
+  costsIncludeVAT: true,
+  costsExcludeVAT: false,
+  vatFree: false,
+  emailToCustomer: true,
+  languageCode: 'en', // Set default to English
+  locations: [{
+    locationType: '',
+    addressIndex: 1,
+    street: '',
+    zipCode: '',
+    city: '',
+    countryCode: '',
+    buildingType: '',
+    floor: '',
+    hasLift: false
+  }],
+  packingMaterials: []
+}
+
+interface EditOfferModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  offerId?: number;
+}
+
+// Add language options constant
+const LANGUAGE_OPTIONS = [
+  { code: 'en', label: 'English' },
+  { code: 'de', label: 'Deutsch' },
+  { code: 'fr', label: 'Français' },
+  { code: 'it', label: 'Italiano' }
+] as const;
 
 export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps) {
   const t = useTranslations('company.offers.editModal')
@@ -164,65 +216,21 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
   const [error, setError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [offerData, setOfferData] = useState<OfferData>({
-    customerId: 1,
-    viewAppointmentState: '',
-    notesInOffer: '',
-    notesNotInOffer: '',
-    costsIncludeVAT: true,
-    costsExcludeVAT: false,
-    vatFree: false,
-    contactPersonInternalUserId: 5,
-    contactPersonFreeText: '',
-    emailToCustomer: true,
-    customerEmail: '',
-    languageCode: '',
-    locations: [{
-      locationType: 'Origin',
-      addressIndex: 1,
-      street: '',
-      zipCode: '',
-      city: '',
-      countryCode: '',
-      buildingType: '',
-      floor: '',
-      hasLift: false
-    }],
-    packingMaterials: []
-  })
+  const [offerData, setOfferData] = useState<OfferData>(initialOfferData)
   const [isPackingMaterialModalOpen, setIsPackingMaterialModalOpen] = useState(false)
   const router = useRouter()
+
+  // Customer search state
+  const [customerSearch, setCustomerSearch] = useState("")
+  const [customers, setCustomers] = useState<Customer[]>([])
+  const [isSearching, setIsSearching] = useState(false)
+  const debouncedSearch = useDebounce(customerSearch, 300)
+
   // Fetch offer data when editing
   useEffect(() => {
     async function fetchOfferData() {
       if (!offerId) {
-        // Reset form for new offer
-        setOfferData({
-          customerId: 1,
-          viewAppointmentState: '',
-          notesInOffer: '',
-          notesNotInOffer: '',
-          costsIncludeVAT: true,
-          costsExcludeVAT: false,
-          vatFree: false,
-          contactPersonInternalUserId: 5,
-          contactPersonFreeText: '',
-          emailToCustomer: true,
-          customerEmail: '',
-          languageCode: '',
-          locations: [{
-            locationType: 'Origin',
-            addressIndex: 1,
-            street: '',
-            zipCode: '',
-            city: '',
-            countryCode: '',
-            buildingType: '',
-            floor: '',
-            hasLift: false
-          }],
-          packingMaterials: []
-        })
+        setOfferData(initialOfferData)
         return
       }
 
@@ -231,7 +239,43 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
         setError(null)
         const response = await apiClient.get(`/Offers/${offerId}`)
         console.log('Fetched offer data:', response.data)
-        setOfferData(response.data)
+
+        // Extract services from the response data
+        const {
+          moveService,
+          cleaningService,
+          packingService,
+          unpackingService,
+          disposalService,
+          storageService,
+          transportService,
+          ...restData
+        } = response.data
+
+        // Create services object with only non-null services
+        const services = {
+          ...(moveService && { moveService }),
+          ...(cleaningService && { cleaningService }),
+          ...(packingService && { packingService }),
+          ...(unpackingService && { unpackingService }),
+          ...(disposalService && { disposalService }),
+          ...(storageService && { storageService }),
+          ...(transportService && { transportService })
+        }
+
+        // Set the offer data with properly structured services
+        setOfferData({
+          ...restData,
+          ...services,
+          // Ensure required fields have default values if missing
+          locations: restData.locations || initialOfferData.locations,
+          packingMaterials: restData.packingMaterials || initialOfferData.packingMaterials,
+          languageCode: restData.languageCode || initialOfferData.languageCode,
+          costsIncludeVAT: restData.costsIncludeVAT ?? initialOfferData.costsIncludeVAT,
+          costsExcludeVAT: restData.costsExcludeVAT ?? initialOfferData.costsExcludeVAT,
+          vatFree: restData.vatFree ?? initialOfferData.vatFree,
+          emailToCustomer: restData.emailToCustomer ?? initialOfferData.emailToCustomer,
+        })
       } catch (err) {
         console.error('Error fetching offer:', err)
         setError(
@@ -249,6 +293,29 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
     }
   }, [isOpen, offerId])
 
+  // Search customers when input changes
+  useEffect(() => {
+    async function searchCustomers() {
+      if (!debouncedSearch) {
+        setCustomers([])
+        return
+      }
+
+      try {
+        setIsSearching(true)
+        const response = await apiClient.get<Customer[]>(`/Task/customers?searchName=${debouncedSearch}`)
+        setCustomers(response.data)
+      } catch (err) {
+        console.error('Error searching customers:', err)
+        setCustomers([])
+      } finally {
+        setIsSearching(false)
+      }
+    }
+
+    searchCustomers()
+  }, [debouncedSearch])
+
   const handleInputChange = <K extends keyof OfferData>(
     field: K,
     value: OfferData[K]
@@ -265,6 +332,53 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
         ...prev,
         [field]: checked
       }))
+    }
+  }
+
+  // Add status update handler
+  const handleStatusUpdate = async (newStatus: string) => {
+    try {
+      setIsSubmitting(true)
+      setError(null)
+
+      const statusValue = parseInt(newStatus)
+      
+      console.log('Updating status:', {
+        offerId,
+        newStatus: statusValue,
+        endpoint: `https://crmproject.runasp.net/api/Offers/${offerId}/status`
+      })
+
+      const response = await fetch(`https://crmproject.runasp.net/api/Offers/${offerId}/status`, {
+        method: 'PATCH',
+        headers: {
+          'Accept': '*/*',
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${cookieUtils.getToken()}`
+        },
+        body: JSON.stringify(statusValue)
+      })
+
+      if (!response.ok) {
+        throw new Error(`Failed to update status: ${response.status} ${response.statusText}`)
+      }
+
+      // Update local state after successful API call
+      setOfferData(prev => ({
+        ...prev,
+        status: statusValue as OfferStatus
+      }))
+
+      router.refresh()
+    } catch (error) {
+      console.error('Error updating status:', error)
+      setError(
+        error instanceof Error 
+          ? error.message 
+          : 'An unexpected error occurred while updating the status'
+      )
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -507,6 +621,39 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
               {offerId ? t('editTitle') : t('createTitle')}
             </h2>
           </div>
+          {/* Add status selector for existing offers */}
+          {offerId && (
+            <div className="flex items-center gap-3">
+              <Select
+                value={offerData.status?.toString() || '0'}
+                onValueChange={handleStatusUpdate}
+                disabled={isSubmitting}
+              >
+                <SelectTrigger className="w-[200px]">
+                  <SelectValue>
+                    {STATUS_OPTIONS.find(opt => opt.value === offerData.status)?.label || 'Pending'}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  {STATUS_OPTIONS.map(({ value, label }) => (
+                    <SelectItem 
+                      key={value} 
+                      value={value.toString()}
+                      className={cn(
+                        value === OfferStatus.Accepted && "text-green-600",
+                        value === OfferStatus.Rejected && "text-red-600",
+                        value === OfferStatus.Canceled && "text-gray-600",
+                        value === OfferStatus.Sent && "text-blue-600",
+                        value === OfferStatus.Pending && "text-yellow-600"
+                      )}
+                    >
+                      {label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
         </div>
 
         {/* Content */}
@@ -527,10 +674,11 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
                     <SelectValue placeholder={t('selectLanguage')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="it">Italiano</SelectItem>
-                    <SelectItem value="de">Deutsch</SelectItem>
-                    <SelectItem value="en">English</SelectItem>
-                    <SelectItem value="fr">Français</SelectItem>
+                    {LANGUAGE_OPTIONS.map(({ code, label }) => (
+                      <SelectItem key={code} value={code}>
+                        {label}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
@@ -551,47 +699,71 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
           <section>
             <h3 className="text-lg font-medium text-gray-900 mb-4">{t('customerInformation')}</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
+              <div className="w-full">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   {t('customer')}
                 </label>
-                <Input 
-                  type="number"
-                  value={offerData.customerId}
-                  onChange={(e) => handleInputChange('customerId', parseInt(e.target.value))}
-                  placeholder={t('selectCustomer')} 
-                />
+                <div className="relative">
+                  <Input
+                    type="text"
+                    value={customerSearch}
+                    onChange={(e) => setCustomerSearch(e.target.value)}
+                    placeholder={t('searchCustomer')}
+                    className="pr-10"
+                  />
+                  {isSearching && (
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-red-500" />
+                    </div>
+                  )}
+                </div>
+                {customers.length > 0 && (
+                  <div className="absolute z-10 mt-1 w-fit bg-white shadow-lg rounded-md border">
+                    <ul className="py-1 max-h-60 overflow-auto">
+                      {customers.map((customer) => (
+                        <li
+                          key={customer.id}
+                          className={cn(
+                            "px-3 py-2 cursor-pointer hover:bg-gray-100",
+                            offerData.customerId === customer.id && "bg-red-50"
+                          )}
+                          onClick={() => {
+                            setOfferData(prev => ({ ...prev, customerId: customer.id }))
+                            setCustomerSearch(customer.fullName)
+                            setCustomers([])
+                          }}
+                        >
+                          <div className="flex items-center">
+                            {offerData.customerId === customer.id && (
+                              <CheckIcon className="h-4 w-4 mr-2 text-red-500" />
+                            )}
+                            <span>{customer.fullName}</span>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {t('contactPerson')}
+                  {t('languageCode')}
                 </label>
-                <Input 
-                  value={offerData.contactPersonFreeText}
-                  onChange={(e) => handleInputChange('contactPersonFreeText', e.target.value)}
-                  placeholder={t('selectContact')} 
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {t('status')}
-                </label>
-                <Input 
-                  value={offerData.viewAppointmentState}
-                  onChange={(e) => handleInputChange('viewAppointmentState', e.target.value)}
-                  placeholder={t('selectStatus')} 
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {t('customerEmail')}
-                </label>
-                <Input 
-                  type="email"
-                  value={offerData.customerEmail}
-                  onChange={(e) => handleInputChange('customerEmail', e.target.value)}
-                  placeholder={t('enterCustomerEmail')} 
-                />
+                <Select
+                  value={offerData.languageCode}
+                  onValueChange={(value) => handleInputChange('languageCode', value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={t('selectLanguage')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="it">Italiano</SelectItem>
+                    <SelectItem value="de">Deutsch</SelectItem>
+                    <SelectItem value="en">English</SelectItem>
+                    <SelectItem value="fr">Français</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </section>
