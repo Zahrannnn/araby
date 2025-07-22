@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const locales = ['ar', 'de', 'en'];
+const locales = ['ar', 'de', 'en', 'it'];
 const defaultLocale = 'en';
 
 // Define public routes that don't require authentication
@@ -11,6 +11,10 @@ const publicRoutes = [
   '/forgot-password',
   '/reset-password',
   '/', // Home page
+  '/payment-success',
+  '/payment-failed',
+  '/offer/accepted',
+  '/offer/rejected',
 ];
 
 // Get the preferred locale, similar to the above or using a library
