@@ -941,6 +941,9 @@
           "noMaterialsYet":"Noch keine Verpackungsmaterialien hinzugefügt. Klicken Sie auf 'Material hinzufügen', um zu beginnen."
         },
       "editModal": {
+        "languageCode":"Sprachcode",
+        "searchCustomer":"Kunden suchen",
+        "emailNotificationAlert":"Nach dem Update wird das Angebot an den Kunden per E-Mail gesendet, wenn 'Angebot an Kunden senden' aktiviert ist.",
         "street":"Straße",
         "countryCode":"Ländercode",
         "enterCountryCode":"Ländercode eingeben",

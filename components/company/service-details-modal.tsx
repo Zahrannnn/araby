@@ -108,7 +108,7 @@ export type TransportService = {
   furtherDiscounts: string;
 }
 
-export type ServiceType = 
+export type ServiceType =
   | { type: 'move'; data: MoveService }
   | { type: 'cleaning'; data: CleaningService }
   | { type: 'packing'; data: PackingService }
@@ -232,6 +232,7 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
     }
     return getInitialServiceData(serviceType);
   });
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (serviceType) {
@@ -244,10 +245,95 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
       ...prev,
       [field]: value
     }));
+    // Clear error for the field when it's being changed
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: '' }));
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+    let isValid = true;
+
+    // Basic validation for required fields (adapt as needed for each service type)
+    if (serviceType === 'move' && (formData as MoveService).moveDate === '') {
+      newErrors.moveDate = 'Move date is required';
+      isValid = false;
+    }
+    if (serviceType === 'move' && (formData as MoveService).moveInDate === '') {
+      newErrors.moveInDate = 'Move-in date is required';
+      isValid = false;
+    }
+    if ((formData as MoveService).roundTripCostCHF < 0) {
+      newErrors.roundTripCostCHF = 'Round trip cost cannot be negative';
+      isValid = false;
+    }
+
+    if ((formData as CleaningService).cleaningType === '' && serviceType === 'cleaning') {
+      newErrors.cleaningType = 'Cleaning type is required';
+      isValid = false;
+    }
+    if ((formData as CleaningService).fixedPriceRateCHF < 0 && serviceType === 'cleaning') {
+      newErrors.fixedPriceRateCHF = 'Fixed price rate cannot be negative';
+      isValid = false;
+    }
+    if ((formData as CleaningService).hourlyRateCHFPerHour !== null && (formData as CleaningService).hourlyRateCHFPerHour! < 0 && serviceType === 'cleaning') {
+      newErrors.hourlyRateCHFPerHour = 'Hourly rate cannot be negative';
+      isValid = false;
+    }
+    if ((formData as CleaningService).durationHours !== null && (formData as CleaningService).durationHours! < 0 && serviceType === 'cleaning') {
+      newErrors.durationHours = 'Duration cannot be negative';
+      isValid = false;
+    }
+    if ((formData as CleaningService).numberOfStaff < 0 && serviceType === 'cleaning') {
+      newErrors.numberOfStaff = 'Number of staff cannot be negative';
+      isValid = false;
+    }
+
+    if ((formData as PackingService).packingDate === '' && serviceType === 'packing') {
+      newErrors.packingDate = 'Packing date is required';
+      isValid = false;
+    }
+    if ((formData as PackingService).durationHours < 0 && serviceType === 'packing') {
+      newErrors.durationHours = 'Duration cannot be negative';
+      isValid = false;
+    }
+
+    if ((formData as DisposalService).disposalDate === '' && serviceType === 'disposal') {
+      newErrors.disposalDate = 'Disposal date is required';
+      isValid = false;
+    }
+    if ((formData as DisposalService).estimatedVolumeM3 < 0 && serviceType === 'disposal') {
+      newErrors.estimatedVolumeM3 = 'Estimated volume cannot be negative';
+      isValid = false;
+    }
+
+    if ((formData as StorageService).rateCHFPerM3PerMonth < 0 && serviceType === 'storage') {
+      newErrors.rateCHFPerM3PerMonth = 'Rate cannot be negative';
+      isValid = false;
+    }
+    if ((formData as StorageService).volumeM3 < 0 && serviceType === 'storage') {
+      newErrors.volumeM3 = 'Volume cannot be negative';
+      isValid = false;
+    }
+
+    if ((formData as TransportService).transportDate === '' && serviceType === 'transport') {
+      newErrors.transportDate = 'Transport date is required';
+      isValid = false;
+    }
+    if ((formData as TransportService).fixedRateCHF < 0 && serviceType === 'transport') {
+      newErrors.fixedRateCHF = 'Fixed rate cannot be negative';
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
   };
 
   const handleSubmit = () => {
-    onSave(formData);
+    if (validateForm()) {
+      onSave(formData);
+    }
   };
 
   if (!isOpen || !serviceType) return null;
@@ -256,79 +342,85 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('moveDate')}</label>
-        <Input 
-          type="date" 
-          value={data.moveDate?.split('T')[0]} 
+        <Input
+          type="date"
+          value={data.moveDate?.split('T')[0] || ''}
           onChange={(e) => handleInputChange('moveDate', `${e.target.value}T00:00:00.000Z`)}
+          className={errors.moveDate ? 'border-red-500' : ''}
         />
+        {errors.moveDate && <p className="text-red-500 text-sm mt-1">{errors.moveDate}</p>}
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('moveInDate')}</label>
-        <Input 
-          type="date" 
-          value={data.moveInDate?.split('T')[0]} 
+        <Input
+          type="date"
+          value={data.moveInDate?.split('T')[0] || ''}
           onChange={(e) => handleInputChange('moveInDate', `${e.target.value}T00:00:00.000Z`)}
+          className={errors.moveInDate ? 'border-red-500' : ''}
         />
+        {errors.moveInDate && <p className="text-red-500 text-sm mt-1">{errors.moveInDate}</p>}
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('moveStartTime')}</label>
-        <Input 
-          type="time" 
-          value={data.moveStartTime} 
+        <Input
+          type="time"
+          value={data.moveStartTime}
           onChange={(e) => handleInputChange('moveStartTime', e.target.value)}
         />
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('roundTripCostCHF')}</label>
-        <Input 
-          type="number" 
-          value={data.roundTripCostCHF} 
+        <Input
+          type="number"
+          value={data.roundTripCostCHF}
           onChange={(e) => handleInputChange('roundTripCostCHF', parseFloat(e.target.value))}
+          className={errors.roundTripCostCHF ? 'border-red-500' : ''}
         />
+        {errors.roundTripCostCHF && <p className="text-red-500 text-sm mt-1">{errors.roundTripCostCHF}</p>}
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('selectedTariffDescription')}</label>
-        <Input 
-          value={data.selectedTariffDescription} 
+        <Input
+          value={data.selectedTariffDescription}
           onChange={(e) => handleInputChange('selectedTariffDescription', e.target.value)}
         />
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('numberOfStaff')}</label>
-        <Input 
-          type="number" 
-          value={data.numberOfStaff} 
+        <Input
+          type="number"
+          value={data.numberOfStaff}
           onChange={(e) => handleInputChange('numberOfStaff', parseInt(e.target.value))}
         />
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('numberOfDeliveryTrucks')}</label>
-        <Input 
-          type="number" 
-          value={data.numberOfDeliveryTrucks} 
+        <Input
+          type="number"
+          value={data.numberOfDeliveryTrucks}
           onChange={(e) => handleInputChange('numberOfDeliveryTrucks', parseInt(e.target.value))}
         />
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('hourlyRateCHF')}</label>
-        <Input 
-          type="number" 
-          value={data.hourlyRateCHF} 
+        <Input
+          type="number"
+          value={data.hourlyRateCHF}
           onChange={(e) => handleInputChange('hourlyRateCHF', parseFloat(e.target.value))}
         />
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('durationHours')}</label>
-        <Input 
-          type="number" 
-          value={data.durationHours} 
+        <Input
+          type="number"
+          value={data.durationHours}
           onChange={(e) => handleInputChange('durationHours', parseFloat(e.target.value))}
         />
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('disassemblyAssemblyBy')}</label>
-        <Input 
-          value={data.disassemblyAssemblyBy} 
+        <Input
+          value={data.disassemblyAssemblyBy}
           onChange={(e) => handleInputChange('disassemblyAssemblyBy', e.target.value)}
         />
       </div>
@@ -339,11 +431,11 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('cleaningType')}</label>
-        <Select 
+        <Select
           value={data.cleaningType}
           onValueChange={(value) => handleInputChange('cleaningType', value)}
         >
-          <SelectTrigger>
+          <SelectTrigger className={errors.cleaningType ? 'border-red-500' : ''}>
             <SelectValue placeholder={t('selectCleaningType')} />
           </SelectTrigger>
           <SelectContent>
@@ -352,54 +444,63 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
             <SelectItem value="window">{t('windowCleaning')}</SelectItem>
           </SelectContent>
         </Select>
+        {errors.cleaningType && <p className="text-red-500 text-sm mt-1">{errors.cleaningType}</p>}
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('fixedPriceRateCHF')}</label>
-        <Input 
-          type="number" 
-          value={data.fixedPriceRateCHF} 
+        <Input
+          type="number"
+          value={data.fixedPriceRateCHF}
           onChange={(e) => handleInputChange('fixedPriceRateCHF', parseFloat(e.target.value))}
+          className={errors.fixedPriceRateCHF ? 'border-red-500' : ''}
         />
+        {errors.fixedPriceRateCHF && <p className="text-red-500 text-sm mt-1">{errors.fixedPriceRateCHF}</p>}
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('hourlyRateCHFPerHour')}</label>
-        <Input 
-          type="number" 
-          value={data.hourlyRateCHFPerHour || ''} 
+        <Input
+          type="number"
+          value={data.hourlyRateCHFPerHour || ''}
           onChange={(e) => handleInputChange('hourlyRateCHFPerHour', parseFloat(e.target.value) || null)}
+          className={errors.hourlyRateCHFPerHour ? 'border-red-500' : ''}
         />
+        {errors.hourlyRateCHFPerHour && <p className="text-red-500 text-sm mt-1">{errors.hourlyRateCHFPerHour}</p>}
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('durationHours')}</label>
-        <Input 
-          type="number" 
-          value={data.durationHours || ''} 
+        <Input
+          type="number"
+          value={data.durationHours || ''}
           onChange={(e) => handleInputChange('durationHours', parseFloat(e.target.value) || null)}
+          className={errors.durationHours ? 'border-red-500' : ''}
         />
+        {errors.durationHours && <p className="text-red-500 text-sm mt-1">{errors.durationHours}</p>}
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('numberOfStaff')}</label>
-        <Input 
-          type="number" 
-          value={data.numberOfStaff} 
+        <Input
+          type="number"
+          value={data.numberOfStaff}
           onChange={(e) => handleInputChange('numberOfStaff', parseInt(e.target.value))}
+          className={errors.numberOfStaff ? 'border-red-500' : ''}
         />
+        {errors.numberOfStaff && <p className="text-red-500 text-sm mt-1">{errors.numberOfStaff}</p>}
       </div>
       <div className="flex items-center space-x-2">
-        <Checkbox 
-          id="fillNailHoles" 
+        <Checkbox
+          id="fillNailHoles"
           checked={data.fillNailHoles}
-          onCheckedChange={(checked) => handleInputChange('fillNailHoles', checked)}
+          onCheckedChange={(checked) => handleInputChange('fillNailHoles', checked as boolean)}
         />
         <label htmlFor="fillNailHoles" className="text-sm font-medium text-gray-700">
           {t('fillNailHoles')}
         </label>
       </div>
       <div className="flex items-center space-x-2">
-        <Checkbox 
-          id="withHighPressureCleaner" 
+        <Checkbox
+          id="withHighPressureCleaner"
           checked={data.withHighPressureCleaner}
-          onCheckedChange={(checked) => handleInputChange('withHighPressureCleaner', checked)}
+          onCheckedChange={(checked) => handleInputChange('withHighPressureCleaner', checked as boolean)}
         />
         <label htmlFor="withHighPressureCleaner" className="text-sm font-medium text-gray-700">
           {t('withHighPressureCleaner')}
@@ -407,41 +508,41 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('cleaningDate')}</label>
-        <Input 
-          type="date" 
-          value={data.cleaningDate?.split('T')[0]} 
+        <Input
+          type="date"
+          value={data.cleaningDate?.split('T')[0]}
           onChange={(e) => handleInputChange('cleaningDate', `${e.target.value}T00:00:00.000Z`)}
         />
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('cleaningStartTime')}</label>
-        <Input 
-          type="time" 
-          value={data.cleaningStartTime} 
+        <Input
+          type="time"
+          value={data.cleaningStartTime}
           onChange={(e) => handleInputChange('cleaningStartTime', e.target.value)}
         />
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('deliveryDate')}</label>
-        <Input 
-          type="date" 
-          value={data.deliveryDate?.split('T')[0]} 
+        <Input
+          type="date"
+          value={data.deliveryDate?.split('T')[0]}
           onChange={(e) => handleInputChange('deliveryDate', `${e.target.value}T00:00:00.000Z`)}
         />
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('deliveryTime')}</label>
-        <Input 
-          type="time" 
-          value={data.deliveryTime} 
+        <Input
+          type="time"
+          value={data.deliveryTime}
           onChange={(e) => handleInputChange('deliveryTime', e.target.value)}
         />
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('discount')}</label>
-        <Input 
-          type="number" 
-          value={data.discount} 
+        <Input
+          type="number"
+          value={data.discount}
           onChange={(e) => handleInputChange('discount', parseFloat(e.target.value))}
         />
       </div>
@@ -511,7 +612,8 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('packingDate')}</label>
-        <Input type="date" value={data.packingDate?.split('T')[0]} onChange={(e) => handleInputChange('packingDate', `${e.target.value}T00:00:00.000Z`)} />
+        <Input type="date" value={data.packingDate?.split('T')[0] || ''} onChange={(e) => handleInputChange('packingDate', `${e.target.value}T00:00:00.000Z`)} className={errors.packingDate ? 'border-red-500' : ''} />
+        {errors.packingDate && <p className="text-red-500 text-sm mt-1">{errors.packingDate}</p>}
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('packingStartTime')}</label>
@@ -523,7 +625,8 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('durationHours')}</label>
-        <Input type="number" value={data.durationHours} onChange={(e) => handleInputChange('durationHours', parseFloat(e.target.value))} />
+        <Input type="number" value={data.durationHours} onChange={(e) => handleInputChange('durationHours', parseFloat(e.target.value))} className={errors.durationHours ? 'border-red-500' : ''} />
+        {errors.durationHours && <p className="text-red-500 text-sm mt-1">{errors.durationHours}</p>}
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('selectedTariffDescription')}</label>
@@ -548,7 +651,7 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('unpackingDate')}</label>
-        <Input type="date" value={data.unpackingDate?.split('T')[0]} onChange={(e) => handleInputChange('unpackingDate', `${e.target.value}T00:00:00.000Z`)} />
+        <Input type="date" value={data.unpackingDate?.split('T')[0] || ''} onChange={(e) => handleInputChange('unpackingDate', `${e.target.value}T00:00:00.000Z`)} />
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('unpackingStartTime')}</label>
@@ -585,7 +688,8 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('volumeRateCHFPerM3')}</label>
-        <Input type="number" value={data.volumeRateCHFPerM3} onChange={(e) => handleInputChange('volumeRateCHFPerM3', parseFloat(e.target.value))} />
+        <Input type="number" value={data.volumeRateCHFPerM3} onChange={(e) => handleInputChange('volumeRateCHFPerM3', parseFloat(e.target.value))} className={errors.volumeRateCHFPerM3 ? 'border-red-500' : ''} />
+        {errors.volumeRateCHFPerM3 && <p className="text-red-500 text-sm mt-1">{errors.volumeRateCHFPerM3}</p>}
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('flatRateDisposalCostCHF')}</label>
@@ -593,7 +697,8 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('estimatedVolumeM3')}</label>
-        <Input type="number" value={data.estimatedVolumeM3} onChange={(e) => handleInputChange('estimatedVolumeM3', parseFloat(e.target.value))} />
+        <Input type="number" value={data.estimatedVolumeM3} onChange={(e) => handleInputChange('estimatedVolumeM3', parseFloat(e.target.value))} className={errors.estimatedVolumeM3 ? 'border-red-500' : ''} />
+        {errors.estimatedVolumeM3 && <p className="text-red-500 text-sm mt-1">{errors.estimatedVolumeM3}</p>}
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('selectedEmployeePlanTariffDescription')}</label>
@@ -617,7 +722,8 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('disposalDate')}</label>
-        <Input type="date" value={data.disposalDate?.split('T')[0]} onChange={(e) => handleInputChange('disposalDate', `${e.target.value}T00:00:00.000Z`)} />
+        <Input type="date" value={data.disposalDate?.split('T')[0] || ''} onChange={(e) => handleInputChange('disposalDate', `${e.target.value}T00:00:00.000Z`)} className={errors.disposalDate ? 'border-red-500' : ''} />
+        {errors.disposalDate && <p className="text-red-500 text-sm mt-1">{errors.disposalDate}</p>}
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('disposalStartTime')}</label>
@@ -646,11 +752,13 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('rateCHFPerM3PerMonth')}</label>
-        <Input type="number" value={data.rateCHFPerM3PerMonth} onChange={(e) => handleInputChange('rateCHFPerM3PerMonth', parseFloat(e.target.value))} />
+        <Input type="number" value={data.rateCHFPerM3PerMonth} onChange={(e) => handleInputChange('rateCHFPerM3PerMonth', parseFloat(e.target.value))} className={errors.rateCHFPerM3PerMonth ? 'border-red-500' : ''} />
+        {errors.rateCHFPerM3PerMonth && <p className="text-red-500 text-sm mt-1">{errors.rateCHFPerM3PerMonth}</p>}
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('volumeM3')}</label>
-        <Input type="number" value={data.volumeM3} onChange={(e) => handleInputChange('volumeM3', parseFloat(e.target.value))} />
+        <Input type="number" value={data.volumeM3} onChange={(e) => handleInputChange('volumeM3', parseFloat(e.target.value))} className={errors.volumeM3 ? 'border-red-500' : ''} />
+        {errors.volumeM3 && <p className="text-red-500 text-sm mt-1">{errors.volumeM3}</p>}
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('additionalCostsText')}</label>
@@ -675,7 +783,8 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('fixedRateCHF')}</label>
-        <Input type="number" value={data.fixedRateCHF} onChange={(e) => handleInputChange('fixedRateCHF', parseFloat(e.target.value))} />
+        <Input type="number" value={data.fixedRateCHF} onChange={(e) => handleInputChange('fixedRateCHF', parseFloat(e.target.value))} className={errors.fixedRateCHF ? 'border-red-500' : ''} />
+        {errors.fixedRateCHF && <p className="text-red-500 text-sm mt-1">{errors.fixedRateCHF}</p>}
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('selectedHourlyTariffDescription')}</label>
@@ -699,7 +808,8 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('transportDate')}</label>
-        <Input type="date" value={data.transportDate?.split('T')[0]} onChange={(e) => handleInputChange('transportDate', `${e.target.value}T00:00:00.000Z`)} />
+        <Input type="date" value={data.transportDate?.split('T')[0] || ''} onChange={(e) => handleInputChange('transportDate', `${e.target.value}T00:00:00.000Z`)} className={errors.transportDate ? 'border-red-500' : ''} />
+        {errors.transportDate && <p className="text-red-500 text-sm mt-1">{errors.transportDate}</p>}
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('transportStartTime')}</label>
@@ -734,7 +844,7 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
 
   const renderServiceForm = () => {
     if (!formData) return null;
-    
+
     switch (serviceType) {
       case 'move':
         return renderMoveServiceForm(formData as MoveService);
@@ -761,9 +871,9 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <div className="flex items-center gap-3">
-            <Button 
-              variant="default" 
-              size="icon" 
+            <Button
+              variant="default"
+              size="icon"
               onClick={onClose}
               className="h-8 w-8"
             >
@@ -792,4 +902,4 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
       </div>
     </div>
   )
-} 
+}

@@ -943,6 +943,7 @@
       "editModal": {
         "languageCode":"Language Code",
         "searchCustomer":"Search customer",
+        "emailNotificationAlert":"After Update, the offer will be sent to the customer via email.",
         "street":"Street",
         "countryCode":"Country Code",
         "enterCountryCode":"Enter country code",

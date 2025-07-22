@@ -18,6 +18,9 @@ import { apiClient } from '@/lib/api'
 import { useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { useDebounce } from '@/app/hooks/useDebounce'
+// Add imports for alert components
+import { AlertCircle } from 'lucide-react'
+import { Alert, AlertDescription } from "@/components/ui/alert"
 
 // Add status enum and options
 enum OfferStatus {
@@ -655,6 +658,18 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
             </div>
           )}
         </div>
+
+        {/* Add email notification alert for edit mode */}
+        {offerId && (
+          <div className="px-6 pt-4 flex justify-center">
+            <Alert className="border-blue-200">
+              <AlertCircle className="h-4 w-4 text-blue-600" />
+              <AlertDescription className="text-blue-700 text-sm w-full">
+                {t('emailNotificationAlert')}
+              </AlertDescription>
+            </Alert>
+          </div>
+        )}
 
         {/* Content */}
         <div className="p-6 space-y-8">
