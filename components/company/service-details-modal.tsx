@@ -240,7 +240,22 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
     }
   }, [initialData, serviceType]);
 
+  const formatTimeForAPI = (time: string): string => {
+    if (!time) return '';
+    // Add ":00" seconds if not present
+    return time.includes(':') ? (time.length === 5 ? `${time}:00` : time) : '';
+  };
+
   const handleInputChange = (field: string, value: string | number | boolean | null | AdditionalCost[]) => {
+    // Special handling for time fields
+    if (
+      field.toLowerCase().includes('time') && 
+      typeof value === 'string' && 
+      !field.includes('Date')
+    ) {
+      value = formatTimeForAPI(value);
+    }
+    
     setFormData(prev => ({
       ...prev,
       [field]: value
@@ -364,7 +379,7 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('moveStartTime')}</label>
         <Input
           type="time"
-          value={data.moveStartTime}
+          value={data.moveStartTime?.slice(0, 5) || ''}
           onChange={(e) => handleInputChange('moveStartTime', e.target.value)}
         />
       </div>
@@ -518,7 +533,7 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('cleaningStartTime')}</label>
         <Input
           type="time"
-          value={data.cleaningStartTime}
+          value={data.cleaningStartTime?.slice(0, 5) || ''}
           onChange={(e) => handleInputChange('cleaningStartTime', e.target.value)}
         />
       </div>
@@ -534,7 +549,7 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('deliveryTime')}</label>
         <Input
           type="time"
-          value={data.deliveryTime}
+          value={data.deliveryTime?.slice(0, 5) || ''}
           onChange={(e) => handleInputChange('deliveryTime', e.target.value)}
         />
       </div>
@@ -617,7 +632,11 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('packingStartTime')}</label>
-        <Input type="time" value={data.packingStartTime} onChange={(e) => handleInputChange('packingStartTime', e.target.value)} />
+        <Input
+          type="time"
+          value={data.packingStartTime?.slice(0, 5) || ''}
+          onChange={(e) => handleInputChange('packingStartTime', e.target.value)}
+        />
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('roundTripCostCHF')}</label>
@@ -655,7 +674,11 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('unpackingStartTime')}</label>
-        <Input type="time" value={data.unpackingStartTime} onChange={(e) => handleInputChange('unpackingStartTime', e.target.value)} />
+        <Input
+          type="time"
+          value={data.unpackingStartTime?.slice(0, 5) || ''}
+          onChange={(e) => handleInputChange('unpackingStartTime', e.target.value)}
+        />
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('roundTripCostCHF')}</label>
@@ -727,7 +750,11 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('disposalStartTime')}</label>
-        <Input type="time" value={data.disposalStartTime} onChange={(e) => handleInputChange('disposalStartTime', e.target.value)} />
+        <Input
+          type="time"
+          value={data.disposalStartTime?.slice(0, 5) || ''}
+          onChange={(e) => handleInputChange('disposalStartTime', e.target.value)}
+        />
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('roundTripCostCHF')}</label>
@@ -813,7 +840,11 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('transportStartTime')}</label>
-        <Input type="time" value={data.transportStartTime} onChange={(e) => handleInputChange('transportStartTime', e.target.value)} />
+        <Input
+          type="time"
+          value={data.transportStartTime?.slice(0, 5) || ''}
+          onChange={(e) => handleInputChange('transportStartTime', e.target.value)}
+        />
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('roundTripCostCHF')}</label>
