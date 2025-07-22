@@ -584,6 +584,9 @@
           "deleting": "Deleting..."
         },
         "offerDetails": {
+          "numberOfDeliveryTrucks": "Number of Delivery Trucks",
+          "furtherDiscounts": "Further Discounts",
+          "durationHours": "Duration Hours",
           "createdBy": "Created By",
           "moveInDate": "Move In Date",
           "deliveryTime": "Delivery Time",
