@@ -904,7 +904,7 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
                   </div>
                 )}
               </div>
-
+{/* 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   {t('languageCode')}
@@ -923,7 +923,7 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
                     <SelectItem value="fr">Français</SelectItem>
                   </SelectContent>
                 </Select>
-              </div>
+              </div> */}
             </div>
           </section>
 
