@@ -168,7 +168,7 @@ const getInitialServiceData = (type: ServiceType['type']): ServiceType['data'] =
         hourlyRateCHF: 0,
         durationHours: 0,
         disassemblyAssemblyBy: '',
-        additionalCosts: DEFAULT_MOVE_ADDITIONAL_COSTS
+        additionalCosts: [...DEFAULT_MOVE_ADDITIONAL_COSTS]  // Create a new array
       };
     case 'cleaning':
       return {
@@ -196,7 +196,7 @@ const getInitialServiceData = (type: ServiceType['type']): ServiceType['data'] =
         numberOfStaff: 0,
         hourlyRateCHF: 0,
         packingMaterialsCost: 0,
-        additionalCosts: DEFAULT_PACKING_ADDITIONAL_COSTS
+        additionalCosts: [...DEFAULT_PACKING_ADDITIONAL_COSTS]  // Create a new array
       };
     case 'unpacking':
       return {
@@ -208,7 +208,7 @@ const getInitialServiceData = (type: ServiceType['type']): ServiceType['data'] =
         numberOfStaff: 0,
         hourlyRateCHF: 0,
         packingMaterialsCost: 0,
-        additionalCosts: DEFAULT_UNPACKING_ADDITIONAL_COSTS
+        additionalCosts: [...DEFAULT_UNPACKING_ADDITIONAL_COSTS]  // Create a new array
       };
     case 'disposal':
       return {
@@ -225,7 +225,7 @@ const getInitialServiceData = (type: ServiceType['type']): ServiceType['data'] =
         roundTripCostCHF: 0,
         discount: 0,
         furtherDiscounts: '',
-        additionalCosts: DEFAULT_DISPOSAL_ADDITIONAL_COSTS
+        additionalCosts: [...DEFAULT_DISPOSAL_ADDITIONAL_COSTS]  // Create a new array
       };
     case 'storage':
       return {
@@ -267,6 +267,17 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
     if (serviceType) {
       // If initialData is provided, use it; otherwise, use the default data with predefined additional costs
       if (initialData && initialData !== null) {
+        // Ensure services have additionalCosts
+        if (serviceType === 'move' && (!initialData.additionalCosts || initialData.additionalCosts.length === 0)) {
+          initialData.additionalCosts = [...DEFAULT_MOVE_ADDITIONAL_COSTS];
+        } else if (serviceType === 'packing' && (!initialData.additionalCosts || initialData.additionalCosts.length === 0)) {
+          initialData.additionalCosts = [...DEFAULT_PACKING_ADDITIONAL_COSTS];
+        } else if (serviceType === 'unpacking' && (!initialData.additionalCosts || initialData.additionalCosts.length === 0)) {
+          initialData.additionalCosts = [...DEFAULT_UNPACKING_ADDITIONAL_COSTS];
+        } else if (serviceType === 'disposal' && (!initialData.additionalCosts || initialData.additionalCosts.length === 0)) {
+          initialData.additionalCosts = [...DEFAULT_DISPOSAL_ADDITIONAL_COSTS];
+        }
+        
         setFormData(initialData);
       } else {
         const defaultData = getInitialServiceData(serviceType);
@@ -1256,6 +1267,30 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
 
   const renderServiceForm = () => {
     if (!formData) return null;
+
+    // Ensure all service types have their default additional costs
+    switch (serviceType) {
+      case 'move':
+        if (!formData.additionalCosts || formData.additionalCosts.length === 0) {
+          formData.additionalCosts = [...DEFAULT_MOVE_ADDITIONAL_COSTS];
+        }
+        break;
+      case 'packing':
+        if (!formData.additionalCosts || formData.additionalCosts.length === 0) {
+          formData.additionalCosts = [...DEFAULT_PACKING_ADDITIONAL_COSTS];
+        }
+        break;
+      case 'unpacking':
+        if (!formData.additionalCosts || formData.additionalCosts.length === 0) {
+          formData.additionalCosts = [...DEFAULT_UNPACKING_ADDITIONAL_COSTS];
+        }
+        break;
+      case 'disposal':
+        if (!formData.additionalCosts || formData.additionalCosts.length === 0) {
+          formData.additionalCosts = [...DEFAULT_DISPOSAL_ADDITIONAL_COSTS];
+        }
+        break;
+    }
 
     switch (serviceType) {
       case 'move':
