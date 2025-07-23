@@ -1150,6 +1150,24 @@ export const companyApi = {
       throw new Error('Network error. Please check your connection.');
     }
   },
+  async uploadCompanyLogo(logoFile: File): Promise<void> {
+    try {
+      const formData = new FormData();
+      formData.append('logoFile', logoFile);
+      
+      await apiClient.post('/CompanySettings/saveupdate-company-logo', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const errorData = error.response.data as ApiErrorResponse;
+        throw new Error(errorData.message || errorData.error || 'Failed to upload company logo');
+      }
+      throw new Error('Network error. Please check your connection.');
+    }
+  },
 };
 
 /**

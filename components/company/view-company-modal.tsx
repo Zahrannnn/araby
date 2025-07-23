@@ -5,10 +5,12 @@ import { companyApi, googleCalendarApi } from '@/lib/api'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import {
   Building2, User2, BarChart2, Eye, EyeOff, Copy, Info, CheckCircle, AlertCircle,
-  CreditCard, Calendar, Mail, Phone, MapPin, Hash, FileText, Clock, Shield, Key, Save, Calendar as CalendarIcon
+  CreditCard, Calendar, Mail, Phone, MapPin, Hash, FileText, Clock, Shield, Key, Save, Calendar as CalendarIcon,
+  Upload, 
 } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import Image from 'next/image'
 
 const ViewCompanyPage: React.FC = () => {
   const {
@@ -40,6 +42,10 @@ const ViewCompanyPage: React.FC = () => {
   const [showSecret, setShowSecret] = useState(false)
   const pubKeyRef = useRef<HTMLInputElement>(null!)
   const secKeyRef = useRef<HTMLInputElement>(null!)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [logoFile, setLogoFile] = useState<File | null>(null)
+  const [uploadSuccess, setUploadSuccess] = useState<string | null>(null)
+  const [uploadError, setUploadError] = useState<string | null>(null)
 
   const { mutate: saveStripeKeys, isPending: isSaving } = useMutation<void, Error, { publishableKey: string; secretKey: string }>({
     mutationFn: companyApi.setStripeKeys,
@@ -65,6 +71,22 @@ const ViewCompanyPage: React.FC = () => {
     },
   })
 
+  const { mutate: uploadLogo, isPending: isLogoUploading } = useMutation({
+    mutationFn: async (file: File) => {
+      return companyApi.uploadCompanyLogo(file);
+    },
+    onSuccess: () => {
+      setUploadSuccess('Company logo uploaded successfully')
+      setUploadError(null)
+      queryClient.invalidateQueries({ queryKey: ['company-settings'] })
+      setLogoFile(null)
+    },
+    onError: (err: Error) => {
+      setUploadError(err.message || 'Failed to upload logo')
+      setUploadSuccess(null)
+    },
+  })
+
   function handleStripeSubmit(e: React.FormEvent) {
     e.preventDefault()
     setFormError(null)
@@ -83,6 +105,28 @@ const ViewCompanyPage: React.FC = () => {
     }
   }
 
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.files && e.target.files.length > 0) {
+      setLogoFile(e.target.files[0])
+      setUploadError(null)
+      setUploadSuccess(null)
+    }
+  }
+
+  function handleLogoUpload() {
+    if (logoFile) {
+      uploadLogo(logoFile)
+    } else {
+      setUploadError('Please select a file first')
+    }
+  }
+
+  function triggerFileInput() {
+    if (fileInputRef.current) {
+      fileInputRef.current.click()
+    }
+  }
+
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-muted/50 via-background to-white py-10 px-4 md:px-6 animate-fade-in">
       <div className="w-full max-w-6xl mx-auto">
@@ -90,8 +134,19 @@ const ViewCompanyPage: React.FC = () => {
           <CardHeader className="pb-3 border-b border-muted/20">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="p-2.5 bg-primary/10 rounded-lg">
-                  <Building2 className="w-6 h-6 text-primary" />
+                <div className="p-2.5 bg-primary/10 rounded-lg flex items-center justify-center w-12 h-12">
+                  {data?.companyInfo?.companyLogoUrl ? (
+                    <Image
+                      src={`https://crmproject.runasp.net/${data.companyInfo.companyLogoUrl}`}
+                      alt="Company Logo"
+                      className="w-full h-full object-cover rounded"
+                      width={100}
+                      height={100}
+                      loading="lazy"
+                    />
+                  ) : (
+                    <Building2 className="w-6 h-6 text-primary" />
+                  )}
                 </div>
                 <div>
                   <CardTitle className="text-2xl font-bold tracking-tight">Company Settings</CardTitle>
@@ -123,7 +178,10 @@ const ViewCompanyPage: React.FC = () => {
             ) : error ? (
               <div className="py-16 text-center text-destructive text-lg">{(error as Error).message}</div>
             ) : data ? (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* Company Logo Upload Section */}
+               
+
                 {/* Company Info */}
                 <section className="bg-white rounded-xl shadow-md p-6 flex flex-col gap-4 border border-muted/30 transition-all duration-300 hover:shadow-lg hover:border-primary/20">
                   <div className="flex items-center gap-3">
@@ -267,6 +325,7 @@ const ViewCompanyPage: React.FC = () => {
                     </div>
                   </div>
                 </section>
+                
                 {/* Manager Info */}
                 <section className="bg-white rounded-xl shadow-md p-6 flex flex-col gap-4 border border-muted/30 transition-all duration-300 hover:shadow-lg hover:border-primary/20">
                   <div className="flex items-center gap-3">
@@ -307,6 +366,80 @@ const ViewCompanyPage: React.FC = () => {
                       <Clock className="w-4 h-4 text-muted-foreground" />
                       <span className="text-muted-foreground">Created:</span>
                       <span className="font-medium text-foreground ml-auto">{data.managerInfo.createdAt?.slice(0, 10)}</span>
+                    </div>
+                  </div>
+                </section>
+                <section className="bg-white rounded-xl h-fit shadow-md p-6 flex flex-col gap-4 border border-muted/30 transition-all duration-300 hover:shadow-lg hover:border-primary/20">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-primary/10 rounded-lg">
+                      {/* <p className="w-5 h-5 text-primary" /> */}
+                    </div>
+                    <h3 className="font-semibold text-lg">Company Logo</h3>
+                  </div>
+                  <div className="h-px w-full bg-gradient-to-r from-muted/50 via-muted/30 to-transparent" />
+                  
+                  <div className="flex flex-col items-center gap-4 py-4">
+                    
+                    
+                    <div className="w-full">
+                      <input 
+                        type="file" 
+                        ref={fileInputRef}
+                        onChange={handleFileChange}
+                        accept="image/jpeg,image/png,image/gif"
+                        className="hidden"
+                        aria-label="Upload company logo"
+                      />
+                      
+                      <div className="flex flex-col gap-3">
+                        <Button 
+                          type="button" 
+                          onClick={triggerFileInput}
+                          variant="outline" 
+                          className="w-full border-muted/30 hover:bg-primary/5 hover:text-primary hover:border-primary/30"
+                        >
+                          <Upload className="w-4 h-4 mr-2" />
+                          {logoFile ? logoFile.name.substring(0, 20) + (logoFile.name.length > 20 ? '...' : '') : 'Select Logo'}
+                        </Button>
+                        
+                        <Button 
+                          type="button" 
+                          onClick={handleLogoUpload}
+                          disabled={!logoFile || isLogoUploading}
+                          className="w-full"
+                        >
+                          {isLogoUploading ? (
+                            <>
+                              <span className="animate-spin w-4 h-4 border-2 border-white/30 border-t-white rounded-full mr-2"></span>
+                              <span>Uploading...</span>
+                            </>
+                          ) : (
+                            <>
+                              <Save className="w-4 h-4 mr-2" />
+                              <span>Upload Logo</span>
+                            </>
+                          )}
+                        </Button>
+                      </div>
+                      
+                      {uploadError && (
+                        <div className="mt-3 text-destructive text-sm animate-fade-in flex items-center gap-1.5 p-2 bg-destructive/10 rounded-lg">
+                          <AlertCircle className="w-4 h-4" />
+                          {uploadError}
+                        </div>
+                      )}
+                      
+                      {uploadSuccess && (
+                        <div className="mt-3 text-green-600 text-sm animate-fade-in flex items-center gap-1.5 p-2 bg-green-50 rounded-lg">
+                          <CheckCircle className="w-4 h-4" />
+                          {uploadSuccess}
+                        </div>
+                      )}
+                      
+                      <div className="mt-3 text-xs text-muted-foreground">
+                        <p>Recommended: Square image, at least 200x200px</p>
+                        <p>Supported formats: JPEG, PNG, GIF</p>
+                      </div>
                     </div>
                   </div>
                 </section>

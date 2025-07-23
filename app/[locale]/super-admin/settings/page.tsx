@@ -20,12 +20,14 @@ interface SubscriptionType {
 interface UpdateSubscriptionRequest {
   priceOfMonthly: number;
   priceOfAnnually: number;
+  priceOfStripe: number;
 }
 
 // Zod validation schema
 const subscriptionUpdateSchema = z.object({
   priceOfMonthly: z.number().min(0, 'Monthly price must be positive'),
   priceOfAnnually: z.number().min(0, 'Annual price must be positive'),
+  priceOfStripe: z.number().min(0, 'Stripe subscription price must be positive'),
 });
 
 type SubscriptionUpdateForm = z.infer<typeof subscriptionUpdateSchema>;
@@ -105,6 +107,7 @@ const SettingsPage = ({ params }: { params: Promise<{ locale: string }> }) => {
     defaultValues: {
       priceOfMonthly: 0,
       priceOfAnnually: 0,
+      priceOfStripe: 0,
     },
   });
 
@@ -121,12 +124,16 @@ const SettingsPage = ({ params }: { params: Promise<{ locale: string }> }) => {
         // Set form values based on fetched data
         const monthlySubscription = data.find(sub => sub.billingCycle.toLowerCase() === 'monthly');
         const annualSubscription = data.find(sub => sub.billingCycle.toLowerCase() === 'annually');
+        const stripeSubscription = data.find(sub => sub.billingCycle.toLowerCase() === 'stripesubs');
 
         if (monthlySubscription) {
           setValue('priceOfMonthly', monthlySubscription.price);
         }
         if (annualSubscription) {
           setValue('priceOfAnnually', annualSubscription.price);
+        }
+        if (stripeSubscription) {
+          setValue('priceOfStripe', stripeSubscription.price);
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load subscription data');
@@ -166,12 +173,15 @@ const SettingsPage = ({ params }: { params: Promise<{ locale: string }> }) => {
   const getSubscriptionStats = () => {
     const monthlySubscription = subscriptionData.find(sub => sub.billingCycle.toLowerCase() === 'monthly');
     const annualSubscription = subscriptionData.find(sub => sub.billingCycle.toLowerCase() === 'annually');
+    const stripeSubscription = subscriptionData.find(sub => sub.billingCycle.toLowerCase() === 'stripesubs');
     
     return {
       monthlyCompanies: monthlySubscription?.companyCount || 0,
       annualCompanies: annualSubscription?.companyCount || 0,
+      stripeCompanies: stripeSubscription?.companyCount || 0,
       monthlyRevenue: monthlySubscription?.totalProfit || 0,
       annualRevenue: annualSubscription?.totalProfit || 0,
+      stripeRevenue: stripeSubscription?.totalProfit || 0,
     };
   };
 
@@ -304,6 +314,39 @@ const SettingsPage = ({ params }: { params: Promise<{ locale: string }> }) => {
                 )}
               </div>
             </div>
+            
+            {/* Stripe Subscription */}
+            <div className="bg-white rounded-lg p-6 shadow-sm border">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                  <svg className="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M5 2a1 1 0 011 1v1h4V3a1 1 0 112 0v1h3a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2h1V3a1 1 0 011-1zm11 14V6H4v10h12z" clipRule="evenodd"/>
+                  </svg>
+                </div>
+                <h3 className="text-lg font-medium text-gray-800">Stripe Subscription</h3>
+              </div>
+              <p className="text-gray-600 mb-4">Payment processed through Stripe payment gateway</p>
+              
+              <div className="mb-4">
+                <label className="text-sm text-gray-600 mb-2 block">Stripe Price</label>
+                <div className="relative">
+                  <input 
+                    type="number" 
+                    step="1"
+                    {...register('priceOfStripe', { valueAsNumber: true })}
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                      errors.priceOfStripe ? 'border-red-300' : 'border-gray-300'
+                    } ${isRTL ? 'text-right pr-12 pl-3' : 'text-left pl-3 pr-12'}`}
+                    aria-label="Stripe Subscription Price"
+                    dir={isRTL ? 'rtl' : 'ltr'}
+                  />
+                  <span className={`absolute top-2 text-gray-500 ${isRTL ? 'left-3' : 'right-3'}`}>CHF</span>
+                </div>
+                {errors.priceOfStripe && (
+                  <p className="text-red-500 text-sm mt-1">{errors.priceOfStripe.message}</p>
+                )}
+              </div>
+            </div>
           </div>
 
           {/* Save Button */}
@@ -369,6 +412,18 @@ const SettingsPage = ({ params }: { params: Promise<{ locale: string }> }) => {
                     <span className="text-green-800 font-bold">{stats.annualCompanies}</span>
                   </div>
                 </div>
+                
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                    <svg className="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M5 2a1 1 0 011 1v1h4V3a1 1 0 112 0v1h3a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2h1V3a1 1 0 011-1zm11 14V6H4v10h12z" clipRule="evenodd"/>
+                    </svg>
+                  </div>
+                  <div className="flex-1 bg-purple-100 rounded-lg px-4 py-3 flex items-center justify-between">
+                    <span className="text-purple-800 font-medium">Stripe Subscription</span>
+                    <span className="text-purple-800 font-bold">{stats.stripeCompanies}</span>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -394,6 +449,16 @@ const SettingsPage = ({ params }: { params: Promise<{ locale: string }> }) => {
                   <div className="flex-1 bg-green-100 rounded-lg px-4 py-3 flex items-center justify-between">
                     <span className="text-green-800 font-medium">{t('superAdmin.settings.yearlyTariff')}</span>
                     <span className="text-green-800 font-bold">CHF {stats.annualRevenue.toLocaleString()}</span>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                    <span className="text-purple-600 font-bold text-sm">$</span>
+                  </div>
+                  <div className="flex-1 bg-purple-100 rounded-lg px-4 py-3 flex items-center justify-between">
+                    <span className="text-purple-800 font-medium">Stripe Subscription</span>
+                    <span className="text-purple-800 font-bold">CHF {stats.stripeRevenue.toLocaleString()}</span>
                   </div>
                 </div>
               </div>
