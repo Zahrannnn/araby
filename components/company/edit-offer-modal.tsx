@@ -624,106 +624,115 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
       // Log the actual JSON payload to help diagnose issues
       console.log('JSON payload:', JSON.stringify(dataToSend, null, 2))
 
-      // CORS Bypass Method: Create a hidden form and submit it
-      // This approach can work when XHR/fetch are blocked by CORS
+      // Get the token
       const token = cookieUtils.getToken();
-      const apiUrl = offerId 
-        ? `https://crmproject.runasp.net/api/Offers/${offerId}` 
-        : 'https://crmproject.runasp.net/api/Offers';
-      
-      // Create a hidden iframe to receive the response
-      const iframeId = 'hidden-submit-iframe';
-      let iframe = document.getElementById(iframeId) as HTMLIFrameElement;
-      
-      if (!iframe) {
-        iframe = document.createElement('iframe');
-        iframe.id = iframeId;
-        iframe.name = iframeId;
-        iframe.style.display = 'none';
-        document.body.appendChild(iframe);
+      if (!token) {
+        throw new Error('No authentication token found');
       }
-      
-      // Create a promise that resolves when the iframe loads
-      const iframeLoadPromise = new Promise<{success: boolean, message?: string}>((resolve) => {
-        iframe.onload = () => {
-          try {
-            // Try to access iframe content (may fail due to same-origin policy)
-            const iframeContent = iframe.contentWindow?.document.body.innerText;
-            console.log('Iframe response:', iframeContent);
-            
-            // Assume success if we can access the iframe content
-            resolve({ success: true });
-          } catch (e) {
-            console.log('Could not access iframe content due to same-origin policy, assuming success');
-            resolve({ success: true });
-          }
-        };
+
+      // Make direct API call with explicit headers
+      try {
+        const url = offerId 
+          ? `https://crmproject.runasp.net/api/Offers/${offerId}` 
+          : 'https://crmproject.runasp.net/api/Offers';
         
-        // Also handle error cases
-        iframe.onerror = () => {
-          console.error('Iframe error occurred');
-          resolve({ success: false, message: 'Form submission failed' });
-        };
-      });
-      
-      // Create a form element
-      const form = document.createElement('form');
-      form.method = offerId ? 'POST' : 'POST'; // Use POST for both (will override with _method field for PUT)
-      form.action = apiUrl;
-      form.target = iframeId; // Submit to the iframe
-      form.style.display = 'none';
-      
-      // Add the data as a hidden field
-      const dataInput = document.createElement('input');
-      dataInput.type = 'hidden';
-      dataInput.name = 'data';
-      dataInput.value = JSON.stringify(dataToSend);
-      form.appendChild(dataInput);
-      
-      // Add method override for PUT if needed
-      if (offerId) {
-        const methodInput = document.createElement('input');
-        methodInput.type = 'hidden';
-        methodInput.name = '_method';
-        methodInput.value = 'PUT';
-        form.appendChild(methodInput);
+        const response = await fetch(url, {
+          method: offerId ? 'PUT' : 'POST',
+          headers: {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(dataToSend)
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('API Error Response:', {
+            status: response.status,
+            statusText: response.statusText,
+            body: errorText
+          });
+          throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+        }
+        
+        // Success - refresh and close
+        console.log('API call successful');
+        router.refresh();
+        onClose();
+      } catch (apiError) {
+        console.error('API Error:', apiError);
+        
+        // If the direct API call fails, try the form submission approach as fallback
+        try {
+          await handleSaveOfferWithForm(dataToSend);
+        } catch (formError) {
+          throw new Error(
+            apiError instanceof Error 
+              ? apiError.message 
+              : 'Failed to save offer via API'
+          );
+        }
       }
-      
-      // Add authorization token
-      const tokenInput = document.createElement('input');
-      tokenInput.type = 'hidden';
-      tokenInput.name = 'Authorization';
-      tokenInput.value = `Bearer ${token}`;
-      form.appendChild(tokenInput);
-      
-      // Add the form to the document and submit it
-      document.body.appendChild(form);
-      console.log('Submitting form to bypass CORS...');
-      form.submit();
-      
-      // Wait for the iframe to load
-      const result = await iframeLoadPromise;
-      
-      // Clean up
-      document.body.removeChild(form);
-      
-      if (!result.success) {
-        throw new Error(result.message || 'Form submission failed');
-      }
-      
-      // Success - refresh and close
-      console.log('Form submission successful');
-      router.refresh();
-      onClose();
     } catch (error) {
-      console.error('Error saving offer:', error);
+      console.error('Error saving offer:', error)
       setError(
         error instanceof Error 
           ? error.message 
           : 'An unexpected error occurred while saving the offer'
-      );
+      )
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
+    }
+  }
+
+  // If the above direct API call fails due to CORS, you can use this as a fallback
+  const handleSaveOfferWithForm = async (dataToSend: OfferData) => {
+    try {
+      // Alternative approach using XMLHttpRequest which might handle CORS differently
+      const token = cookieUtils.getToken();
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+
+      return new Promise<void>((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        const url = offerId 
+          ? `https://crmproject.runasp.net/api/Offers/${offerId}` 
+          : 'https://crmproject.runasp.net/api/Offers';
+        
+        xhr.open(offerId ? 'PUT' : 'POST', url);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+        xhr.setRequestHeader('Accept', '*/*');
+        
+        xhr.onload = function() {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            console.log('XHR successful response:', xhr.responseText);
+            router.refresh();
+            onClose();
+            resolve();
+          } else {
+            console.error('XHR error response:', {
+              status: xhr.status,
+              statusText: xhr.statusText,
+              response: xhr.responseText
+            });
+            reject(new Error(`XHR request failed: ${xhr.status} ${xhr.statusText}`));
+          }
+        };
+        
+        xhr.onerror = function() {
+          console.error('XHR network error');
+          reject(new Error('Network error occurred'));
+        };
+        
+        console.log('Sending XHR request with payload:', JSON.stringify(dataToSend));
+        xhr.send(JSON.stringify(dataToSend));
+      });
+    } catch (error) {
+      console.error('Error with XHR submission:', error);
+      throw error;
     }
   }
 
@@ -904,26 +913,6 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
                   </div>
                 )}
               </div>
-{/* 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {t('languageCode')}
-                </label>
-                <Select
-                  value={offerData.languageCode}
-                  onValueChange={(value) => handleInputChange('languageCode', value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder={t('selectLanguage')} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="it">Italiano</SelectItem>
-                    <SelectItem value="de">Deutsch</SelectItem>
-                    <SelectItem value="en">English</SelectItem>
-                    <SelectItem value="fr">Français</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div> */}
             </div>
           </section>
 
