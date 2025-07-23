@@ -262,6 +262,7 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
     return getInitialServiceData(serviceType);
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [hasChanges, setHasChanges] = useState(false);
 
   useEffect(() => {
     if (serviceType) {
@@ -283,6 +284,9 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
         const defaultData = getInitialServiceData(serviceType);
         setFormData(defaultData);
       }
+      
+      // Reset the changes flag when modal opens
+      setHasChanges(false);
     }
   }, [initialData, serviceType]);
 
@@ -307,6 +311,9 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
   };
 
   const handleInputChange = (field: string, value: string | number | boolean | null | AdditionalCost[]) => {
+    // Mark that user has made changes
+    setHasChanges(true);
+    
     // Special handling for time fields
     if (
       field.toLowerCase().includes('time') && 
@@ -409,8 +416,19 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
 
   const handleSubmit = () => {
     if (validateForm()) {
-      onSave(formData);
+      // Only mark as configured if the user has made changes or if the service was already configured
+      if (hasChanges || initialData) {
+        onSave(formData);
+      } else {
+        // If no changes were made and this is a new service, just close without saving
+        onClose();
+      }
     }
+  };
+  
+  const handleCancel = () => {
+    // If no changes were made and this is a new service, close without saving
+    onClose();
   };
 
   if (!isOpen || !serviceType) return null;
@@ -1321,7 +1339,7 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
             <Button
               variant="default"
               size="icon"
-              onClick={onClose}
+              onClick={handleCancel}
               className="h-8 w-8"
             >
               <ChevronLeftIcon className="h-4 w-4" />
@@ -1339,7 +1357,7 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
 
         {/* Footer */}
         <div className="flex items-center justify-end gap-4 p-6 border-t border-gray-200">
-          <Button variant="secondary" onClick={onClose}>
+          <Button variant="secondary" onClick={handleCancel}>
             {t('cancel')}
           </Button>
           <Button onClick={handleSubmit}>

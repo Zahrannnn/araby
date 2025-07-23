@@ -409,115 +409,20 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
   }
 
   const handleServiceClick = (type: ServiceType['type']) => {
-    setSelectedService(type)
-    // If service is null, initialize it with empty data
-    if (offerData[`${type}Service`] === null) {
-      const initialServiceData = {
-        moveService: { 
-          moveDate: '2025-01-01T00:00:00Z', 
-          moveInDate: '2025-01-01T00:00:00Z', 
-          moveStartTime: '08:00:00', 
-          roundTripCostCHF: 0, 
-          selectedTariffDescription: '', 
-          numberOfStaff: 0, 
-          numberOfDeliveryTrucks: 0, 
-          hourlyRateCHF: 0, 
-          durationHours: 0, 
-          disassemblyAssemblyBy: '', 
-          additionalCosts: [] // The default costs will be added by the ServiceDetailsModal component
-        },
-        cleaningService: { 
-          cleaningType: '', 
-          fixedPriceRateCHF: 0, 
-          hourlyRateCHFPerHour: null, 
-          durationHours: null, 
-          numberOfStaff: 0, 
-          fillNailHoles: false, 
-          withHighPressureCleaner: false, 
-          cleaningDate: '2025-01-01T00:00:00Z', 
-          cleaningStartTime: '08:00:00', 
-          deliveryDate: '2025-01-01T00:00:00Z', 
-          deliveryTime: '08:00:00', 
-          discount: 0, 
-          additionalCosts: [] // The default costs will be added by the ServiceDetailsModal component
-        },
-        packingService: { 
-          packingDate: '2025-01-01T00:00:00Z', 
-          packingStartTime: '08:00:00', 
-          roundTripCostCHF: 0, 
-          durationHours: 0, 
-          selectedTariffDescription: '', 
-          numberOfStaff: 0, 
-          hourlyRateCHF: 0, 
-          packingMaterialsCost: 0, 
-          additionalCosts: [] // The default costs will be added by the ServiceDetailsModal component
-        },
-        unpackingService: { 
-          unpackingDate: '2025-01-01T00:00:00Z', 
-          unpackingStartTime: '08:00:00', 
-          roundTripCostCHF: 0, 
-          durationHours: 0, 
-          selectedTariffDescription: '', 
-          numberOfStaff: 0, 
-          hourlyRateCHF: 0, 
-          packingMaterialsCost: 0, 
-          additionalCosts: [] // The default costs will be added by the ServiceDetailsModal component
-        },
-        disposalService: { 
-          volumeRateCHFPerM3: 0, 
-          flatRateDisposalCostCHF: 0, 
-          estimatedVolumeM3: 0, 
-          selectedEmployeePlanTariffDescription: null, 
-          numberOfStaff: null, 
-          numberOfDeliveryTrucks: null, 
-          hourlyRateCHF: null, 
-          durationHours: null, 
-          disposalDate: '2025-01-01T00:00:00Z', 
-          disposalStartTime: '08:00:00', 
-          roundTripCostCHF: 0, 
-          discount: 0, 
-          furtherDiscounts: '', 
-          additionalCosts: [] // The default costs will be added by the ServiceDetailsModal component
-        },
-        storageService: { 
-          rateCHFPerM3PerMonth: 0, 
-          volumeM3: 0, 
-          cost: 0, 
-          additionalCosts: [] 
-        },
-        transportService: { 
-          transportTypeText: '', 
-          fixedRateCHF: 0, 
-          selectedHourlyTariffDescription: null, 
-          numberOfStaff: 0, 
-          numberOfDeliveryTrucks: 0, 
-          hourlyRateCHF: null, 
-          durationHours: null, 
-          transportDate: '2025-01-01T00:00:00Z', 
-          transportStartTime: '08:00:00', 
-          roundTripCostCHF: 0, 
-          cost: 0, 
-          discount: 0, 
-          concessionText: '', 
-          furtherDiscounts: '', 
-          additionalCosts: [] 
-        }
-      };
-      
-      setOfferData(prev => ({
-        ...prev,
-        [`${type}Service`]: initialServiceData[`${type}Service`]
-      }));
-    }
+    setSelectedService(type);
+    // Don't initialize the service data here - let the ServiceDetailsModal handle it
   }
 
   const handleServiceSave = (data: ServiceType['data']) => {
-    setOfferData(prev => ({
-      ...prev,
-      [`${selectedService}Service`]: data
-    }))
+    // Only update the service data if we received valid data from the modal
+    if (data) {
+      setOfferData(prev => ({
+        ...prev,
+        [`${selectedService}Service`]: data
+      }));
+    }
     
-    setSelectedService(null)
+    setSelectedService(null);
   }
 
   const handleAddLocation = () => {
