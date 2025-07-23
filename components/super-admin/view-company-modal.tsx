@@ -38,6 +38,13 @@ export function ViewCompanyModal({
   // Use API data if available, otherwise fall back to basic company data
   const displayData = React.useMemo(() => {
     if (companyDetails) {
+      console.log('isSubStripe value:', companyDetails.companyInfo.isSubStripe);
+      console.log('isSubStripe type:', typeof companyDetails.companyInfo.isSubStripe);
+      
+      // Ensure isSubStripe is strictly a boolean true
+      const isStripeActive = companyDetails.companyInfo.isSubStripe === true;
+      console.log('isStripeActive (after check):', isStripeActive);
+      
       return {
         name: companyDetails.companyInfo.companyName,
         email: companyDetails.companyInfo.contactEmail,
@@ -51,6 +58,14 @@ export function ViewCompanyModal({
         subscriptionEnd: new Date(companyDetails.companyInfo.subscriptionEndDate).toLocaleDateString("de-DE"),
         createdAt: new Date(companyDetails.companyInfo.createdAt).toLocaleDateString("de-DE"),
         notes: companyDetails.companyInfo.notes || t('notAvailable'),
+        bank: companyDetails.companyInfo.bank || t('notAvailable'),
+        nameOfBankAccount: companyDetails.companyInfo.nameOfBankAccount || t('notAvailable'),
+        iban: companyDetails.companyInfo.iban || t('notAvailable'),
+        bic: companyDetails.companyInfo.bic || t('notAvailable'),
+        transportInsurancePolicyNo: companyDetails.companyInfo.transportInsurancePolicyNo || t('notAvailable'),
+        businessInsurancePolicyNo: companyDetails.companyInfo.businessInsurancePolicyNo || t('notAvailable'),
+        isSubStripe: isStripeActive,
+        stripeSubCreatedAt: companyDetails.companyInfo.stripeSubCreatedAt ? new Date(companyDetails.companyInfo.stripeSubCreatedAt).toLocaleDateString("de-DE") : t('notAvailable'),
         manager: {
           fullName: `${companyDetails.managerInfo.firstName} ${companyDetails.managerInfo.lastName}`,
           email: companyDetails.managerInfo.email,
@@ -82,6 +97,14 @@ export function ViewCompanyModal({
       subscriptionEnd: t('notAvailable'),
       createdAt: company?.createdAt ? new Date(company.createdAt).toLocaleDateString("de-DE") : t('notAvailable'),
       notes: company?.notes || t('notAvailable'),
+      bank: t('notAvailable'),
+      nameOfBankAccount: t('notAvailable'),
+      iban: t('notAvailable'),
+      bic: t('notAvailable'),
+      transportInsurancePolicyNo: t('notAvailable'),
+      businessInsurancePolicyNo: t('notAvailable'),
+      isSubStripe: false,
+      stripeSubCreatedAt: t('notAvailable'),
       manager: {
         fullName: t('notAvailable'),
         email: company?.managerEmail || t('notAvailable'),
@@ -294,6 +317,117 @@ export function ViewCompanyModal({
                     </div>
                   </div>
 
+                  <div>
+                    <div className="flex items-start gap-3">
+                      <svg className="h-4 w-4 text-gray-400 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                      </svg>
+                      <div>
+                        <p className="text-sm font-medium text-gray-700 mb-1">{t('bank')}</p>
+                        <p className="text-gray-900">{displayData.bank}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex items-start gap-3">
+                      <svg className="h-4 w-4 text-gray-400 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                      <div>
+                        <p className="text-sm font-medium text-gray-700 mb-1">{t('nameOfBankAccount')}</p>
+                        <p className="text-gray-900">{displayData.nameOfBankAccount}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex items-start gap-3">
+                      <svg className="h-4 w-4 text-gray-400 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                      </svg>
+                      <div>
+                        <p className="text-sm font-medium text-gray-700 mb-1">{t('iban')}</p>
+                        <p className="text-gray-900">{displayData.iban}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex items-start gap-3">
+                      <svg className="h-4 w-4 text-gray-400 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                      </svg>
+                      <div>
+                        <p className="text-sm font-medium text-gray-700 mb-1">{t('bic')}</p>
+                        <p className="text-gray-900">{displayData.bic}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex items-start gap-3">
+                      <svg className="h-4 w-4 text-gray-400 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                      </svg>
+                      <div>
+                        <p className="text-sm font-medium text-gray-700 mb-1">{t('transportInsurancePolicyNo')}</p>
+                        <p className="text-gray-900">{displayData.transportInsurancePolicyNo}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex items-start gap-3">
+                      <svg className="h-4 w-4 text-gray-400 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                      </svg>
+                      <div>
+                        <p className="text-sm font-medium text-gray-700 mb-1">{t('businessInsurancePolicyNo')}</p>
+                        <p className="text-gray-900">{displayData.businessInsurancePolicyNo}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {displayData.isSubStripe === true && (
+                    <div>
+                      <div className="flex items-start gap-3">
+                        <svg className="h-4 w-4 text-gray-400 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                        <div>
+                          <p className="text-sm font-medium text-gray-700 mb-1">{t('stripeSubscription')}</p>
+                          <div className="flex items-center gap-2">
+                            <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                              <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                              {t('active')}
+                            </span>
+                            <span className="text-sm text-gray-500">{t('since')} {displayData.stripeSubCreatedAt}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {displayData.isSubStripe === false && (
+                    <div>
+                      <div className="flex items-start gap-3">
+                        <svg className="h-4 w-4 text-gray-400 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                        <div>
+                          <p className="text-sm font-medium text-gray-700 mb-1">{t('stripeSubscription')}</p>
+                          <div className="flex items-center gap-2">
+                            <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                              <div className="w-2 h-2 rounded-full bg-gray-500"></div>
+                              {t('inactive')}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                   <div className="md:col-span-2">
                     <div className="flex items-start gap-3">
                       <svg className="h-4 w-4 text-gray-400 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -304,6 +438,11 @@ export function ViewCompanyModal({
                         <p className="text-gray-900">{displayData.notes}</p>
                       </div>
                     </div>
+                  </div>
+
+                  {/* Debug info - Remove in production */}
+                  <div className="md:col-span-2 mt-2 p-2 bg-gray-100 rounded text-xs text-gray-500">
+                    Debug: isSubStripe = {String(displayData.isSubStripe)}, type = {typeof displayData.isSubStripe}
                   </div>
                 </div>
               </div>
@@ -481,6 +620,117 @@ export function ViewCompanyModal({
                     </div>
                   </div>
                 </div>
+              </div>
+
+              {/* Stripe Keys Section - Always displayed but content changes based on isSubStripe */}
+              <div className="bg-gray-50 rounded-lg p-6 mt-6">
+                <div className="flex items-center gap-2 mb-6">
+                  <div className="w-5 h-5 bg-red-500 rounded flex items-center justify-center">
+                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-medium text-gray-900">Stripe API Keys</h3>
+                  <div className="ml-auto flex items-center gap-2">
+                    {displayData.isSubStripe ? (
+                      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                        {t('active')}
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                        <div className="w-2 h-2 rounded-full bg-amber-500"></div>
+                        {t('required')}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                
+                {displayData.isSubStripe ? (
+                  <div className="bg-white rounded-lg p-4 border border-gray-200 mb-4">
+                    <div className="mb-4 flex items-center gap-2">
+                      <svg className="h-5 w-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span className="font-medium text-gray-800">Stripe integration is configured</span>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                      <div className="flex flex-col">
+                        <p className="text-sm font-medium text-gray-600 mb-1">Subscription Started</p>
+                        <p className="text-gray-900 font-medium">{displayData.stripeSubCreatedAt}</p>
+                      </div>
+                      
+                      <div className="flex flex-col">
+                        <p className="text-sm font-medium text-gray-600 mb-1">Status</p>
+                        <div className="flex items-center gap-2">
+                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                            <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                            Active
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-gray-50 p-3 rounded-md border border-gray-200">
+                      <h4 className="text-sm font-medium mb-2 flex items-center gap-1.5 text-gray-700">
+                        <svg className="h-4 w-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Payment Processing Information
+                      </h4>
+                      <ul className="list-disc list-inside text-sm space-y-1 text-gray-600 ml-1">
+                        <li>This company has Stripe integration enabled</li>
+                        <li>Payment processing is active and working</li>
+                        <li>API keys are securely stored and configured</li>
+                      </ul>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="mb-6">
+                    <div className="mb-3 p-3 bg-amber-50 border border-amber-200 rounded-lg text-amber-800 flex items-start gap-2">
+                      <svg className="h-5 w-5 text-amber-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <div>
+                        <p className="font-medium mb-1">No Stripe keys are set for this company</p>
+                        <p className="text-sm">To accept payments, the company needs to add Stripe API keys.</p>
+                      </div>
+                    </div>
+                    <div className="mt-4 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                      <h4 className="text-sm font-medium mb-2 flex items-center gap-1.5 text-gray-700">
+                        <svg className="h-4 w-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        Setup Instructions:
+                      </h4>
+                      <ol className="list-decimal list-inside text-sm space-y-1 text-gray-600 ml-1">
+                        <li>Company manager needs to log in to their <a href="https://dashboard.stripe.com/apikeys" className="text-blue-600 hover:underline">Stripe Dashboard</a></li>
+                        <li>Navigate to <span className="font-medium">Developers &gt; API keys</span></li>
+                        <li>Copy the <span className="font-medium">Publishable key</span> and <span className="font-medium">Secret key</span></li>
+                        <li>Add them in the company settings section</li>
+                      </ol>
+                      <div className="mt-3 text-xs flex items-center gap-1.5 text-amber-600">
+                        <svg className="h-4 w-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                        <span>Never share your secret key publicly.</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
+                {displayData.isSubStripe && (
+                  <div className="text-sm text-gray-500 flex items-center gap-2 bg-amber-50 p-3 rounded-md border border-amber-200">
+                    <svg className="h-5 w-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                    <div>
+                      <p className="font-medium text-amber-800">Security Notice</p>
+                      <p className="text-amber-700">For security reasons, API keys are not displayed in the admin view. The company manager can access these in their dashboard.</p>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

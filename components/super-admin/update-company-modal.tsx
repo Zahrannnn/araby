@@ -29,6 +29,13 @@ interface CompanyFormData {
   subscriptionTypeId: number;
   subscriptionEndDate: string;
   isActive: boolean;
+  isSubStripe: boolean;
+  bank: string;
+  nameOfBankAccount: string;
+  iban: string;
+  bic: string;
+  transportInsurancePolicyNo: string;
+  businessInsurancePolicyNo: string;
 }
 
 interface ManagerFormData {
@@ -65,7 +72,14 @@ export function UpdateCompanyModal({ isOpen, onClose, onSuccess, companyId }: Up
     notes: "",
     subscriptionTypeId: 1,
     subscriptionEndDate: "",
-    isActive: true
+    isActive: true,
+    isSubStripe: false,
+    bank: "",
+    nameOfBankAccount: "",
+    iban: "",
+    bic: "",
+    transportInsurancePolicyNo: "",
+    businessInsurancePolicyNo: ""
   });
 
   const [managerFormData, setManagerFormData] = useState<ManagerFormData>({
@@ -98,7 +112,14 @@ export function UpdateCompanyModal({ isOpen, onClose, onSuccess, companyId }: Up
         notes: companyDetails.companyInfo.notes || "",
         subscriptionTypeId: companyDetails.companyInfo.subscriptionTypeId || 1,
         subscriptionEndDate: formatDateTimeLocal(companyDetails.companyInfo.subscriptionEndDate),
-        isActive: companyDetails.companyInfo.isActive
+        isActive: companyDetails.companyInfo.isActive,
+        isSubStripe: companyDetails.companyInfo.isSubStripe || false,
+        bank: companyDetails.companyInfo.bank || "",
+        nameOfBankAccount: companyDetails.companyInfo.nameOfBankAccount || "",
+        iban: companyDetails.companyInfo.iban || "",
+        bic: companyDetails.companyInfo.bic || "",
+        transportInsurancePolicyNo: companyDetails.companyInfo.transportInsurancePolicyNo || "",
+        businessInsurancePolicyNo: companyDetails.companyInfo.businessInsurancePolicyNo || ""
       });
 
       setManagerFormData({
@@ -490,6 +511,21 @@ export function UpdateCompanyModal({ isOpen, onClose, onSuccess, companyId }: Up
                   </select>
                 </div>
 
+                <div className="flex items-center gap-2 mt-4">
+                  <input
+                    type="checkbox"
+                    id="is-sub-stripe"
+                    checked={companyFormData.isSubStripe}
+                    onChange={(e) => handleCompanyInputChange('isSubStripe', e.target.checked)}
+                    disabled={isSubmitting}
+                    className="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"
+                    aria-label="Stripe Subscription"
+                  />
+                  <Label htmlFor="is-sub-stripe" className="text-sm font-medium text-gray-700">
+                    {t('isSubStripeLabel') || "Stripe Subscription"}
+                  </Label>
+                </div>
+
                 <div>
                   <Label htmlFor="subscription-end" className="text-sm font-medium text-gray-700 mb-2 block">
                     {t('subscriptionEndLabel')} *
@@ -505,7 +541,100 @@ export function UpdateCompanyModal({ isOpen, onClose, onSuccess, companyId }: Up
                   {errors.subscriptionEndDate && <p className="text-red-500 text-xs mt-1">{errors.subscriptionEndDate}</p>}
                 </div>
 
-                <div>
+                {/* Banking Information */}
+                <div className="border-t border-gray-200 pt-4 mt-4">
+                  <h4 className="text-sm font-medium text-gray-900 mb-3">{t('bankingInfoLabel') || "Banking Information"}</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="bank" className="text-sm font-medium text-gray-700 mb-2 block">
+                        {t('bankLabel') || "Bank"}
+                      </Label>
+                      <Input
+                        id="bank"
+                        placeholder={t('bankPlaceholder') || "Bank name"}
+                        className="w-full"
+                        value={companyFormData.bank}
+                        onChange={(e) => handleCompanyInputChange('bank', e.target.value)}
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="account-name" className="text-sm font-medium text-gray-700 mb-2 block">
+                        {t('accountNameLabel') || "Account Name"}
+                      </Label>
+                      <Input
+                        id="account-name"
+                        placeholder={t('accountNamePlaceholder') || "Name on bank account"}
+                        className="w-full"
+                        value={companyFormData.nameOfBankAccount}
+                        onChange={(e) => handleCompanyInputChange('nameOfBankAccount', e.target.value)}
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="iban" className="text-sm font-medium text-gray-700 mb-2 block">
+                        {t('ibanLabel') || "IBAN"}
+                      </Label>
+                      <Input
+                        id="iban"
+                        placeholder={t('ibanPlaceholder') || "IBAN number"}
+                        className="w-full"
+                        value={companyFormData.iban}
+                        onChange={(e) => handleCompanyInputChange('iban', e.target.value)}
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="bic" className="text-sm font-medium text-gray-700 mb-2 block">
+                        {t('bicLabel') || "BIC"}
+                      </Label>
+                      <Input
+                        id="bic"
+                        placeholder={t('bicPlaceholder') || "BIC/SWIFT code"}
+                        className="w-full"
+                        value={companyFormData.bic}
+                        onChange={(e) => handleCompanyInputChange('bic', e.target.value)}
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Insurance Information */}
+                <div className="border-t border-gray-200 pt-4 mt-4">
+                  <h4 className="text-sm font-medium text-gray-900 mb-3">{t('insuranceInfoLabel') || "Insurance Information"}</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="transport-insurance" className="text-sm font-medium text-gray-700 mb-2 block">
+                        {t('transportInsuranceLabel') || "Transport Insurance Policy No."}
+                      </Label>
+                      <Input
+                        id="transport-insurance"
+                        placeholder={t('transportInsurancePlaceholder') || "Transport insurance policy number"}
+                        className="w-full"
+                        value={companyFormData.transportInsurancePolicyNo}
+                        onChange={(e) => handleCompanyInputChange('transportInsurancePolicyNo', e.target.value)}
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="business-insurance" className="text-sm font-medium text-gray-700 mb-2 block">
+                        {t('businessInsuranceLabel') || "Business Insurance Policy No."}
+                      </Label>
+                      <Input
+                        id="business-insurance"
+                        placeholder={t('businessInsurancePlaceholder') || "Business insurance policy number"}
+                        className="w-full"
+                        value={companyFormData.businessInsurancePolicyNo}
+                        onChange={(e) => handleCompanyInputChange('businessInsurancePolicyNo', e.target.value)}
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Company Status */}
+                <div className="border-t border-gray-200 pt-4 mt-4">
                   <Label className="text-sm font-medium text-gray-700 mb-3 block">
                     Company Status *
                   </Label>
@@ -519,7 +648,7 @@ export function UpdateCompanyModal({ isOpen, onClose, onSuccess, companyId }: Up
                         checked={companyFormData.isActive === true}
                         onChange={() => handleCompanyInputChange('isActive', true)}
                         disabled={isSubmitting}
-                        className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 caret-green-400 "
+                        className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 caret-green-400"
                         aria-label="Set company status to active"
                       />
                       <Label htmlFor="status-active" className="ml-2 text-sm text-gray-700 cursor-pointer">

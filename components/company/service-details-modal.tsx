@@ -25,6 +25,7 @@ export type MoveService = {
   hourlyRateCHF: number;
   durationHours: number;
   disassemblyAssemblyBy: string;
+  additionalCosts: AdditionalCost[];
 }
 
 export type CleaningService = {
@@ -52,6 +53,7 @@ export type PackingService = {
   numberOfStaff: number;
   hourlyRateCHF: number;
   packingMaterialsCost: number;
+  additionalCosts: AdditionalCost[];
 }
 
 export type UnpackingService = {
@@ -63,6 +65,7 @@ export type UnpackingService = {
   numberOfStaff: number;
   hourlyRateCHF: number;
   packingMaterialsCost: number;
+  additionalCosts: AdditionalCost[];
 }
 
 export type DisposalService = {
@@ -77,17 +80,16 @@ export type DisposalService = {
   disposalDate: string;
   disposalStartTime: string;
   roundTripCostCHF: number;
-  additionalCostsText: string;
   discount: number;
   furtherDiscounts: string;
+  additionalCosts: AdditionalCost[];
 }
 
 export type StorageService = {
   rateCHFPerM3PerMonth: number;
   volumeM3: number;
-  additionalCostsText: string;
-  furtherDiscounts: string;
   cost: number;
+  additionalCosts: AdditionalCost[];
 }
 
 export type TransportService = {
@@ -101,11 +103,9 @@ export type TransportService = {
   transportDate: string;
   transportStartTime: string;
   roundTripCostCHF: number;
-  additionalCostsText: string;
   cost: number;
   discount: number;
-  concessionText: string;
-  furtherDiscounts: string;
+  additionalCosts: AdditionalCost[];
 }
 
 export type ServiceType =
@@ -121,9 +121,38 @@ interface ServiceDetailsModalProps {
   isOpen: boolean;
   onClose: () => void;
   serviceType: ServiceType['type'];
-  initialData?: ServiceType['data'];
+  initialData?: ServiceType['data'] | null;
   onSave: (data: ServiceType['data']) => void;
 }
+
+// Default additional costs for different service types
+const DEFAULT_MOVE_ADDITIONAL_COSTS: AdditionalCost[] = [
+  { description: "Expenses (Per Diem)", price: 20.00 },
+  { description: "Piano (Standard)", price: 250.00 },
+  { description: "Piano (Large)", price: 350.00 },
+  { description: "Furniture Lift (Included)", price: 0.00 },
+  { description: "Furniture Lift (Standard)", price: 250.00 },
+  { description: "Furniture Lift (Large)", price: 350.00 },
+  { description: "Heavy Goods Surcharge (Standard)", price: 150.00 },
+  { description: "Heavy Goods Surcharge (Large)", price: 250.00 },
+  { description: "Safe (Standard)", price: 350.00 },
+  { description: "Safe (Large)", price: 450.00 },
+  { description: "Waterbed Service", price: 500.00 }
+];
+
+const DEFAULT_PACKING_ADDITIONAL_COSTS: AdditionalCost[] = [
+  { description: "Expenses (Per Diem)", price: 20.00 },
+  { description: "Packing Material Fee", price: 0.00 }
+];
+
+const DEFAULT_UNPACKING_ADDITIONAL_COSTS: AdditionalCost[] = [
+  { description: "Expenses (Per Diem)", price: 20.00 },
+  { description: "Packing Material Fee", price: 0.00 }
+];
+
+const DEFAULT_DISPOSAL_ADDITIONAL_COSTS: AdditionalCost[] = [
+  { description: "Expenses (Per Diem)", price: 20.00 }
+];
 
 const getInitialServiceData = (type: ServiceType['type']): ServiceType['data'] => {
   switch (type) {
@@ -138,7 +167,8 @@ const getInitialServiceData = (type: ServiceType['type']): ServiceType['data'] =
         numberOfDeliveryTrucks: 0,
         hourlyRateCHF: 0,
         durationHours: 0,
-        disassemblyAssemblyBy: ''
+        disassemblyAssemblyBy: '',
+        additionalCosts: DEFAULT_MOVE_ADDITIONAL_COSTS
       };
     case 'cleaning':
       return {
@@ -165,7 +195,8 @@ const getInitialServiceData = (type: ServiceType['type']): ServiceType['data'] =
         selectedTariffDescription: '',
         numberOfStaff: 0,
         hourlyRateCHF: 0,
-        packingMaterialsCost: 0
+        packingMaterialsCost: 0,
+        additionalCosts: DEFAULT_PACKING_ADDITIONAL_COSTS
       };
     case 'unpacking':
       return {
@@ -176,7 +207,8 @@ const getInitialServiceData = (type: ServiceType['type']): ServiceType['data'] =
         selectedTariffDescription: '',
         numberOfStaff: 0,
         hourlyRateCHF: 0,
-        packingMaterialsCost: 0
+        packingMaterialsCost: 0,
+        additionalCosts: DEFAULT_UNPACKING_ADDITIONAL_COSTS
       };
     case 'disposal':
       return {
@@ -191,17 +223,16 @@ const getInitialServiceData = (type: ServiceType['type']): ServiceType['data'] =
         disposalDate: '',
         disposalStartTime: '',
         roundTripCostCHF: 0,
-        additionalCostsText: '',
         discount: 0,
-        furtherDiscounts: ''
+        furtherDiscounts: '',
+        additionalCosts: DEFAULT_DISPOSAL_ADDITIONAL_COSTS
       };
     case 'storage':
       return {
         rateCHFPerM3PerMonth: 0,
         volumeM3: 0,
-        additionalCostsText: '',
-        furtherDiscounts: '',
-        cost: 0
+        cost: 0,
+        additionalCosts: []
       };
     case 'transport':
       return {
@@ -215,11 +246,9 @@ const getInitialServiceData = (type: ServiceType['type']): ServiceType['data'] =
         transportDate: '',
         transportStartTime: '',
         roundTripCostCHF: 0,
-        additionalCostsText: '',
         cost: 0,
         discount: 0,
-        concessionText: '',
-        furtherDiscounts: ''
+        additionalCosts: []
       };
   }
 };
@@ -236,7 +265,13 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
 
   useEffect(() => {
     if (serviceType) {
-      setFormData(initialData || getInitialServiceData(serviceType));
+      // If initialData is provided, use it; otherwise, use the default data with predefined additional costs
+      if (initialData && initialData !== null) {
+        setFormData(initialData);
+      } else {
+        const defaultData = getInitialServiceData(serviceType);
+        setFormData(defaultData);
+      }
     }
   }, [initialData, serviceType]);
 
@@ -248,6 +283,8 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
     const formattedMinutes = minutes.toString().padStart(2, '0');
     return `${formattedHours}:${formattedMinutes}:00`;
   };
+  
+
 
   const formatTimeForDisplay = (time: string): string => {
     if (!time) return '';
@@ -374,7 +411,7 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
         <Input
           type="date"
           value={data.moveDate?.split('T')[0] || ''}
-          onChange={(e) => handleInputChange('moveDate', `${e.target.value}T00:00:00.000Z`)}
+          onChange={(e) => handleInputChange('moveDate', `${e.target.value}T00:00:00`)}
           className={errors.moveDate ? 'border-red-500' : ''}
         />
         {errors.moveDate && <p className="text-red-500 text-sm mt-1">{errors.moveDate}</p>}
@@ -384,7 +421,7 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
         <Input
           type="date"
           value={data.moveInDate?.split('T')[0] || ''}
-          onChange={(e) => handleInputChange('moveInDate', `${e.target.value}T00:00:00.000Z`)}
+          onChange={(e) => handleInputChange('moveInDate', `${e.target.value}T00:00:00`)}
           className={errors.moveInDate ? 'border-red-500' : ''}
         />
         {errors.moveInDate && <p className="text-red-500 text-sm mt-1">{errors.moveInDate}</p>}
@@ -452,6 +489,65 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
           value={data.disassemblyAssemblyBy}
           onChange={(e) => handleInputChange('disassemblyAssemblyBy', e.target.value)}
         />
+      </div>
+      <div className="md:col-span-2">
+        <div className="flex items-center justify-between mb-4">
+          <label className="block text-sm font-medium text-gray-700">{t('additionalCosts')}</label>
+          <Button
+            type="button"
+            variant="default"
+            size="sm"
+            className="gap-2"
+            onClick={() => {
+              const newCosts = [...(data.additionalCosts || []), { description: '', price: 0 }]
+              handleInputChange('additionalCosts', newCosts)
+            }}
+          >
+            <PlusIcon className="h-4 w-4" />
+            {t('addCost')}
+          </Button>
+        </div>
+        <div className="space-y-4">
+          {(data.additionalCosts || []).map((cost, index) => (
+            <div key={index} className="flex gap-4">
+              <div className="flex-1">
+                <Input
+                  placeholder={t('costDescription')}
+                  value={cost.description}
+                  onChange={(e) => {
+                    const newCosts = [...(data.additionalCosts || [])]
+                    newCosts[index] = { ...cost, description: e.target.value }
+                    handleInputChange('additionalCosts', newCosts)
+                  }}
+                />
+              </div>
+              <div className="w-32">
+                <Input
+                  type="number"
+                  placeholder={t('price')}
+                  value={cost.price}
+                  onChange={(e) => {
+                    const newCosts = [...(data.additionalCosts || [])]
+                    newCosts[index] = { ...cost, price: parseFloat(e.target.value) }
+                    handleInputChange('additionalCosts', newCosts)
+                  }}
+                />
+              </div>
+              <Button
+                type="button"
+                variant="destructive"
+                size="icon"
+                onClick={() => {
+                  const newCosts = [...(data.additionalCosts || [])]
+                  newCosts.splice(index, 1)
+                  handleInputChange('additionalCosts', newCosts)
+                }}
+              >
+                <TrashIcon className="h-4 w-4" />
+              </Button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   )
@@ -540,7 +636,7 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
         <Input
           type="date"
           value={data.cleaningDate?.split('T')[0]}
-          onChange={(e) => handleInputChange('cleaningDate', `${e.target.value}T00:00:00.000Z`)}
+          onChange={(e) => handleInputChange('cleaningDate', `${e.target.value}T00:00:00`)}
         />
       </div>
       <div>
@@ -556,7 +652,7 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
         <Input
           type="date"
           value={data.deliveryDate?.split('T')[0]}
-          onChange={(e) => handleInputChange('deliveryDate', `${e.target.value}T00:00:00.000Z`)}
+          onChange={(e) => handleInputChange('deliveryDate', `${e.target.value}T00:00:00`)}
         />
       </div>
       <div>
@@ -641,7 +737,7 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('packingDate')}</label>
-        <Input type="date" value={data.packingDate?.split('T')[0] || ''} onChange={(e) => handleInputChange('packingDate', `${e.target.value}T00:00:00.000Z`)} className={errors.packingDate ? 'border-red-500' : ''} />
+        <Input type="date" value={data.packingDate?.split('T')[0] || ''} onChange={(e) => handleInputChange('packingDate', `${e.target.value}T00:00:00`)} className={errors.packingDate ? 'border-red-500' : ''} />
         {errors.packingDate && <p className="text-red-500 text-sm mt-1">{errors.packingDate}</p>}
       </div>
       <div>
@@ -677,6 +773,65 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('packingMaterialsCost')}</label>
         <Input type="number" value={data.packingMaterialsCost} onChange={(e) => handleInputChange('packingMaterialsCost', parseFloat(e.target.value))} />
       </div>
+      <div className="md:col-span-2">
+        <div className="flex items-center justify-between mb-4">
+          <label className="block text-sm font-medium text-gray-700">{t('additionalCosts')}</label>
+          <Button
+            type="button"
+            variant="default"
+            size="sm"
+            className="gap-2"
+            onClick={() => {
+              const newCosts = [...(data.additionalCosts || []), { description: '', price: 0 }]
+              handleInputChange('additionalCosts', newCosts)
+            }}
+          >
+            <PlusIcon className="h-4 w-4" />
+            {t('addCost')}
+          </Button>
+        </div>
+        <div className="space-y-4">
+          {(data.additionalCosts || []).map((cost, index) => (
+            <div key={index} className="flex gap-4">
+              <div className="flex-1">
+                <Input
+                  placeholder={t('costDescription')}
+                  value={cost.description}
+                  onChange={(e) => {
+                    const newCosts = [...(data.additionalCosts || [])]
+                    newCosts[index] = { ...cost, description: e.target.value }
+                    handleInputChange('additionalCosts', newCosts)
+                  }}
+                />
+              </div>
+              <div className="w-32">
+                <Input
+                  type="number"
+                  placeholder={t('price')}
+                  value={cost.price}
+                  onChange={(e) => {
+                    const newCosts = [...(data.additionalCosts || [])]
+                    newCosts[index] = { ...cost, price: parseFloat(e.target.value) }
+                    handleInputChange('additionalCosts', newCosts)
+                  }}
+                />
+              </div>
+              <Button
+                type="button"
+                variant="destructive"
+                size="icon"
+                onClick={() => {
+                  const newCosts = [...(data.additionalCosts || [])]
+                  newCosts.splice(index, 1)
+                  handleInputChange('additionalCosts', newCosts)
+                }}
+              >
+                <TrashIcon className="h-4 w-4" />
+              </Button>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   )
 
@@ -684,7 +839,7 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('unpackingDate')}</label>
-        <Input type="date" value={data.unpackingDate?.split('T')[0] || ''} onChange={(e) => handleInputChange('unpackingDate', `${e.target.value}T00:00:00.000Z`)} />
+        <Input type="date" value={data.unpackingDate?.split('T')[0] || ''} onChange={(e) => handleInputChange('unpackingDate', `${e.target.value}T00:00:00`)} />
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('unpackingStartTime')}</label>
@@ -717,6 +872,65 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('packingMaterialsCost')}</label>
         <Input type="number" value={data.packingMaterialsCost} onChange={(e) => handleInputChange('packingMaterialsCost', parseFloat(e.target.value))} />
+      </div>
+      <div className="md:col-span-2">
+        <div className="flex items-center justify-between mb-4">
+          <label className="block text-sm font-medium text-gray-700">{t('additionalCosts')}</label>
+          <Button
+            type="button"
+            variant="default"
+            size="sm"
+            className="gap-2"
+            onClick={() => {
+              const newCosts = [...(data.additionalCosts || []), { description: '', price: 0 }]
+              handleInputChange('additionalCosts', newCosts)
+            }}
+          >
+            <PlusIcon className="h-4 w-4" />
+            {t('addCost')}
+          </Button>
+        </div>
+        <div className="space-y-4">
+          {(data.additionalCosts || []).map((cost, index) => (
+            <div key={index} className="flex gap-4">
+              <div className="flex-1">
+                <Input
+                  placeholder={t('costDescription')}
+                  value={cost.description}
+                  onChange={(e) => {
+                    const newCosts = [...(data.additionalCosts || [])]
+                    newCosts[index] = { ...cost, description: e.target.value }
+                    handleInputChange('additionalCosts', newCosts)
+                  }}
+                />
+              </div>
+              <div className="w-32">
+                <Input
+                  type="number"
+                  placeholder={t('price')}
+                  value={cost.price}
+                  onChange={(e) => {
+                    const newCosts = [...(data.additionalCosts || [])]
+                    newCosts[index] = { ...cost, price: parseFloat(e.target.value) }
+                    handleInputChange('additionalCosts', newCosts)
+                  }}
+                />
+              </div>
+              <Button
+                type="button"
+                variant="destructive"
+                size="icon"
+                onClick={() => {
+                  const newCosts = [...(data.additionalCosts || [])]
+                  newCosts.splice(index, 1)
+                  handleInputChange('additionalCosts', newCosts)
+                }}
+              >
+                <TrashIcon className="h-4 w-4" />
+              </Button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   )
@@ -759,7 +973,7 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('disposalDate')}</label>
-        <Input type="date" value={data.disposalDate?.split('T')[0] || ''} onChange={(e) => handleInputChange('disposalDate', `${e.target.value}T00:00:00.000Z`)} className={errors.disposalDate ? 'border-red-500' : ''} />
+        <Input type="date" value={data.disposalDate?.split('T')[0] || ''} onChange={(e) => handleInputChange('disposalDate', `${e.target.value}T00:00:00`)} className={errors.disposalDate ? 'border-red-500' : ''} />
         {errors.disposalDate && <p className="text-red-500 text-sm mt-1">{errors.disposalDate}</p>}
       </div>
       <div>
@@ -775,16 +989,71 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
         <Input type="number" value={data.roundTripCostCHF} onChange={(e) => handleInputChange('roundTripCostCHF', parseFloat(e.target.value))} />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('additionalCostsText')}</label>
-        <Input value={data.additionalCostsText} onChange={(e) => handleInputChange('additionalCostsText', e.target.value)} />
-      </div>
-      <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('discount')}</label>
         <Input type="number" value={data.discount} onChange={(e) => handleInputChange('discount', parseFloat(e.target.value))} />
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('furtherDiscounts')}</label>
         <Input value={data.furtherDiscounts} onChange={(e) => handleInputChange('furtherDiscounts', e.target.value)} />
+      </div>
+      <div className="md:col-span-2">
+        <div className="flex items-center justify-between mb-4">
+          <label className="block text-sm font-medium text-gray-700">{t('additionalCosts')}</label>
+          <Button
+            type="button"
+            variant="default"
+            size="sm"
+            className="gap-2"
+            onClick={() => {
+              const newCosts = [...(data.additionalCosts || []), { description: '', price: 0 }]
+              handleInputChange('additionalCosts', newCosts)
+            }}
+          >
+            <PlusIcon className="h-4 w-4" />
+            {t('addCost')}
+          </Button>
+        </div>
+        <div className="space-y-4">
+          {(data.additionalCosts || []).map((cost, index) => (
+            <div key={index} className="flex gap-4">
+              <div className="flex-1">
+                <Input
+                  placeholder={t('costDescription')}
+                  value={cost.description}
+                  onChange={(e) => {
+                    const newCosts = [...(data.additionalCosts || [])]
+                    newCosts[index] = { ...cost, description: e.target.value }
+                    handleInputChange('additionalCosts', newCosts)
+                  }}
+                />
+              </div>
+              <div className="w-32">
+                <Input
+                  type="number"
+                  placeholder={t('price')}
+                  value={cost.price}
+                  onChange={(e) => {
+                    const newCosts = [...(data.additionalCosts || [])]
+                    newCosts[index] = { ...cost, price: parseFloat(e.target.value) }
+                    handleInputChange('additionalCosts', newCosts)
+                  }}
+                />
+              </div>
+              <Button
+                type="button"
+                variant="destructive"
+                size="icon"
+                onClick={() => {
+                  const newCosts = [...(data.additionalCosts || [])]
+                  newCosts.splice(index, 1)
+                  handleInputChange('additionalCosts', newCosts)
+                }}
+              >
+                <TrashIcon className="h-4 w-4" />
+              </Button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   )
@@ -802,16 +1071,67 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
         {errors.volumeM3 && <p className="text-red-500 text-sm mt-1">{errors.volumeM3}</p>}
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('additionalCostsText')}</label>
-        <Input value={data.additionalCostsText} onChange={(e) => handleInputChange('additionalCostsText', e.target.value)} />
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('furtherDiscounts')}</label>
-        <Input value={data.furtherDiscounts} onChange={(e) => handleInputChange('furtherDiscounts', e.target.value)} />
-      </div>
-      <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('cost')}</label>
         <Input type="number" value={data.cost} onChange={(e) => handleInputChange('cost', parseFloat(e.target.value))} />
+      </div>
+      <div className="md:col-span-2">
+        <div className="flex items-center justify-between mb-4">
+          <label className="block text-sm font-medium text-gray-700">{t('additionalCosts')}</label>
+          <Button
+            type="button"
+            variant="default"
+            size="sm"
+            className="gap-2"
+            onClick={() => {
+              const newCosts = [...(data.additionalCosts || []), { description: '', price: 0 }]
+              handleInputChange('additionalCosts', newCosts)
+            }}
+          >
+            <PlusIcon className="h-4 w-4" />
+            {t('addCost')}
+          </Button>
+        </div>
+        <div className="space-y-4">
+          {(data.additionalCosts || []).map((cost, index) => (
+            <div key={index} className="flex gap-4">
+              <div className="flex-1">
+                <Input
+                  placeholder={t('costDescription')}
+                  value={cost.description}
+                  onChange={(e) => {
+                    const newCosts = [...(data.additionalCosts || [])]
+                    newCosts[index] = { ...cost, description: e.target.value }
+                    handleInputChange('additionalCosts', newCosts)
+                  }}
+                />
+              </div>
+              <div className="w-32">
+                <Input
+                  type="number"
+                  placeholder={t('price')}
+                  value={cost.price}
+                  onChange={(e) => {
+                    const newCosts = [...(data.additionalCosts || [])]
+                    newCosts[index] = { ...cost, price: parseFloat(e.target.value) }
+                    handleInputChange('additionalCosts', newCosts)
+                  }}
+                />
+              </div>
+              <Button
+                type="button"
+                variant="destructive"
+                size="icon"
+                onClick={() => {
+                  const newCosts = [...(data.additionalCosts || [])]
+                  newCosts.splice(index, 1)
+                  handleInputChange('additionalCosts', newCosts)
+                }}
+              >
+                <TrashIcon className="h-4 w-4" />
+              </Button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   )
@@ -849,7 +1169,7 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('transportDate')}</label>
-        <Input type="date" value={data.transportDate?.split('T')[0] || ''} onChange={(e) => handleInputChange('transportDate', `${e.target.value}T00:00:00.000Z`)} className={errors.transportDate ? 'border-red-500' : ''} />
+        <Input type="date" value={data.transportDate?.split('T')[0] || ''} onChange={(e) => handleInputChange('transportDate', `${e.target.value}T00:00:00`)} className={errors.transportDate ? 'border-red-500' : ''} />
         {errors.transportDate && <p className="text-red-500 text-sm mt-1">{errors.transportDate}</p>}
       </div>
       <div>
@@ -865,10 +1185,6 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
         <Input type="number" value={data.roundTripCostCHF} onChange={(e) => handleInputChange('roundTripCostCHF', parseFloat(e.target.value))} />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('additionalCostsText')}</label>
-        <Input value={data.additionalCostsText} onChange={(e) => handleInputChange('additionalCostsText', e.target.value)} />
-      </div>
-      <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('cost')}</label>
         <Input type="number" value={data.cost} onChange={(e) => handleInputChange('cost', parseFloat(e.target.value))} />
       </div>
@@ -876,13 +1192,64 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
         <label className="block text-sm font-medium text-gray-700 mb-2">{t('discount')}</label>
         <Input type="number" value={data.discount} onChange={(e) => handleInputChange('discount', parseFloat(e.target.value))} />
       </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('concessionText')}</label>
-        <Input value={data.concessionText} onChange={(e) => handleInputChange('concessionText', e.target.value)} />
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('furtherDiscounts')}</label>
-        <Input value={data.furtherDiscounts} onChange={(e) => handleInputChange('furtherDiscounts', e.target.value)} />
+      <div className="md:col-span-2">
+        <div className="flex items-center justify-between mb-4">
+          <label className="block text-sm font-medium text-gray-700">{t('additionalCosts')}</label>
+          <Button
+            type="button"
+            variant="default"
+            size="sm"
+            className="gap-2"
+            onClick={() => {
+              const newCosts = [...(data.additionalCosts || []), { description: '', price: 0 }]
+              handleInputChange('additionalCosts', newCosts)
+            }}
+          >
+            <PlusIcon className="h-4 w-4" />
+            {t('addCost')}
+          </Button>
+        </div>
+        <div className="space-y-4">
+          {(data.additionalCosts || []).map((cost, index) => (
+            <div key={index} className="flex gap-4">
+              <div className="flex-1">
+                <Input
+                  placeholder={t('costDescription')}
+                  value={cost.description}
+                  onChange={(e) => {
+                    const newCosts = [...(data.additionalCosts || [])]
+                    newCosts[index] = { ...cost, description: e.target.value }
+                    handleInputChange('additionalCosts', newCosts)
+                  }}
+                />
+              </div>
+              <div className="w-32">
+                <Input
+                  type="number"
+                  placeholder={t('price')}
+                  value={cost.price}
+                  onChange={(e) => {
+                    const newCosts = [...(data.additionalCosts || [])]
+                    newCosts[index] = { ...cost, price: parseFloat(e.target.value) }
+                    handleInputChange('additionalCosts', newCosts)
+                  }}
+                />
+              </div>
+              <Button
+                type="button"
+                variant="destructive"
+                size="icon"
+                onClick={() => {
+                  const newCosts = [...(data.additionalCosts || [])]
+                  newCosts.splice(index, 1)
+                  handleInputChange('additionalCosts', newCosts)
+                }}
+              >
+                <TrashIcon className="h-4 w-4" />
+              </Button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   )

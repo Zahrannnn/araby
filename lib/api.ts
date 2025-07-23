@@ -101,6 +101,15 @@ export interface CompanyDetailsResponse {
     subsType: string;
     subscriptionTypeId: number;
     isActive: boolean;
+    isSubStripe: boolean;
+    stripeSubCreatedAt: string;
+    bank: string;
+    nameOfBankAccount: string;
+    iban: string;
+    bic: string;
+    transportInsurancePolicyNo: string;
+    businessInsurancePolicyNo: string;
+    companyLogoUrl: string | null;
     createdAt: string;
     updatedAt: string | null;
     subscriptionEndDate: string;

@@ -1,10 +1,11 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { useTranslations } from 'next-intl'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { apiClient } from "@/lib/api"
 
 interface AddCompanyModalProps {
   isOpen: boolean;
@@ -22,6 +23,13 @@ interface FormData {
   country: string;
   vatNumber: string;
   subscriptionTypeId: number;
+  isSubStripe: boolean;
+  bank: string;
+  nameOfBankAccount: string;
+  iban: string;
+  bic: string;
+  transportInsurancePolicyNo: string;
+  businessInsurancePolicyNo: string;
   subscriptionEndDate: string;
   managerEmail: string;
   managerUserName: string;
@@ -40,6 +48,9 @@ export function AddCompanyModal({ isOpen, onClose, onSuccess }: AddCompanyModalP
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitError, setSubmitError] = useState<string>("");
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [formData, setFormData] = useState<FormData>({
     companyName: "",
@@ -51,6 +62,13 @@ export function AddCompanyModal({ isOpen, onClose, onSuccess }: AddCompanyModalP
     country: "",
     vatNumber: "",
     subscriptionTypeId: 1, 
+    isSubStripe: false,
+    bank: "",
+    nameOfBankAccount: "",
+    iban: "",
+    bic: "",
+    transportInsurancePolicyNo: "",
+    businessInsurancePolicyNo: "",
     subscriptionEndDate: "",
     managerEmail: "",
     managerUserName: "",
@@ -62,7 +80,7 @@ export function AddCompanyModal({ isOpen, onClose, onSuccess }: AddCompanyModalP
 
   if (!isOpen) return null;
 
-  const handleInputChange = (field: keyof FormData, value: string | number) => {
+  const handleInputChange = (field: keyof FormData, value: string | number | boolean) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
@@ -74,6 +92,55 @@ export function AddCompanyModal({ isOpen, onClose, onSuccess }: AddCompanyModalP
         ...prev,
         [field]: ""
       }));
+    }
+  };
+
+  const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Check if file is an image
+      if (!file.type.startsWith('image/')) {
+        setErrors(prev => ({
+          ...prev,
+          logo: "Please select an image file"
+        }));
+        return;
+      }
+      
+      // Check file size (limit to 2MB)
+      if (file.size > 2 * 1024 * 1024) {
+        setErrors(prev => ({
+          ...prev,
+          logo: "Logo file size must be less than 2MB"
+        }));
+        return;
+      }
+
+      setLogoFile(file);
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setLogoPreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+      
+      // Clear any previous errors
+      if (errors.logo) {
+        setErrors(prev => {
+          const newErrors = { ...prev };
+          delete newErrors.logo;
+          return newErrors;
+        });
+      }
+    }
+  };
+
+  const handleRemoveLogo = () => {
+    setLogoFile(null);
+    setLogoPreview(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
     }
   };
 
@@ -135,6 +202,7 @@ export function AddCompanyModal({ isOpen, onClose, onSuccess }: AddCompanyModalP
         throw new Error("Authentication token not found");
       }
 
+      // First create the company
       const response = await fetch("https://crmproject.runasp.net/api/SuperAdmin/create-company", {
         method: "POST",
         headers: {
@@ -149,6 +217,22 @@ export function AddCompanyModal({ isOpen, onClose, onSuccess }: AddCompanyModalP
         throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
 
+      // If logo file exists, upload it
+      if (logoFile) {
+        try {
+          const formData = new FormData();
+          formData.append('logoFile', logoFile);
+          
+          await apiClient.post('/api/CompanySettings/saveupdate-company-logo', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          });
+        } catch (logoError) {
+          console.error("Error uploading logo:", logoError);
+          // Continue with success even if logo upload fails
+        }
+      }
      
       setFormData({
         companyName: "",
@@ -160,6 +244,13 @@ export function AddCompanyModal({ isOpen, onClose, onSuccess }: AddCompanyModalP
         country: "",
         vatNumber: "",
         subscriptionTypeId: 1,
+        isSubStripe: false,
+        bank: "",
+        nameOfBankAccount: "",
+        iban: "",
+        bic: "",
+        transportInsurancePolicyNo: "",
+        businessInsurancePolicyNo: "",
         subscriptionEndDate: "",
         managerEmail: "",
         managerUserName: "",
@@ -168,6 +259,8 @@ export function AddCompanyModal({ isOpen, onClose, onSuccess }: AddCompanyModalP
         lastName: "",
         notes: ""
       });
+      setLogoFile(null);
+      setLogoPreview(null);
       
       onClose();
       if (onSuccess) onSuccess();
@@ -244,6 +337,57 @@ export function AddCompanyModal({ isOpen, onClose, onSuccess }: AddCompanyModalP
                     </svg>
                   </div>
                   <span className="text-sm text-gray-500">{t('generalSettings')}</span>
+                </div>
+              </div>
+
+              {/* Company Logo Section */}
+              <div className="mb-6 border-b border-gray-200 pb-6">
+                <Label htmlFor="company-logo" className="text-sm font-medium text-gray-700 mb-2 block">
+                  {t('companyLogoLabel') || "Company Logo"}
+                </Label>
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0">
+                    <div className="w-24 h-24 border border-gray-300 rounded-md flex items-center justify-center overflow-hidden bg-gray-100">
+                      {logoPreview ? (
+                        <img 
+                          src={logoPreview} 
+                          alt="Company logo preview" 
+                          className="w-full h-full object-contain"
+                        />
+                      ) : (
+                        <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex-grow space-y-2">
+                    <Input
+                      id="company-logo"
+                      type="file"
+                      accept="image/*"
+                      ref={fileInputRef}
+                      className="w-full"
+                      onChange={handleLogoChange}
+                      disabled={isSubmitting}
+                    />
+                    <p className="text-xs text-gray-500">
+                      {t('logoHelpText') || "Upload a company logo (PNG, JPG, JPEG). Max size: 2MB"}
+                    </p>
+                    {errors.logo && <p className="text-red-500 text-xs">{errors.logo}</p>}
+                    {logoPreview && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={handleRemoveLogo}
+                        className="text-xs"
+                        disabled={isSubmitting}
+                      >
+                        {t('removeLogo') || "Remove Logo"}
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -387,6 +531,21 @@ export function AddCompanyModal({ isOpen, onClose, onSuccess }: AddCompanyModalP
                   </select>
                 </div>
 
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="is-sub-stripe"
+                    checked={formData.isSubStripe}
+                    onChange={(e) => handleInputChange('isSubStripe', e.target.checked)}
+                    disabled={isSubmitting}
+                    className="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"
+                    aria-label={t('isSubStripeLabel') || "Stripe Subscription"}
+                  />
+                  <Label htmlFor="is-sub-stripe" className="text-sm font-medium text-gray-700">
+                    {t('isSubStripeLabel') || "Stripe Subscription"}
+                  </Label>
+                </div>
+
                 <div>
                   <Label htmlFor="subscription-end" className="text-sm font-medium text-gray-700 mb-2 block">
                     {t('subscriptionEndLabel')} *
@@ -400,6 +559,98 @@ export function AddCompanyModal({ isOpen, onClose, onSuccess }: AddCompanyModalP
                     disabled={isSubmitting}
                   />
                   {errors.subscriptionEndDate && <p className="text-red-500 text-xs mt-1">{errors.subscriptionEndDate}</p>}
+                </div>
+
+                {/* Banking Information */}
+                <div className="border-t border-gray-200 pt-4 mt-4">
+                  <h4 className="text-sm font-medium text-gray-900 mb-3">{t('bankingInfoLabel') || "Banking Information"}</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="bank" className="text-sm font-medium text-gray-700 mb-2 block">
+                        {t('bankLabel') || "Bank"}
+                      </Label>
+                      <Input
+                        id="bank"
+                        placeholder={t('bankPlaceholder') || "Bank name"}
+                        className="w-full"
+                        value={formData.bank}
+                        onChange={(e) => handleInputChange('bank', e.target.value)}
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="account-name" className="text-sm font-medium text-gray-700 mb-2 block">
+                        {t('accountNameLabel') || "Account Name"}
+                      </Label>
+                      <Input
+                        id="account-name"
+                        placeholder={t('accountNamePlaceholder') || "Name on bank account"}
+                        className="w-full"
+                        value={formData.nameOfBankAccount}
+                        onChange={(e) => handleInputChange('nameOfBankAccount', e.target.value)}
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="iban" className="text-sm font-medium text-gray-700 mb-2 block">
+                        {t('ibanLabel') || "IBAN"}
+                      </Label>
+                      <Input
+                        id="iban"
+                        placeholder={t('ibanPlaceholder') || "IBAN number"}
+                        className="w-full"
+                        value={formData.iban}
+                        onChange={(e) => handleInputChange('iban', e.target.value)}
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="bic" className="text-sm font-medium text-gray-700 mb-2 block">
+                        {t('bicLabel') || "BIC"}
+                      </Label>
+                      <Input
+                        id="bic"
+                        placeholder={t('bicPlaceholder') || "BIC/SWIFT code"}
+                        className="w-full"
+                        value={formData.bic}
+                        onChange={(e) => handleInputChange('bic', e.target.value)}
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Insurance Information */}
+                <div className="border-t border-gray-200 pt-4 mt-4">
+                  <h4 className="text-sm font-medium text-gray-900 mb-3">{t('insuranceInfoLabel') || "Insurance Information"}</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="transport-insurance" className="text-sm font-medium text-gray-700 mb-2 block">
+                        {t('transportInsuranceLabel') || "Transport Insurance Policy No."}
+                      </Label>
+                      <Input
+                        id="transport-insurance"
+                        placeholder={t('transportInsurancePlaceholder') || "Transport insurance policy number"}
+                        className="w-full"
+                        value={formData.transportInsurancePolicyNo}
+                        onChange={(e) => handleInputChange('transportInsurancePolicyNo', e.target.value)}
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="business-insurance" className="text-sm font-medium text-gray-700 mb-2 block">
+                        {t('businessInsuranceLabel') || "Business Insurance Policy No."}
+                      </Label>
+                      <Input
+                        id="business-insurance"
+                        placeholder={t('businessInsurancePlaceholder') || "Business insurance policy number"}
+                        className="w-full"
+                        value={formData.businessInsurancePolicyNo}
+                        onChange={(e) => handleInputChange('businessInsurancePolicyNo', e.target.value)}
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 <div>

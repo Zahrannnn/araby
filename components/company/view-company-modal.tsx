@@ -2,12 +2,13 @@
 import React, { useState, useRef } from 'react'
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query'
 import { companyApi, googleCalendarApi } from '@/lib/api'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription,  } from '@/components/ui/card'
-import { Building2, User2, BarChart2, Eye, EyeOff, Copy, Info, CheckCircle, AlertCircle, CreditCard, Calendar, Mail, Phone, MapPin, Hash, FileText, Clock, Shield, Key, Save, Calendar as CalendarIcon } from 'lucide-react'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import {
+  Building2, User2, BarChart2, Eye, EyeOff, Copy, Info, CheckCircle, AlertCircle,
+  CreditCard, Calendar, Mail, Phone, MapPin, Hash, FileText, Clock, Shield, Key, Save, Calendar as CalendarIcon
+} from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-
-// Types are imported from the API client
 
 const ViewCompanyPage: React.FC = () => {
   const {
@@ -29,6 +30,7 @@ const ViewCompanyPage: React.FC = () => {
     queryKey: ['company-stripe-keys'],
     queryFn: companyApi.getStripeKeys,
     staleTime: 5 * 60 * 1000,
+    enabled: !!data?.companyInfo?.isSubStripe, // Only fetch if Stripe is enabled
   })
 
   const [publishableKey, setPublishableKey] = useState('')
@@ -178,9 +180,27 @@ const ViewCompanyPage: React.FC = () => {
                       <span className="font-medium text-foreground ml-auto">{data.companyInfo.subsType}</span>
                     </div>
                     <div className="flex items-center gap-2.5">
+                      <CreditCard className="w-4 h-4 text-muted-foreground opacity-0" />
+                      <span className="text-muted-foreground">Stripe Sub:</span>
+                      <span className="ml-auto flex items-center gap-1.5">
+                        {data.companyInfo.isSubStripe ? (
+                          <><CheckCircle className="w-3.5 h-3.5 text-green-500" /><span className="text-green-600 font-medium">Active</span></>
+                        ) : (
+                          <><AlertCircle className="w-3.5 h-3.5 text-amber-500" /><span className="text-amber-600 font-medium">Inactive</span></>
+                        )}
+                      </span>
+                    </div>
+                    {data.companyInfo.isSubStripe && data.companyInfo.stripeSubCreatedAt && (
+                      <div className="flex items-center gap-2.5">
+                        <Calendar className="w-4 h-4 text-muted-foreground opacity-0" />
+                        <span className="text-muted-foreground">Stripe Created:</span>
+                        <span className="font-medium text-foreground ml-auto">{data.companyInfo.stripeSubCreatedAt?.slice(0, 10)}</span>
+                      </div>
+                    )}
+                    <div className="flex items-center gap-2.5">
                       <Calendar className="w-4 h-4 text-muted-foreground" />
                       <span className="text-muted-foreground">Ends on:</span>
-                      <span className="font-medium text-foreground ml-auto">{data.companyInfo.subscriptionEndDate?.slice(0,10)}</span>
+                      <span className="font-medium text-foreground ml-auto">{data.companyInfo.subscriptionEndDate?.slice(0, 10)}</span>
                     </div>
                     <div className="flex items-center gap-2.5">
                       <Shield className="w-4 h-4 text-muted-foreground" />
@@ -196,12 +216,54 @@ const ViewCompanyPage: React.FC = () => {
                     <div className="flex items-center gap-2.5">
                       <Clock className="w-4 h-4 text-muted-foreground" />
                       <span className="text-muted-foreground">Created:</span>
-                      <span className="font-medium text-foreground ml-auto">{data.companyInfo.createdAt?.slice(0,10)}</span>
+                      <span className="font-medium text-foreground ml-auto">{data.companyInfo.createdAt?.slice(0, 10)}</span>
                     </div>
                     <div className="flex items-start gap-2.5 mt-1">
                       <FileText className="w-4 h-4 text-muted-foreground mt-0.5" />
                       <span className="text-muted-foreground">Notes:</span>
                       <span className="font-medium text-foreground ml-auto text-right">{data.companyInfo.notes || '-'}</span>
+                    </div>
+                    {/* Banking Information Section */}
+                    <div className="pt-3 mt-2 border-t border-gray-100">
+                      <h4 className="font-medium text-gray-700 mb-2">Banking Information</h4>
+                      <div className="flex flex-col gap-2">
+                        <div className="flex items-center gap-2.5">
+                          <CreditCard className="w-4 h-4 text-muted-foreground" />
+                          <span className="text-muted-foreground">Bank:</span>
+                          <span className="font-medium text-foreground ml-auto">{data.companyInfo.bank || '-'}</span>
+                        </div>
+                        <div className="flex items-center gap-2.5">
+                          <CreditCard className="w-4 h-4 text-muted-foreground opacity-0" />
+                          <span className="text-muted-foreground">Account Name:</span>
+                          <span className="font-medium text-foreground ml-auto">{data.companyInfo.nameOfBankAccount || '-'}</span>
+                        </div>
+                        <div className="flex items-center gap-2.5">
+                          <CreditCard className="w-4 h-4 text-muted-foreground opacity-0" />
+                          <span className="text-muted-foreground">IBAN:</span>
+                          <span className="font-medium text-foreground ml-auto">{data.companyInfo.iban || '-'}</span>
+                        </div>
+                        <div className="flex items-center gap-2.5">
+                          <CreditCard className="w-4 h-4 text-muted-foreground opacity-0" />
+                          <span className="text-muted-foreground">BIC:</span>
+                          <span className="font-medium text-foreground ml-auto">{data.companyInfo.bic || '-'}</span>
+                        </div>
+                      </div>
+                    </div>
+                    {/* Insurance Information Section */}
+                    <div className="pt-3 mt-2 border-t border-gray-100">
+                      <h4 className="font-medium text-gray-700 mb-2">Insurance Information</h4>
+                      <div className="flex flex-col gap-2">
+                        <div className="flex items-center gap-2.5">
+                          <Shield className="w-4 h-4 text-muted-foreground" />
+                          <span className="text-muted-foreground">Transport Insurance:</span>
+                          <span className="font-medium text-foreground ml-auto">{data.companyInfo.transportInsurancePolicyNo || '-'}</span>
+                        </div>
+                        <div className="flex items-center gap-2.5">
+                          <Shield className="w-4 h-4 text-muted-foreground opacity-0" />
+                          <span className="text-muted-foreground">Business Insurance:</span>
+                          <span className="font-medium text-foreground ml-auto">{data.companyInfo.businessInsurancePolicyNo || '-'}</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </section>
@@ -244,7 +306,7 @@ const ViewCompanyPage: React.FC = () => {
                     <div className="flex items-center gap-2.5">
                       <Clock className="w-4 h-4 text-muted-foreground" />
                       <span className="text-muted-foreground">Created:</span>
-                      <span className="font-medium text-foreground ml-auto">{data.managerInfo.createdAt?.slice(0,10)}</span>
+                      <span className="font-medium text-foreground ml-auto">{data.managerInfo.createdAt?.slice(0, 10)}</span>
                     </div>
                   </div>
                 </section>
@@ -261,7 +323,7 @@ const ViewCompanyPage: React.FC = () => {
                     <div className="flex items-center gap-2.5">
                       <Calendar className="w-4 h-4 text-muted-foreground" />
                       <span className="text-muted-foreground">Subscription Date:</span>
-                      <span className="font-medium text-foreground ml-auto">{data.metrics.subscriptionDate?.slice(0,10)}</span>
+                      <span className="font-medium text-foreground ml-auto">{data.metrics.subscriptionDate?.slice(0, 10)}</span>
                     </div>
                     <div className="flex items-center gap-2.5">
                       <User2 className="w-4 h-4 text-muted-foreground" />
@@ -296,178 +358,180 @@ const ViewCompanyPage: React.FC = () => {
               </div>
             ) : null}
             {/* Stripe Keys Section */}
-            <div className="mt-10">
-              <Card className="border-0 shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl">
-                <CardHeader className="pb-3 border-b border-muted/20 flex flex-row items-center gap-3">
-                  <div className="p-2.5 bg-primary/10 rounded-lg">
-                    <CreditCard className="w-6 h-6 text-primary" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-xl font-bold tracking-tight">Stripe API Keys</CardTitle>
-                    <CardDescription>Configure your payment processing credentials</CardDescription>
-                  </div>
-                  {!stripeKeys?.publishableKey && (
-                    <span className="ml-auto text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full text-xs font-medium flex items-center gap-1.5">
-                      <AlertCircle className="w-3.5 h-3.5" />
-                      <span>Required for payments</span>
-                    </span>
-                  )}
-                </CardHeader>
-                <CardContent className="pt-6">
-                  {isStripeLoading ? (
-                    <div className="py-16 text-center text-muted-foreground text-lg flex flex-col items-center gap-3">
-                      <div className="animate-spin w-8 h-8 border-4 border-primary/30 border-t-primary rounded-full"></div>
-                      <span>Loading Stripe keys...</span>
+            {data?.companyInfo?.isSubStripe && (
+              <div className="mt-10">
+                <Card className="border-0 shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl">
+                  <CardHeader className="pb-3 border-b border-muted/20 flex flex-row items-center gap-3">
+                    <div className="p-2.5 bg-primary/10 rounded-lg">
+                      <CreditCard className="w-6 h-6 text-primary" />
                     </div>
-                  ) : stripeError ? (
-                    <div className="py-16 text-center text-destructive text-lg flex flex-col items-center gap-3">
-                      <AlertCircle className="w-8 h-8" />
-                      <span>{(stripeError as Error).message}</span>
+                    <div>
+                      <CardTitle className="text-xl font-bold tracking-tight">Stripe API Keys</CardTitle>
+                      <CardDescription>Configure your payment processing credentials</CardDescription>
                     </div>
-                  ) : stripeKeys && stripeKeys.publishableKey ? (
-                    <div className="mb-6">
-                      <div className="mb-3 text-sm font-medium flex items-center gap-2 text-primary/80">
-                        <CheckCircle className="w-4 h-4" />
-                        Current Stripe keys for this company:
+                    {!stripeKeys?.publishableKey && (
+                      <span className="ml-auto text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full text-xs font-medium flex items-center gap-1.5">
+                        <AlertCircle className="w-3.5 h-3.5" />
+                        <span>Required for payments</span>
+                      </span>
+                    )}
+                  </CardHeader>
+                  <CardContent className="pt-6">
+                    {isStripeLoading ? (
+                      <div className="py-16 text-center text-muted-foreground text-lg flex flex-col items-center gap-3">
+                        <div className="animate-spin w-8 h-8 border-4 border-primary/30 border-t-primary rounded-full"></div>
+                        <span>Loading Stripe keys...</span>
                       </div>
-                      <div className="flex flex-col gap-3 text-sm">
-                        <div className="flex items-center gap-2">
-                          <Input
-                            ref={pubKeyRef}
-                            readOnly
-                            value={stripeKeys.publishableKey}
-                            className="font-mono text-xs bg-white/80 cursor-pointer focus:ring-2 focus:ring-primary/30 border-muted/30"
-                            onClick={() => pubKeyRef.current && handleCopy(pubKeyRef)}
-                            aria-label="Publishable Key"
-                          />
-                          <Button type="button" variant="outline" size="icon" onClick={() => pubKeyRef.current && handleCopy(pubKeyRef)} title="Copy Publishable Key" className="border-muted/30 hover:bg-primary/5 hover:text-primary hover:border-primary/30">
-                            <Copy className="w-4 h-4" />
-                          </Button>
+                    ) : stripeError ? (
+                      <div className="py-16 text-center text-destructive text-lg flex flex-col items-center gap-3">
+                        <AlertCircle className="w-8 h-8" />
+                        <span>{(stripeError as Error).message}</span>
+                      </div>
+                    ) : stripeKeys && stripeKeys.publishableKey ? (
+                      <div className="mb-6">
+                        <div className="mb-3 text-sm font-medium flex items-center gap-2 text-primary/80">
+                          <CheckCircle className="w-4 h-4" />
+                          Current Stripe keys for this company:
                         </div>
-                        <div className="flex items-center gap-2">
-                          <Input
-                            ref={secKeyRef}
-                            readOnly
-                            type={showSecret ? 'text' : 'password'}
-                            value={stripeKeys.secretKey}
-                            className="font-mono text-xs bg-white/80 cursor-pointer focus:ring-2 focus:ring-primary/30 border-muted/30"
-                            onClick={() => secKeyRef.current && handleCopy(secKeyRef)}
-                            aria-label="Secret Key"
-                          />
-                          <Button type="button" variant="outline" size="icon" onClick={() => setShowSecret(v => !v)} title={showSecret ? 'Hide Secret' : 'Show Secret'} className="border-muted/30 hover:bg-primary/5 hover:text-primary hover:border-primary/30">
-                            {showSecret ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                          </Button>
-                          <Button type="button" variant="outline" size="icon" onClick={() => secKeyRef.current && handleCopy(secKeyRef)} title="Copy Secret Key" className="border-muted/30 hover:bg-primary/5 hover:text-primary hover:border-primary/30">
-                            <Copy className="w-4 h-4" />
-                          </Button>
+                        <div className="flex flex-col gap-3 text-sm">
+                          <div className="flex items-center gap-2">
+                            <Input
+                              ref={pubKeyRef}
+                              readOnly
+                              value={stripeKeys.publishableKey}
+                              className="font-mono text-xs bg-white/80 cursor-pointer focus:ring-2 focus:ring-primary/30 border-muted/30"
+                              onClick={() => pubKeyRef.current && handleCopy(pubKeyRef)}
+                              aria-label="Publishable Key"
+                            />
+                            <Button type="button" variant="outline" size="icon" onClick={() => pubKeyRef.current && handleCopy(pubKeyRef)} title="Copy Publishable Key" className="border-muted/30 hover:bg-primary/5 hover:text-primary hover:border-primary/30">
+                              <Copy className="w-4 h-4" />
+                            </Button>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Input
+                              ref={secKeyRef}
+                              readOnly
+                              type={showSecret ? 'text' : 'password'}
+                              value={stripeKeys.secretKey}
+                              className="font-mono text-xs bg-white/80 cursor-pointer focus:ring-2 focus:ring-primary/30 border-muted/30"
+                              onClick={() => secKeyRef.current && handleCopy(secKeyRef)}
+                              aria-label="Secret Key"
+                            />
+                            <Button type="button" variant="outline" size="icon" onClick={() => setShowSecret(v => !v)} title={showSecret ? 'Hide Secret' : 'Show Secret'} className="border-muted/30 hover:bg-primary/5 hover:text-primary hover:border-primary/30">
+                              {showSecret ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                            </Button>
+                            <Button type="button" variant="outline" size="icon" onClick={() => secKeyRef.current && handleCopy(secKeyRef)} title="Copy Secret Key" className="border-muted/30 hover:bg-primary/5 hover:text-primary hover:border-primary/30">
+                              <Copy className="w-4 h-4" />
+                            </Button>
+                          </div>
                         </div>
-                      </div>
-                      <div className="mt-4 text-xs text-muted-foreground flex items-center gap-1.5">
-                        <Info className="w-3.5 h-3.5" />
-                        To update, enter new keys below and save.
-                      </div>
-                      <div className="h-px w-full bg-gradient-to-r from-muted/50 via-muted/30 to-transparent my-4" />
-                    </div>
-                  ) : (
-                    <div className="mb-6">
-                      <div className="mb-3 p-3 bg-amber-50 border border-amber-200 rounded-lg text-amber-800 flex items-start gap-2">
-                        <Info className="w-5 h-5 text-amber-500 mt-0.5" />
-                        <div>
-                          <p className="font-medium mb-1">No Stripe keys are set for this company</p>
-                          <p className="text-sm">To accept payments, you need to add your Stripe API keys.</p>
+                        <div className="mt-4 text-xs text-muted-foreground flex items-center gap-1.5">
+                          <Info className="w-3.5 h-3.5" />
+                          To update, enter new keys below and save.
                         </div>
+                        <div className="h-px w-full bg-gradient-to-r from-muted/50 via-muted/30 to-transparent my-4" />
                       </div>
-                      <div className="mt-4 bg-muted/20 p-4 rounded-lg border border-muted/30">
-                        <h4 className="text-sm font-medium mb-2 flex items-center gap-1.5">
-                          <FileText className="w-4 h-4 text-primary" />
-                          Setup Instructions:
-                        </h4>
-                        <ol className="list-decimal list-inside text-sm space-y-1 text-muted-foreground ml-1">
-                          <li>Log in to your <a href="https://dashboard.stripe.com/apikeys" target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80 transition-colors">Stripe Dashboard</a>.</li>
-                          <li>Go to <span className="font-medium text-foreground">Developers &gt; API keys</span>.</li>
-                          <li>Copy your <span className="font-medium text-foreground">Publishable key</span> and <span className="font-medium text-foreground">Secret key</span>.</li>
-                          <li>Paste them below and click <span className="font-medium text-foreground">Save</span>.</li>
-                        </ol>
-                        <div className="mt-3 text-xs flex items-center gap-1.5 text-amber-600">
-                          <Shield className="w-3.5 h-3.5" />
-                          Never share your secret key publicly.
+                    ) : (
+                      <div className="mb-6">
+                        <div className="mb-3 p-3 bg-amber-50 border border-amber-200 rounded-lg text-amber-800 flex items-start gap-2">
+                          <Info className="w-5 h-5 text-amber-500 mt-0.5" />
+                          <div>
+                            <p className="font-medium mb-1">No Stripe keys are set for this company</p>
+                            <p className="text-sm">To accept payments, you need to add your Stripe API keys.</p>
+                          </div>
                         </div>
+                        <div className="mt-4 bg-muted/20 p-4 rounded-lg border border-muted/30">
+                          <h4 className="text-sm font-medium mb-2 flex items-center gap-1.5">
+                            <FileText className="w-4 h-4 text-primary" />
+                            Setup Instructions:
+                          </h4>
+                          <ol className="list-decimal list-inside text-sm space-y-1 text-muted-foreground ml-1">
+                            <li>Log in to your <a href="https://dashboard.stripe.com/apikeys" target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80 transition-colors">Stripe Dashboard</a>.</li>
+                            <li>Go to <span className="font-medium text-foreground">Developers &gt; API keys</span>.</li>
+                            <li>Copy your <span className="font-medium text-foreground">Publishable key</span> and <span className="font-medium text-foreground">Secret key</span>.</li>
+                            <li>Paste them below and click <span className="font-medium text-foreground">Save</span>.</li>
+                          </ol>
+                          <div className="mt-3 text-xs flex items-center gap-1.5 text-amber-600">
+                            <Shield className="w-3.5 h-3.5" />
+                            Never share your secret key publicly.
+                          </div>
+                        </div>
+                        <div className="h-px w-full bg-gradient-to-r from-muted/50 via-muted/30 to-transparent my-4" />
                       </div>
-                      <div className="h-px w-full bg-gradient-to-r from-muted/50 via-muted/30 to-transparent my-4" />
-                    </div>
-                  )}
-                  <form className="flex flex-col gap-4 max-w-md" onSubmit={handleStripeSubmit} autoComplete="off">
-                    <div className="flex flex-col gap-1.5">
-                      <label htmlFor="publishableKey" className="text-sm font-medium flex items-center gap-1.5">
-                        <Key className="w-3.5 h-3.5 text-muted-foreground" />
-                        Publishable Key
-                      </label>
-                      <Input
-                        id="publishableKey"
-                        type="text"
-                        placeholder="pk_live_..."
-                        value={publishableKey}
-                        onChange={e => setPublishableKey(e.target.value)}
-                        autoComplete="off"
-                        disabled={isSaving}
-                        className="bg-white/90 border-muted/30 focus-visible:ring-primary/30"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <label htmlFor="secretKey" className="text-sm font-medium flex items-center gap-1.5">
-                        <Shield className="w-3.5 h-3.5 text-muted-foreground" />
-                        Secret Key
-                      </label>
-                      <div className="relative flex items-center">
+                    )}
+                    <form className="flex flex-col gap-4 max-w-md" onSubmit={handleStripeSubmit} autoComplete="off">
+                      <div className="flex flex-col gap-1.5">
+                        <label htmlFor="publishableKey" className="text-sm font-medium flex items-center gap-1.5">
+                          <Key className="w-3.5 h-3.5 text-muted-foreground" />
+                          Publishable Key
+                        </label>
                         <Input
-                          id="secretKey"
-                          type={showSecret ? 'text' : 'password'}
-                          placeholder="sk_live_..."
-                          value={secretKey}
-                          onChange={e => setSecretKey(e.target.value)}
+                          id="publishableKey"
+                          type="text"
+                          placeholder="pk_live_..."
+                          value={publishableKey}
+                          onChange={e => setPublishableKey(e.target.value)}
                           autoComplete="off"
                           disabled={isSaving}
-                          className="bg-white/90 pr-10 border-muted/30 focus-visible:ring-primary/30"
+                          className="bg-white/90 border-muted/30 focus-visible:ring-primary/30"
                         />
-                        <Button type="button" variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2" onClick={() => setShowSecret(v => !v)} tabIndex={-1}>
-                          {showSecret ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                        </Button>
                       </div>
-                    </div>
-                    {formError && (
-                      <div className="text-destructive text-sm animate-fade-in flex items-center gap-1.5 p-2 bg-destructive/10 rounded-lg">
-                        <AlertCircle className="w-4 h-4" />
-                        {formError}
+                      <div className="flex flex-col gap-1.5">
+                        <label htmlFor="secretKey" className="text-sm font-medium flex items-center gap-1.5">
+                          <Shield className="w-3.5 h-3.5 text-muted-foreground" />
+                          Secret Key
+                        </label>
+                        <div className="relative flex items-center">
+                          <Input
+                            id="secretKey"
+                            type={showSecret ? 'text' : 'password'}
+                            placeholder="sk_live_..."
+                            value={secretKey}
+                            onChange={e => setSecretKey(e.target.value)}
+                            autoComplete="off"
+                            disabled={isSaving}
+                            className="bg-white/90 pr-10 border-muted/30 focus-visible:ring-primary/30"
+                          />
+                          <Button type="button" variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2" onClick={() => setShowSecret(v => !v)} tabIndex={-1}>
+                            {showSecret ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                          </Button>
+                        </div>
                       </div>
-                    )}
-                    {formSuccess && (
-                      <div className="text-green-600 text-sm animate-fade-in flex items-center gap-1.5 p-2 bg-green-50 rounded-lg">
-                        <CheckCircle className="w-4 h-4" />
-                        {formSuccess}
-                      </div>
-                    )}
-                    <Button 
-                      variant="default"
-                      type="submit" 
-                      disabled={isSaving} 
-                      className={`w-fit min-w-[120px] transition gap-1.5 ${formError ? 'bg-red-500 hover:bg-red-600' : 'bg-primary hover:bg-primary/90'}`}
-                    >
-                      {isSaving ? (
-                        <>
-                          <span className="animate-spin w-4 h-4 border-2 border-white/30 border-t-white rounded-full"></span>
-                          <span>Saving...</span>
-                        </>
-                      ) : (
-                        <>
-                          <Save className="w-4 h-4" />
-                          <span>Save</span>
-                        </>
+                      {formError && (
+                        <div className="text-destructive text-sm animate-fade-in flex items-center gap-1.5 p-2 bg-destructive/10 rounded-lg">
+                          <AlertCircle className="w-4 h-4" />
+                          {formError}
+                        </div>
                       )}
-                    </Button>
-                  </form>
-                </CardContent>
-              </Card>
-            </div>
+                      {formSuccess && (
+                        <div className="text-green-600 text-sm animate-fade-in flex items-center gap-1.5 p-2 bg-green-50 rounded-lg">
+                          <CheckCircle className="w-4 h-4" />
+                          {formSuccess}
+                        </div>
+                      )}
+                      <Button
+                        variant="default"
+                        type="submit"
+                        disabled={isSaving}
+                        className={`w-fit min-w-[120px] transition gap-1.5 ${formError ? 'bg-red-500 hover:bg-red-600' : 'bg-primary hover:bg-primary/90'}`}
+                      >
+                        {isSaving ? (
+                          <>
+                            <span className="animate-spin w-4 h-4 border-2 border-white/30 border-t-white rounded-full"></span>
+                            <span>Saving...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Save className="w-4 h-4" />
+                            <span>Save</span>
+                          </>
+                        )}
+                      </Button>
+                    </form>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

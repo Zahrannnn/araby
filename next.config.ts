@@ -20,6 +20,10 @@ const nextConfig: NextConfig = {
         hostname: 'i.postimg.cc',
         protocol: 'https',
       },
+      {
+        hostname: 'crmproject.runasp.net',
+        protocol: 'https',
+      }
     ],
   },
 };
