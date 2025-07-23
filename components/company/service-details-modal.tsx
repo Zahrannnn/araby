@@ -12,6 +12,7 @@ import { ChevronLeftIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outlin
 export type AdditionalCost = {
   description: string;
   price: number;
+  hidden?: boolean; // Added hidden property
 }
 
 export type MoveService = {
@@ -137,24 +138,31 @@ const DEFAULT_MOVE_ADDITIONAL_COSTS: AdditionalCost[] = [
   { description: "Heavy Goods Surcharge (Large)", price: 250.00 },
   { description: "Safe (Standard)", price: 350.00 },
   { description: "Safe (Large)", price: 450.00 },
-  { description: "Waterbed Service", price: 500.00 }
+  { description: "Waterbed Service", price: 500.00 },
+  { description: "", price: 0, hidden: true }
 ];
 
 const DEFAULT_PACKING_ADDITIONAL_COSTS: AdditionalCost[] = [
   { description: "Expenses (Per Diem)", price: 20.00 },
-  { description: "Packing Material Fee", price: 0.00 }
+  { description: "Packing Material Fee", price: 0.00 },
+  { description: "", price: 0, hidden: true }
 ];
 
 const DEFAULT_UNPACKING_ADDITIONAL_COSTS: AdditionalCost[] = [
   { description: "Expenses (Per Diem)", price: 20.00 },
-  { description: "Packing Material Fee", price: 0.00 }
+  { description: "Packing Material Fee", price: 0.00 },
+  { description: "", price: 0, hidden: true }
 ];
 
 const DEFAULT_DISPOSAL_ADDITIONAL_COSTS: AdditionalCost[] = [
-  { description: "Expenses (Per Diem)", price: 20.00 }
+  { description: "Expenses (Per Diem)", price: 20.00 },
+  { description: "", price: 0, hidden: true }
 ];
 
 const getInitialServiceData = (type: ServiceType['type']): ServiceType['data'] => {
+  // Helper function to filter out hidden costs
+  const filterHiddenCosts = (costs: AdditionalCost[]) => costs.filter(cost => !cost.hidden);
+  
   switch (type) {
     case 'move':
       return {
@@ -168,7 +176,7 @@ const getInitialServiceData = (type: ServiceType['type']): ServiceType['data'] =
         hourlyRateCHF: 0,
         durationHours: 0,
         disassemblyAssemblyBy: '',
-        additionalCosts: [...DEFAULT_MOVE_ADDITIONAL_COSTS]  // Create a new array
+        additionalCosts: filterHiddenCosts([...DEFAULT_MOVE_ADDITIONAL_COSTS])
       };
     case 'cleaning':
       return {
@@ -196,7 +204,7 @@ const getInitialServiceData = (type: ServiceType['type']): ServiceType['data'] =
         numberOfStaff: 0,
         hourlyRateCHF: 0,
         packingMaterialsCost: 0,
-        additionalCosts: [...DEFAULT_PACKING_ADDITIONAL_COSTS]  // Create a new array
+        additionalCosts: filterHiddenCosts([...DEFAULT_PACKING_ADDITIONAL_COSTS])
       };
     case 'unpacking':
       return {
@@ -208,7 +216,7 @@ const getInitialServiceData = (type: ServiceType['type']): ServiceType['data'] =
         numberOfStaff: 0,
         hourlyRateCHF: 0,
         packingMaterialsCost: 0,
-        additionalCosts: [...DEFAULT_UNPACKING_ADDITIONAL_COSTS]  // Create a new array
+        additionalCosts: filterHiddenCosts([...DEFAULT_UNPACKING_ADDITIONAL_COSTS])
       };
     case 'disposal':
       return {
@@ -225,7 +233,7 @@ const getInitialServiceData = (type: ServiceType['type']): ServiceType['data'] =
         roundTripCostCHF: 0,
         discount: 0,
         furtherDiscounts: '',
-        additionalCosts: [...DEFAULT_DISPOSAL_ADDITIONAL_COSTS]  // Create a new array
+        additionalCosts: filterHiddenCosts([...DEFAULT_DISPOSAL_ADDITIONAL_COSTS])
       };
     case 'storage':
       return {
@@ -266,17 +274,25 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
 
   useEffect(() => {
     if (serviceType) {
+      // Helper function to filter out hidden costs
+      const filterHiddenCosts = (costs: AdditionalCost[]) => costs.filter(cost => !cost.hidden);
+      
       // If initialData is provided, use it; otherwise, use the default data with predefined additional costs
       if (initialData && initialData !== null) {
         // Ensure services have additionalCosts
         if (serviceType === 'move' && (!initialData.additionalCosts || initialData.additionalCosts.length === 0)) {
-          initialData.additionalCosts = [...DEFAULT_MOVE_ADDITIONAL_COSTS];
+          initialData.additionalCosts = filterHiddenCosts([...DEFAULT_MOVE_ADDITIONAL_COSTS]);
         } else if (serviceType === 'packing' && (!initialData.additionalCosts || initialData.additionalCosts.length === 0)) {
-          initialData.additionalCosts = [...DEFAULT_PACKING_ADDITIONAL_COSTS];
+          initialData.additionalCosts = filterHiddenCosts([...DEFAULT_PACKING_ADDITIONAL_COSTS]);
         } else if (serviceType === 'unpacking' && (!initialData.additionalCosts || initialData.additionalCosts.length === 0)) {
-          initialData.additionalCosts = [...DEFAULT_UNPACKING_ADDITIONAL_COSTS];
+          initialData.additionalCosts = filterHiddenCosts([...DEFAULT_UNPACKING_ADDITIONAL_COSTS]);
         } else if (serviceType === 'disposal' && (!initialData.additionalCosts || initialData.additionalCosts.length === 0)) {
-          initialData.additionalCosts = [...DEFAULT_DISPOSAL_ADDITIONAL_COSTS];
+          initialData.additionalCosts = filterHiddenCosts([...DEFAULT_DISPOSAL_ADDITIONAL_COSTS]);
+        }
+        
+        // If initialData has additionalCosts, filter out hidden costs
+        if (initialData.additionalCosts) {
+          initialData.additionalCosts = filterHiddenCosts(initialData.additionalCosts);
         }
         
         setFormData(initialData);
@@ -418,7 +434,15 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
     if (validateForm()) {
       // Only mark as configured if the user has made changes or if the service was already configured
       if (hasChanges || initialData) {
-        onSave(formData);
+        // Create a clean copy of the form data with hidden costs removed
+        const cleanedData = { ...formData };
+        
+        // Filter out hidden costs if additionalCosts exists
+        if (cleanedData.additionalCosts) {
+          cleanedData.additionalCosts = cleanedData.additionalCosts.filter(cost => !cost.hidden);
+        }
+        
+        onSave(cleanedData);
       } else {
         // If no changes were made and this is a new service, just close without saving
         onClose();
@@ -537,45 +561,52 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
           </Button>
         </div>
         <div className="space-y-4">
-          {(data.additionalCosts || []).map((cost, index) => (
-            <div key={index} className="flex gap-4">
-              <div className="flex-1">
-                <Input
-                  placeholder={t('costDescription')}
-                  value={cost.description}
-                  onChange={(e) => {
-                    const newCosts = [...(data.additionalCosts || [])]
-                    newCosts[index] = { ...cost, description: e.target.value }
-                    handleInputChange('additionalCosts', newCosts)
-                  }}
-                />
-              </div>
-              <div className="w-32">
-                <Input
-                  type="number"
-                  placeholder={t('price')}
-                  value={cost.price}
-                  onChange={(e) => {
-                    const newCosts = [...(data.additionalCosts || [])]
-                    newCosts[index] = { ...cost, price: parseFloat(e.target.value) }
-                    handleInputChange('additionalCosts', newCosts)
-                  }}
-                />
-              </div>
-              <Button
-                type="button"
-                variant="destructive"
-                size="icon"
-                onClick={() => {
-                  const newCosts = [...(data.additionalCosts || [])]
-                  newCosts.splice(index, 1)
-                  handleInputChange('additionalCosts', newCosts)
-                }}
-              >
-                <TrashIcon className="h-4 w-4" />
-              </Button>
-            </div>
-          ))}
+          {(data.additionalCosts || [])
+            .filter(cost => !cost.hidden) // Filter out hidden costs
+            .map((cost) => {
+              // Find the actual index in the original array
+              const actualIndex = data.additionalCosts.findIndex(c => c === cost);
+              
+              return (
+                <div key={actualIndex} className="flex gap-4">
+                  <div className="flex-1">
+                    <Input
+                      placeholder={t('costDescription')}
+                      value={cost.description}
+                      onChange={(e) => {
+                        const newCosts = [...(data.additionalCosts || [])]
+                        newCosts[actualIndex] = { ...cost, description: e.target.value }
+                        handleInputChange('additionalCosts', newCosts)
+                      }}
+                    />
+                  </div>
+                  <div className="w-32">
+                    <Input
+                      type="number"
+                      placeholder={t('price')}
+                      value={cost.price}
+                      onChange={(e) => {
+                        const newCosts = [...(data.additionalCosts || [])]
+                        newCosts[actualIndex] = { ...cost, price: parseFloat(e.target.value) }
+                        handleInputChange('additionalCosts', newCosts)
+                      }}
+                    />
+                  </div>
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="icon"
+                    onClick={() => {
+                      const newCosts = [...(data.additionalCosts || [])]
+                      newCosts.splice(actualIndex, 1)
+                      handleInputChange('additionalCosts', newCosts)
+                    }}
+                  >
+                    <TrashIcon className="h-4 w-4" />
+                  </Button>
+                </div>
+              );
+            })}
         </div>
       </div>
     </div>
@@ -718,45 +749,52 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
           </Button>
         </div>
         <div className="space-y-4">
-          {(data.additionalCosts || []).map((cost, index) => (
-            <div key={index} className="flex gap-4">
-              <div className="flex-1">
-                <Input
-                  placeholder={t('costDescription')}
-                  value={cost.description}
-                  onChange={(e) => {
-                    const newCosts = [...(data.additionalCosts || [])]
-                    newCosts[index] = { ...cost, description: e.target.value }
-                    handleInputChange('additionalCosts', newCosts)
-                  }}
-                />
-              </div>
-              <div className="w-32">
-                <Input
-                  type="number"
-                  placeholder={t('price')}
-                  value={cost.price}
-                  onChange={(e) => {
-                    const newCosts = [...(data.additionalCosts || [])]
-                    newCosts[index] = { ...cost, price: parseFloat(e.target.value) }
-                    handleInputChange('additionalCosts', newCosts)
-                  }}
-                />
-              </div>
-              <Button
-                type="button"
-                variant="destructive"
-                size="icon"
-                onClick={() => {
-                  const newCosts = [...(data.additionalCosts || [])]
-                  newCosts.splice(index, 1)
-                  handleInputChange('additionalCosts', newCosts)
-                }}
-              >
-                <TrashIcon className="h-4 w-4" />
-              </Button>
-            </div>
-          ))}
+          {(data.additionalCosts || [])
+            .filter(cost => !cost.hidden) // Filter out hidden costs
+            .map((cost) => {
+              // Find the actual index in the original array
+              const actualIndex = data.additionalCosts.findIndex(c => c === cost);
+              
+              return (
+                <div key={actualIndex} className="flex gap-4">
+                  <div className="flex-1">
+                    <Input
+                      placeholder={t('costDescription')}
+                      value={cost.description}
+                      onChange={(e) => {
+                        const newCosts = [...(data.additionalCosts || [])]
+                        newCosts[actualIndex] = { ...cost, description: e.target.value }
+                        handleInputChange('additionalCosts', newCosts)
+                      }}
+                    />
+                  </div>
+                  <div className="w-32">
+                    <Input
+                      type="number"
+                      placeholder={t('price')}
+                      value={cost.price}
+                      onChange={(e) => {
+                        const newCosts = [...(data.additionalCosts || [])]
+                        newCosts[actualIndex] = { ...cost, price: parseFloat(e.target.value) }
+                        handleInputChange('additionalCosts', newCosts)
+                      }}
+                    />
+                  </div>
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="icon"
+                    onClick={() => {
+                      const newCosts = [...(data.additionalCosts || [])]
+                      newCosts.splice(actualIndex, 1)
+                      handleInputChange('additionalCosts', newCosts)
+                    }}
+                  >
+                    <TrashIcon className="h-4 w-4" />
+                  </Button>
+                </div>
+              );
+            })}
         </div>
       </div>
     </div>
@@ -820,45 +858,52 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
           </Button>
         </div>
         <div className="space-y-4">
-          {(data.additionalCosts || []).map((cost, index) => (
-            <div key={index} className="flex gap-4">
-              <div className="flex-1">
-                <Input
-                  placeholder={t('costDescription')}
-                  value={cost.description}
-                  onChange={(e) => {
-                    const newCosts = [...(data.additionalCosts || [])]
-                    newCosts[index] = { ...cost, description: e.target.value }
-                    handleInputChange('additionalCosts', newCosts)
-                  }}
-                />
-              </div>
-              <div className="w-32">
-                <Input
-                  type="number"
-                  placeholder={t('price')}
-                  value={cost.price}
-                  onChange={(e) => {
-                    const newCosts = [...(data.additionalCosts || [])]
-                    newCosts[index] = { ...cost, price: parseFloat(e.target.value) }
-                    handleInputChange('additionalCosts', newCosts)
-                  }}
-                />
-              </div>
-              <Button
-                type="button"
-                variant="destructive"
-                size="icon"
-                onClick={() => {
-                  const newCosts = [...(data.additionalCosts || [])]
-                  newCosts.splice(index, 1)
-                  handleInputChange('additionalCosts', newCosts)
-                }}
-              >
-                <TrashIcon className="h-4 w-4" />
-              </Button>
-            </div>
-          ))}
+          {(data.additionalCosts || [])
+            .filter(cost => !cost.hidden) // Filter out hidden costs
+            .map((cost) => {
+              // Find the actual index in the original array
+              const actualIndex = data.additionalCosts.findIndex(c => c === cost);
+              
+              return (
+                <div key={actualIndex} className="flex gap-4">
+                  <div className="flex-1">
+                    <Input
+                      placeholder={t('costDescription')}
+                      value={cost.description}
+                      onChange={(e) => {
+                        const newCosts = [...(data.additionalCosts || [])]
+                        newCosts[actualIndex] = { ...cost, description: e.target.value }
+                        handleInputChange('additionalCosts', newCosts)
+                      }}
+                    />
+                  </div>
+                  <div className="w-32">
+                    <Input
+                      type="number"
+                      placeholder={t('price')}
+                      value={cost.price}
+                      onChange={(e) => {
+                        const newCosts = [...(data.additionalCosts || [])]
+                        newCosts[actualIndex] = { ...cost, price: parseFloat(e.target.value) }
+                        handleInputChange('additionalCosts', newCosts)
+                      }}
+                    />
+                  </div>
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="icon"
+                    onClick={() => {
+                      const newCosts = [...(data.additionalCosts || [])]
+                      newCosts.splice(actualIndex, 1)
+                      handleInputChange('additionalCosts', newCosts)
+                    }}
+                  >
+                    <TrashIcon className="h-4 w-4" />
+                  </Button>
+                </div>
+              );
+            })}
         </div>
       </div>
     </div>
@@ -920,45 +965,52 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
           </Button>
         </div>
         <div className="space-y-4">
-          {(data.additionalCosts || []).map((cost, index) => (
-            <div key={index} className="flex gap-4">
-              <div className="flex-1">
-                <Input
-                  placeholder={t('costDescription')}
-                  value={cost.description}
-                  onChange={(e) => {
-                    const newCosts = [...(data.additionalCosts || [])]
-                    newCosts[index] = { ...cost, description: e.target.value }
-                    handleInputChange('additionalCosts', newCosts)
-                  }}
-                />
-              </div>
-              <div className="w-32">
-                <Input
-                  type="number"
-                  placeholder={t('price')}
-                  value={cost.price}
-                  onChange={(e) => {
-                    const newCosts = [...(data.additionalCosts || [])]
-                    newCosts[index] = { ...cost, price: parseFloat(e.target.value) }
-                    handleInputChange('additionalCosts', newCosts)
-                  }}
-                />
-              </div>
-              <Button
-                type="button"
-                variant="destructive"
-                size="icon"
-                onClick={() => {
-                  const newCosts = [...(data.additionalCosts || [])]
-                  newCosts.splice(index, 1)
-                  handleInputChange('additionalCosts', newCosts)
-                }}
-              >
-                <TrashIcon className="h-4 w-4" />
-              </Button>
-            </div>
-          ))}
+          {(data.additionalCosts || [])
+            .filter(cost => !cost.hidden) // Filter out hidden costs
+            .map((cost) => {
+              // Find the actual index in the original array
+              const actualIndex = data.additionalCosts.findIndex(c => c === cost);
+              
+              return (
+                <div key={actualIndex} className="flex gap-4">
+                  <div className="flex-1">
+                    <Input
+                      placeholder={t('costDescription')}
+                      value={cost.description}
+                      onChange={(e) => {
+                        const newCosts = [...(data.additionalCosts || [])]
+                        newCosts[actualIndex] = { ...cost, description: e.target.value }
+                        handleInputChange('additionalCosts', newCosts)
+                      }}
+                    />
+                  </div>
+                  <div className="w-32">
+                    <Input
+                      type="number"
+                      placeholder={t('price')}
+                      value={cost.price}
+                      onChange={(e) => {
+                        const newCosts = [...(data.additionalCosts || [])]
+                        newCosts[actualIndex] = { ...cost, price: parseFloat(e.target.value) }
+                        handleInputChange('additionalCosts', newCosts)
+                      }}
+                    />
+                  </div>
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="icon"
+                    onClick={() => {
+                      const newCosts = [...(data.additionalCosts || [])]
+                      newCosts.splice(actualIndex, 1)
+                      handleInputChange('additionalCosts', newCosts)
+                    }}
+                  >
+                    <TrashIcon className="h-4 w-4" />
+                  </Button>
+                </div>
+              );
+            })}
         </div>
       </div>
     </div>
@@ -1043,45 +1095,52 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
           </Button>
         </div>
         <div className="space-y-4">
-          {(data.additionalCosts || []).map((cost, index) => (
-            <div key={index} className="flex gap-4">
-              <div className="flex-1">
-                <Input
-                  placeholder={t('costDescription')}
-                  value={cost.description}
-                  onChange={(e) => {
-                    const newCosts = [...(data.additionalCosts || [])]
-                    newCosts[index] = { ...cost, description: e.target.value }
-                    handleInputChange('additionalCosts', newCosts)
-                  }}
-                />
-              </div>
-              <div className="w-32">
-                <Input
-                  type="number"
-                  placeholder={t('price')}
-                  value={cost.price}
-                  onChange={(e) => {
-                    const newCosts = [...(data.additionalCosts || [])]
-                    newCosts[index] = { ...cost, price: parseFloat(e.target.value) }
-                    handleInputChange('additionalCosts', newCosts)
-                  }}
-                />
-              </div>
-              <Button
-                type="button"
-                variant="destructive"
-                size="icon"
-                onClick={() => {
-                  const newCosts = [...(data.additionalCosts || [])]
-                  newCosts.splice(index, 1)
-                  handleInputChange('additionalCosts', newCosts)
-                }}
-              >
-                <TrashIcon className="h-4 w-4" />
-              </Button>
-            </div>
-          ))}
+          {(data.additionalCosts || [])
+            .filter(cost => !cost.hidden) // Filter out hidden costs
+            .map((cost) => {
+              // Find the actual index in the original array
+              const actualIndex = data.additionalCosts.findIndex(c => c === cost);
+              
+              return (
+                <div key={actualIndex} className="flex gap-4">
+                  <div className="flex-1">
+                    <Input
+                      placeholder={t('costDescription')}
+                      value={cost.description}
+                      onChange={(e) => {
+                        const newCosts = [...(data.additionalCosts || [])]
+                        newCosts[actualIndex] = { ...cost, description: e.target.value }
+                        handleInputChange('additionalCosts', newCosts)
+                      }}
+                    />
+                  </div>
+                  <div className="w-32">
+                    <Input
+                      type="number"
+                      placeholder={t('price')}
+                      value={cost.price}
+                      onChange={(e) => {
+                        const newCosts = [...(data.additionalCosts || [])]
+                        newCosts[actualIndex] = { ...cost, price: parseFloat(e.target.value) }
+                        handleInputChange('additionalCosts', newCosts)
+                      }}
+                    />
+                  </div>
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="icon"
+                    onClick={() => {
+                      const newCosts = [...(data.additionalCosts || [])]
+                      newCosts.splice(actualIndex, 1)
+                      handleInputChange('additionalCosts', newCosts)
+                    }}
+                  >
+                    <TrashIcon className="h-4 w-4" />
+                  </Button>
+                </div>
+              );
+            })}
         </div>
       </div>
     </div>
@@ -1121,45 +1180,52 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
           </Button>
         </div>
         <div className="space-y-4">
-          {(data.additionalCosts || []).map((cost, index) => (
-            <div key={index} className="flex gap-4">
-              <div className="flex-1">
-                <Input
-                  placeholder={t('costDescription')}
-                  value={cost.description}
-                  onChange={(e) => {
-                    const newCosts = [...(data.additionalCosts || [])]
-                    newCosts[index] = { ...cost, description: e.target.value }
-                    handleInputChange('additionalCosts', newCosts)
-                  }}
-                />
-              </div>
-              <div className="w-32">
-                <Input
-                  type="number"
-                  placeholder={t('price')}
-                  value={cost.price}
-                  onChange={(e) => {
-                    const newCosts = [...(data.additionalCosts || [])]
-                    newCosts[index] = { ...cost, price: parseFloat(e.target.value) }
-                    handleInputChange('additionalCosts', newCosts)
-                  }}
-                />
-              </div>
-              <Button
-                type="button"
-                variant="destructive"
-                size="icon"
-                onClick={() => {
-                  const newCosts = [...(data.additionalCosts || [])]
-                  newCosts.splice(index, 1)
-                  handleInputChange('additionalCosts', newCosts)
-                }}
-              >
-                <TrashIcon className="h-4 w-4" />
-              </Button>
-            </div>
-          ))}
+          {(data.additionalCosts || [])
+            .filter(cost => !cost.hidden) // Filter out hidden costs
+            .map((cost) => {
+              // Find the actual index in the original array
+              const actualIndex = data.additionalCosts.findIndex(c => c === cost);
+              
+              return (
+                <div key={actualIndex} className="flex gap-4">
+                  <div className="flex-1">
+                    <Input
+                      placeholder={t('costDescription')}
+                      value={cost.description}
+                      onChange={(e) => {
+                        const newCosts = [...(data.additionalCosts || [])]
+                        newCosts[actualIndex] = { ...cost, description: e.target.value }
+                        handleInputChange('additionalCosts', newCosts)
+                      }}
+                    />
+                  </div>
+                  <div className="w-32">
+                    <Input
+                      type="number"
+                      placeholder={t('price')}
+                      value={cost.price}
+                      onChange={(e) => {
+                        const newCosts = [...(data.additionalCosts || [])]
+                        newCosts[actualIndex] = { ...cost, price: parseFloat(e.target.value) }
+                        handleInputChange('additionalCosts', newCosts)
+                      }}
+                    />
+                  </div>
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="icon"
+                    onClick={() => {
+                      const newCosts = [...(data.additionalCosts || [])]
+                      newCosts.splice(actualIndex, 1)
+                      handleInputChange('additionalCosts', newCosts)
+                    }}
+                  >
+                    <TrashIcon className="h-4 w-4" />
+                  </Button>
+                </div>
+              );
+            })}
         </div>
       </div>
     </div>
@@ -1239,45 +1305,52 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
           </Button>
         </div>
         <div className="space-y-4">
-          {(data.additionalCosts || []).map((cost, index) => (
-            <div key={index} className="flex gap-4">
-              <div className="flex-1">
-                <Input
-                  placeholder={t('costDescription')}
-                  value={cost.description}
-                  onChange={(e) => {
-                    const newCosts = [...(data.additionalCosts || [])]
-                    newCosts[index] = { ...cost, description: e.target.value }
-                    handleInputChange('additionalCosts', newCosts)
-                  }}
-                />
-              </div>
-              <div className="w-32">
-                <Input
-                  type="number"
-                  placeholder={t('price')}
-                  value={cost.price}
-                  onChange={(e) => {
-                    const newCosts = [...(data.additionalCosts || [])]
-                    newCosts[index] = { ...cost, price: parseFloat(e.target.value) }
-                    handleInputChange('additionalCosts', newCosts)
-                  }}
-                />
-              </div>
-              <Button
-                type="button"
-                variant="destructive"
-                size="icon"
-                onClick={() => {
-                  const newCosts = [...(data.additionalCosts || [])]
-                  newCosts.splice(index, 1)
-                  handleInputChange('additionalCosts', newCosts)
-                }}
-              >
-                <TrashIcon className="h-4 w-4" />
-              </Button>
-            </div>
-          ))}
+          {(data.additionalCosts || [])
+            .filter(cost => !cost.hidden) // Filter out hidden costs
+            .map((cost) => {
+              // Find the actual index in the original array
+              const actualIndex = data.additionalCosts.findIndex(c => c === cost);
+              
+              return (
+                <div key={actualIndex} className="flex gap-4">
+                  <div className="flex-1">
+                    <Input
+                      placeholder={t('costDescription')}
+                      value={cost.description}
+                      onChange={(e) => {
+                        const newCosts = [...(data.additionalCosts || [])]
+                        newCosts[actualIndex] = { ...cost, description: e.target.value }
+                        handleInputChange('additionalCosts', newCosts)
+                      }}
+                    />
+                  </div>
+                  <div className="w-32">
+                    <Input
+                      type="number"
+                      placeholder={t('price')}
+                      value={cost.price}
+                      onChange={(e) => {
+                        const newCosts = [...(data.additionalCosts || [])]
+                        newCosts[actualIndex] = { ...cost, price: parseFloat(e.target.value) }
+                        handleInputChange('additionalCosts', newCosts)
+                      }}
+                    />
+                  </div>
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="icon"
+                    onClick={() => {
+                      const newCosts = [...(data.additionalCosts || [])]
+                      newCosts.splice(actualIndex, 1)
+                      handleInputChange('additionalCosts', newCosts)
+                    }}
+                  >
+                    <TrashIcon className="h-4 w-4" />
+                  </Button>
+                </div>
+              );
+            })}
         </div>
       </div>
     </div>
@@ -1286,7 +1359,7 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
   const renderServiceForm = () => {
     if (!formData) return null;
 
-    // Ensure all service types have their default additional costs
+    // Ensure all service types have their default additional costs (but keep hidden ones for internal use)
     switch (serviceType) {
       case 'move':
         if (!formData.additionalCosts || formData.additionalCosts.length === 0) {
