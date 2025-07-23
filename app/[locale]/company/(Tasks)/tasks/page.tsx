@@ -595,7 +595,7 @@ export default function TasksPage() {
               </div>
             </div>
             {canManageTasks && (
-              <div className="w-full md:w-auto">
+              <div className="w-full md:w-auto flex flex-col gap-2">
                 <Button 
                   className="w-full md:w-auto bg-red-500 hover:bg-red-600 text-white px-20"
                   onClick={() => {
@@ -604,6 +604,11 @@ export default function TasksPage() {
                   }}
                 >
                   {t('addTask')}
+                </Button>
+                <Button variant="outline" className="w-full md:w-auto">
+                <Link href="/company/tasks/gallery">
+                 Tasks Gallery
+                </Link>
                 </Button>
               </div>
             )}
