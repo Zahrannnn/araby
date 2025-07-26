@@ -39,7 +39,7 @@ export default function ExpensesPage() {
   }
 
   return (
-    <main className="flex flex-col flex-1 bg-white rounded-xl shadow-md p-6 gap-6 min-h-screen">
+    <main className="flex flex-col flex-1 bg-white rounded-xl shadow-md p-6 gap-6 min-h-screen overflow-y-hidden">
       <section className="flex flex-col md:flex-row gap-6">
         <ExpensesAnalytics />
         <div className="flex-1 flex justify-end items-start">

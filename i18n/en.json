@@ -1180,7 +1180,21 @@
         "selectedHourlyTariffDescription": "Selected Hourly Tariff Description",
         "transportDate": "Transport Date",
         "transportStartTime": "Transport Start Time",
-        "concessionText": "Concession Text"
+        "concessionText": "Concession Text",
+        "defaultCosts": {
+          "expensesPerDiem": "Expenses (Per Diem)",
+          "pianoStandard": "Piano (Standard)",
+          "pianoLarge": "Piano (Large)",
+          "furnitureLiftIncluded": "Furniture Lift (Included)",
+          "furnitureLiftStandard": "Furniture Lift (Standard)",
+          "furnitureLiftLarge": "Furniture Lift (Large)",
+          "heavyGoodsSurchargeStandard": "Heavy Goods Surcharge (Standard)",
+          "heavyGoodsSurchargeLarge": "Heavy Goods Surcharge (Large)",
+          "safeStandard": "Safe (Standard)",
+          "safeLarge": "Safe (Large)",
+          "waterbedService": "Waterbed Service",
+          "packingMaterialFee": "Packing Material Fee"
+        }
        
        
        

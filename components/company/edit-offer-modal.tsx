@@ -341,10 +341,20 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
 
   const handleCheckboxChange = (field: keyof Pick<OfferData, 'emailToCustomer' | 'costsIncludeVAT' | 'costsExcludeVAT' | 'vatFree'>) => {
     return (checked: boolean) => {
-      setOfferData(prev => ({
-        ...prev,
-        [field]: checked
-      }))
+      if (field === 'emailToCustomer') {
+        setOfferData(prev => ({
+          ...prev,
+          [field]: checked
+        }))
+      } else {
+        // For VAT settings, make them mutually exclusive
+        setOfferData(prev => ({
+          ...prev,
+          costsIncludeVAT: field === 'costsIncludeVAT' ? checked : false,
+          costsExcludeVAT: field === 'costsExcludeVAT' ? checked : false,
+          vatFree: field === 'vatFree' ? checked : false
+        }))
+      }
     }
   }
 

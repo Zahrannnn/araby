@@ -126,143 +126,157 @@ interface ServiceDetailsModalProps {
   onSave: (data: ServiceType['data']) => void;
 }
 
-// Default additional costs for different service types
-const DEFAULT_MOVE_ADDITIONAL_COSTS: AdditionalCost[] = [
-  { description: "Expenses (Per Diem)", price: 20.00 },
-  { description: "Piano (Standard)", price: 250.00 },
-  { description: "Piano (Large)", price: 350.00 },
-  { description: "Furniture Lift (Included)", price: 0.00 },
-  { description: "Furniture Lift (Standard)", price: 250.00 },
-  { description: "Furniture Lift (Large)", price: 350.00 },
-  { description: "Heavy Goods Surcharge (Standard)", price: 150.00 },
-  { description: "Heavy Goods Surcharge (Large)", price: 250.00 },
-  { description: "Safe (Standard)", price: 350.00 },
-  { description: "Safe (Large)", price: 450.00 },
-  { description: "Waterbed Service", price: 500.00 },
-  { description: "", price: 0, hidden: true }
-];
-
-const DEFAULT_PACKING_ADDITIONAL_COSTS: AdditionalCost[] = [
-  { description: "Expenses (Per Diem)", price: 20.00 },
-  { description: "Packing Material Fee", price: 0.00 },
-  { description: "", price: 0, hidden: true }
-];
-
-const DEFAULT_UNPACKING_ADDITIONAL_COSTS: AdditionalCost[] = [
-  { description: "Expenses (Per Diem)", price: 20.00 },
-  { description: "Packing Material Fee", price: 0.00 },
-  { description: "", price: 0, hidden: true }
-];
-
-const DEFAULT_DISPOSAL_ADDITIONAL_COSTS: AdditionalCost[] = [
-  { description: "Expenses (Per Diem)", price: 20.00 },
-  { description: "", price: 0, hidden: true }
-];
-
-const getInitialServiceData = (type: ServiceType['type']): ServiceType['data'] => {
-  // Helper function to filter out hidden costs
-  const filterHiddenCosts = (costs: AdditionalCost[]) => costs.filter(cost => !cost.hidden);
-  
-  switch (type) {
-    case 'move':
-      return {
-        moveDate: '',
-        moveInDate: '',
-        moveStartTime: '',
-        roundTripCostCHF: 0,
-        selectedTariffDescription: '',
-        numberOfStaff: 0,
-        numberOfDeliveryTrucks: 0,
-        hourlyRateCHF: 0,
-        durationHours: 0,
-        disassemblyAssemblyBy: '',
-        additionalCosts: filterHiddenCosts([...DEFAULT_MOVE_ADDITIONAL_COSTS])
-      };
-    case 'cleaning':
-      return {
-        cleaningType: '',
-        fixedPriceRateCHF: 0,
-        hourlyRateCHFPerHour: null,
-        durationHours: null,
-        numberOfStaff: 0,
-        fillNailHoles: false,
-        withHighPressureCleaner: false,
-        cleaningDate: '',
-        cleaningStartTime: '',
-        deliveryDate: '',
-        deliveryTime: '',
-        discount: 0,
-        additionalCosts: []
-      };
-    case 'packing':
-      return {
-        packingDate: '',
-        packingStartTime: '',
-        roundTripCostCHF: 0,
-        durationHours: 0,
-        selectedTariffDescription: '',
-        numberOfStaff: 0,
-        hourlyRateCHF: 0,
-        packingMaterialsCost: 0,
-        additionalCosts: filterHiddenCosts([...DEFAULT_PACKING_ADDITIONAL_COSTS])
-      };
-    case 'unpacking':
-      return {
-        unpackingDate: '',
-        unpackingStartTime: '',
-        roundTripCostCHF: 0,
-        durationHours: 0,
-        selectedTariffDescription: '',
-        numberOfStaff: 0,
-        hourlyRateCHF: 0,
-        packingMaterialsCost: 0,
-        additionalCosts: filterHiddenCosts([...DEFAULT_UNPACKING_ADDITIONAL_COSTS])
-      };
-    case 'disposal':
-      return {
-        volumeRateCHFPerM3: 0,
-        flatRateDisposalCostCHF: 0,
-        estimatedVolumeM3: 0,
-        selectedEmployeePlanTariffDescription: null,
-        numberOfStaff: null,
-        numberOfDeliveryTrucks: null,
-        hourlyRateCHF: null,
-        durationHours: null,
-        disposalDate: '',
-        disposalStartTime: '',
-        roundTripCostCHF: 0,
-        discount: 0,
-        furtherDiscounts: '',
-        additionalCosts: filterHiddenCosts([...DEFAULT_DISPOSAL_ADDITIONAL_COSTS])
-      };
-    case 'storage':
-      return {
-        rateCHFPerM3PerMonth: 0,
-        volumeM3: 0,
-        cost: 0,
-        additionalCosts: []
-      };
-    case 'transport':
-      return {
-        transportTypeText: '',
-        fixedRateCHF: 0,
-        selectedHourlyTariffDescription: null,
-        numberOfStaff: 0,
-        numberOfDeliveryTrucks: 0,
-        hourlyRateCHF: null,
-        durationHours: null,
-        transportDate: '',
-        transportStartTime: '',
-        roundTripCostCHF: 0,
-        cost: 0,
-        discount: 0,
-        additionalCosts: []
-      };
-  }
-};
-
 export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData, onSave }: ServiceDetailsModalProps) {
   const t = useTranslations('company.offers.serviceDetails')
+  
+  // Function to get translated default costs
+  const getTranslatedDefaultCosts = () => {
+    const defaultMoveCosts: AdditionalCost[] = [
+      { description: t('defaultCosts.expensesPerDiem'), price: 20.00 },
+      { description: t('defaultCosts.pianoStandard'), price: 250.00 },
+      { description: t('defaultCosts.pianoLarge'), price: 350.00 },
+      { description: t('defaultCosts.furnitureLiftIncluded'), price: 0.00 },
+      { description: t('defaultCosts.furnitureLiftStandard'), price: 250.00 },
+      { description: t('defaultCosts.furnitureLiftLarge'), price: 350.00 },
+      { description: t('defaultCosts.heavyGoodsSurchargeStandard'), price: 150.00 },
+      { description: t('defaultCosts.heavyGoodsSurchargeLarge'), price: 250.00 },
+      { description: t('defaultCosts.safeStandard'), price: 350.00 },
+      { description: t('defaultCosts.safeLarge'), price: 450.00 },
+      { description: t('defaultCosts.waterbedService'), price: 500.00 },
+      { description: "", price: 0, hidden: true }
+    ];
+
+    const defaultPackingCosts: AdditionalCost[] = [
+      { description: t('defaultCosts.expensesPerDiem'), price: 20.00 },
+      { description: t('defaultCosts.packingMaterialFee'), price: 0.00 },
+      { description: "", price: 0, hidden: true }
+    ];
+
+    const defaultUnpackingCosts: AdditionalCost[] = [
+      { description: t('defaultCosts.expensesPerDiem'), price: 20.00 },
+      { description: t('defaultCosts.packingMaterialFee'), price: 0.00 },
+      { description: "", price: 0, hidden: true }
+    ];
+
+    const defaultDisposalCosts: AdditionalCost[] = [
+      { description: t('defaultCosts.expensesPerDiem'), price: 20.00 },
+      { description: "", price: 0, hidden: true }
+    ];
+
+    return {
+      move: defaultMoveCosts,
+      packing: defaultPackingCosts,
+      unpacking: defaultUnpackingCosts,
+      disposal: defaultDisposalCosts
+    };
+  };
+  
+  // Function to get initial service data
+  const getInitialServiceData = (type: ServiceType['type']): ServiceType['data'] => {
+    // Helper function to filter out hidden costs
+    const filterHiddenCosts = (costs: AdditionalCost[]) => costs.filter(cost => !cost.hidden);
+    
+    // Get translated default costs
+    const translatedCosts = getTranslatedDefaultCosts();
+    
+    switch (type) {
+      case 'move':
+        return {
+          moveDate: '',
+          moveInDate: '',
+          moveStartTime: '',
+          roundTripCostCHF: 0,
+          selectedTariffDescription: '',
+          numberOfStaff: 0,
+          numberOfDeliveryTrucks: 0,
+          hourlyRateCHF: 0,
+          durationHours: 0,
+          disassemblyAssemblyBy: '',
+          additionalCosts: filterHiddenCosts([...translatedCosts.move])
+        };
+      case 'cleaning':
+        return {
+          cleaningType: '',
+          fixedPriceRateCHF: 0,
+          hourlyRateCHFPerHour: null,
+          durationHours: null,
+          numberOfStaff: 0,
+          fillNailHoles: false,
+          withHighPressureCleaner: false,
+          cleaningDate: '',
+          cleaningStartTime: '',
+          deliveryDate: '',
+          deliveryTime: '',
+          discount: 0,
+          additionalCosts: []
+        };
+      case 'packing':
+        return {
+          packingDate: '',
+          packingStartTime: '',
+          roundTripCostCHF: 0,
+          durationHours: 0,
+          selectedTariffDescription: '',
+          numberOfStaff: 0,
+          hourlyRateCHF: 0,
+          packingMaterialsCost: 0,
+          additionalCosts: filterHiddenCosts([...translatedCosts.packing])
+        };
+      case 'unpacking':
+        return {
+          unpackingDate: '',
+          unpackingStartTime: '',
+          roundTripCostCHF: 0,
+          durationHours: 0,
+          selectedTariffDescription: '',
+          numberOfStaff: 0,
+          hourlyRateCHF: 0,
+          packingMaterialsCost: 0,
+          additionalCosts: filterHiddenCosts([...translatedCosts.unpacking])
+        };
+      case 'disposal':
+        return {
+          volumeRateCHFPerM3: 0,
+          flatRateDisposalCostCHF: 0,
+          estimatedVolumeM3: 0,
+          selectedEmployeePlanTariffDescription: null,
+          numberOfStaff: null,
+          numberOfDeliveryTrucks: null,
+          hourlyRateCHF: null,
+          durationHours: null,
+          disposalDate: '',
+          disposalStartTime: '',
+          roundTripCostCHF: 0,
+          discount: 0,
+          furtherDiscounts: '',
+          additionalCosts: filterHiddenCosts([...translatedCosts.disposal])
+        };
+      case 'storage':
+        return {
+          rateCHFPerM3PerMonth: 0,
+          volumeM3: 0,
+          cost: 0,
+          additionalCosts: []
+        };
+      case 'transport':
+        return {
+          transportTypeText: '',
+          fixedRateCHF: 0,
+          selectedHourlyTariffDescription: null,
+          numberOfStaff: 0,
+          numberOfDeliveryTrucks: 0,
+          hourlyRateCHF: null,
+          durationHours: null,
+          transportDate: '',
+          transportStartTime: '',
+          roundTripCostCHF: 0,
+          cost: 0,
+          discount: 0,
+          additionalCosts: []
+        };
+    }
+  };
+  
   const [formData, setFormData] = useState<ServiceType['data']>(() => {
     if (initialData) {
       return initialData;
@@ -277,17 +291,20 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
       // Helper function to filter out hidden costs
       const filterHiddenCosts = (costs: AdditionalCost[]) => costs.filter(cost => !cost.hidden);
       
+      // Get translated default costs
+      const translatedCosts = getTranslatedDefaultCosts();
+      
       // If initialData is provided, use it; otherwise, use the default data with predefined additional costs
       if (initialData && initialData !== null) {
         // Ensure services have additionalCosts
         if (serviceType === 'move' && (!initialData.additionalCosts || initialData.additionalCosts.length === 0)) {
-          initialData.additionalCosts = filterHiddenCosts([...DEFAULT_MOVE_ADDITIONAL_COSTS]);
+          initialData.additionalCosts = filterHiddenCosts([...translatedCosts.move]);
         } else if (serviceType === 'packing' && (!initialData.additionalCosts || initialData.additionalCosts.length === 0)) {
-          initialData.additionalCosts = filterHiddenCosts([...DEFAULT_PACKING_ADDITIONAL_COSTS]);
+          initialData.additionalCosts = filterHiddenCosts([...translatedCosts.packing]);
         } else if (serviceType === 'unpacking' && (!initialData.additionalCosts || initialData.additionalCosts.length === 0)) {
-          initialData.additionalCosts = filterHiddenCosts([...DEFAULT_UNPACKING_ADDITIONAL_COSTS]);
+          initialData.additionalCosts = filterHiddenCosts([...translatedCosts.unpacking]);
         } else if (serviceType === 'disposal' && (!initialData.additionalCosts || initialData.additionalCosts.length === 0)) {
-          initialData.additionalCosts = filterHiddenCosts([...DEFAULT_DISPOSAL_ADDITIONAL_COSTS]);
+          initialData.additionalCosts = filterHiddenCosts([...translatedCosts.disposal]);
         }
         
         // If initialData has additionalCosts, filter out hidden costs
@@ -1363,22 +1380,22 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
     switch (serviceType) {
       case 'move':
         if (!formData.additionalCosts || formData.additionalCosts.length === 0) {
-          formData.additionalCosts = [...DEFAULT_MOVE_ADDITIONAL_COSTS];
+          formData.additionalCosts = [...getTranslatedDefaultCosts().move];
         }
         break;
       case 'packing':
         if (!formData.additionalCosts || formData.additionalCosts.length === 0) {
-          formData.additionalCosts = [...DEFAULT_PACKING_ADDITIONAL_COSTS];
+          formData.additionalCosts = [...getTranslatedDefaultCosts().packing];
         }
         break;
       case 'unpacking':
         if (!formData.additionalCosts || formData.additionalCosts.length === 0) {
-          formData.additionalCosts = [...DEFAULT_UNPACKING_ADDITIONAL_COSTS];
+          formData.additionalCosts = [...getTranslatedDefaultCosts().unpacking];
         }
         break;
       case 'disposal':
         if (!formData.additionalCosts || formData.additionalCosts.length === 0) {
-          formData.additionalCosts = [...DEFAULT_DISPOSAL_ADDITIONAL_COSTS];
+          formData.additionalCosts = [...getTranslatedDefaultCosts().disposal];
         }
         break;
     }

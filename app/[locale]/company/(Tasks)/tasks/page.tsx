@@ -191,36 +191,42 @@ function TaskModal({ open, onOpenChange, taskToEdit }: TaskModalProps) {
 
   const isSubmitting = addTaskMutation.isPending || updateTaskMutation.isPending;
 
+  if (!open) return null;
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl w-full sm:max-w-lg md:max-w-2xl px-2 sm:px-6">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">
+    <div className="fixed inset-0 backdrop-blur-sm bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 border-b border-gray-200">
+          <h2 className="text-xl font-semibold text-gray-900">
             {taskToEdit ? t('editTitle') : t('title')}
-          </DialogTitle>
-          <DialogDescription>
-            {taskToEdit ? t('editSubtitle') : t('subtitle')}
-          </DialogDescription>
-        </DialogHeader>
-        <div className="my-4">
-          <div className="text-lg font-semibold text-red-600 mb-4">{t('sectionTitle')}</div>
-          <form className="space-y-4" onSubmit={handleSubmit}>
-            {formError && <div className="text-red-600 mb-2">{formError}</div>}
+          </h2>
+        </div>
+        
+        {/* Content */}
+        <div className="p-6 space-y-6">
+          <div className="text-lg font-medium text-red-600 mb-4">{t('sectionTitle')}</div>
+          
+          {formError && <div className="text-red-600 mb-4 p-3 bg-red-50 rounded-md">{formError}</div>}
+          
+          <div className="space-y-6">
             <div>
-              <Label className="my-2" htmlFor="task-title">{t('fields.title')}</Label>
-              <Input id="task-title" placeholder={t('fields.titlePlaceholder')} value={title} onChange={e => setTitle(e.target.value)} />
+              <Label className="mb-2" htmlFor="task-title">{t('fields.title')}</Label>
+              <Input id="task-title" placeholder={t('fields.titlePlaceholder')} value={title} onChange={e => setTitle(e.target.value)} className="text-sm" />
             </div>
+            
             <div>
-              <Label className="my-2" htmlFor="task-desc">{t('fields.description')}</Label>
-              <Textarea id="task-desc" placeholder={t('fields.descriptionPlaceholder')} value={description} onChange={e => setDescription(e.target.value)} />
+              <Label className="mb-2" htmlFor="task-desc">{t('fields.description')}</Label>
+              <Textarea id="task-desc" placeholder={t('fields.descriptionPlaceholder')} value={description} onChange={e => setDescription(e.target.value)} className="text-sm resize-none min-h-[100px]" />
             </div>
-            <div className="flex flex-col gap-4 md:flex-row">
-              <div className="flex-1 min-w-0">
-                <Label className="my-2" htmlFor="employee">{t('fields.employee')}</Label>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <Label className="mb-2" htmlFor="employee">{t('fields.employee')}</Label>
                 <select
                   id="employee"
                   title={t('fields.employeePlaceholder')}
-                  className="w-full border rounded px-3 py-2"
+                  className="w-full border rounded px-3 py-2 text-sm"
                   value={employeeId}
                   onChange={e => setEmployeeId(e.target.value)}
                 >
@@ -230,12 +236,13 @@ function TaskModal({ open, onOpenChange, taskToEdit }: TaskModalProps) {
                   ))}
                 </select>
               </div>
-              <div className="flex-1 min-w-0">
-                <Label className="my-2" htmlFor="customer">{t('fields.customer')}</Label>
+              
+              <div>
+                <Label className="mb-2" htmlFor="customer">{t('fields.customer')}</Label>
                 <select
                   id="customer"
                   title={t('fields.customerPlaceholder')}
-                  className="w-full border rounded px-3 py-2"
+                  className="w-full border rounded px-3 py-2 text-sm"
                   value={customerId}
                   onChange={e => setCustomerId(e.target.value)}
                 >
@@ -246,13 +253,14 @@ function TaskModal({ open, onOpenChange, taskToEdit }: TaskModalProps) {
                 </select>
               </div>
             </div>
-            <div className="flex flex-col gap-4 md:flex-row">
-              <div className="flex-1 min-w-0">
-                <Label className="my-2" htmlFor="priority">{t('fields.priorityPlaceholder')}</Label>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <Label className="mb-2" htmlFor="priority">{t('fields.priorityPlaceholder')}</Label>
                 <select
-                  title="peririty"
+                  title="priority"
                   id="priority"
-                  className="w-full border rounded px-3 py-2"
+                  className="w-full border rounded px-3 py-2 text-sm"
                   value={priority}
                   onChange={e => setPriority(e.target.value)}
                 >
@@ -262,23 +270,27 @@ function TaskModal({ open, onOpenChange, taskToEdit }: TaskModalProps) {
                   <option value="High">{t('priority.high')}</option>
                 </select>
               </div>
-              <div className="flex-1 min-w-0">
-                <Label className="my-2" htmlFor="due-date">{t('fields.dueDate')}</Label>
+              
+              <div>
+                <Label className="mb-2" htmlFor="due-date">{t('fields.dueDate')}</Label>
                 <Input
                   id="due-date"
                   type="datetime-local"
                   placeholder={t('fields.dueDatePlaceholder')}
                   value={dueDate}
                   onChange={e => setDueDate(e.target.value)}
+                  className="text-sm"
                 />
               </div>
             </div>
+            
             <div>
-              <Label className="my-2" htmlFor="notes">{t('fields.notes')}</Label>
-              <Input id="notes" placeholder={t('fields.notesPlaceholder')} value={notes} onChange={e => setNotes(e.target.value)} />
+              <Label className="mb-2" htmlFor="notes">{t('fields.notes')}</Label>
+              <Input id="notes" placeholder={t('fields.notesPlaceholder')} value={notes} onChange={e => setNotes(e.target.value)} className="text-sm" />
             </div>
+            
             <div>
-              <Label className="my-2">{t('fields.fileUpload')}</Label>
+              <Label className="mb-2">{t('fields.fileUpload')}</Label>
               <div
                 className="border-2 border-dashed rounded-lg p-4 text-center cursor-pointer"
                 onDrop={handleDrop}
@@ -287,42 +299,50 @@ function TaskModal({ open, onOpenChange, taskToEdit }: TaskModalProps) {
                 <input type="file" multiple className="hidden" id="file-upload" onChange={handleFileChange} />
                 <label htmlFor="file-upload" className="block cursor-pointer">
                   <div className="flex flex-col items-center justify-center">
-                    <svg width="40" height="40" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <svg width="32" height="32" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 16v-8m0 0l-4 4m4-4l4 4" />
                     </svg>
-                    <span className="text-red-600">{t('fields.fileUploadHint')}</span>
+                    <span className="text-red-600 text-sm">{t('fields.fileUploadHint')}</span>
                     <div className="text-xs text-gray-500 mt-1">{t('fields.fileUploadTypes')}</div>
                   </div>
                 </label>
                 {files.length > 0 && (
-                  <div className="mt-2 text-sm text-gray-700 break-words">
-                    {files.map(file => <div key={file.name}>{file.name}</div>)}
+                  <div className="mt-2 text-xs sm:text-sm text-gray-700 break-words max-h-20 overflow-y-auto">
+                    {files.map(file => <div key={file.name} className="truncate">{file.name}</div>)}
                   </div>
                 )}
               </div>
             </div>
-            <div className="flex flex-col sm:flex-row gap-2 mt-6">
-              <Button
-                type="submit"
-                className="bg-red-500 hover:bg-red-600 w-full sm:w-auto"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? 'Saving...' : taskToEdit ? t('actions.update') : t('actions.save')}
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => onOpenChange(false)}
-                disabled={isSubmitting}
-                className="w-full sm:w-auto"
-              >
-                {t('actions.cancel')}
-              </Button>
-            </div>
-          </form>
+          </div>
         </div>
-      </DialogContent>
-    </Dialog>
+        
+        {/* Footer */}
+        <div className="flex items-center justify-end gap-4 p-6 border-t border-gray-200">
+          <Button 
+            variant="outline" 
+            onClick={() => onOpenChange(false)}
+            disabled={isSubmitting}
+          >
+            {t('actions.cancel')}
+          </Button>
+          <Button 
+            onClick={handleSubmit}
+            disabled={isSubmitting}
+            className="bg-red-500 hover:bg-red-600"
+            type="button"
+          >
+            {isSubmitting ? (
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                {t('actions.saving') || 'Saving...'}
+              </div>
+            ) : (
+              taskToEdit ? t('actions.update') : t('actions.save')
+            )}
+          </Button>
+        </div>
+      </div>
+    </div>
   );
 }
 

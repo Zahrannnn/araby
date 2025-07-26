@@ -1118,7 +1118,23 @@
         "selectedHourlyTariffDescription": "وصف التعريفة بالساعة المختارة",
         "transportDate": "تاريخ النقل",
         "transportStartTime": "وقت بدء النقل",
-        "concessionText": "نص التنازل"
+        "concessionText": "نص التنازل",
+        "additionalCosts": "تكاليف إضافية",
+        "addCost": "إضافة تكلفة",
+        "defaultCosts": {
+          "expensesPerDiem": "نفقات (بدل يومي)",
+          "pianoStandard": "بيانو (قياسي)",
+          "pianoLarge": "بيانو (كبير)",
+          "furnitureLiftIncluded": "رافعة أثاث (مشمولة)",
+          "furnitureLiftStandard": "رافعة أثاث (قياسية)",
+          "furnitureLiftLarge": "رافعة أثاث (كبيرة)",
+          "heavyGoodsSurchargeStandard": "رسوم إضافية للبضائع الثقيلة (قياسية)",
+          "heavyGoodsSurchargeLarge": "رسوم إضافية للبضائع الثقيلة (كبيرة)",
+          "safeStandard": "خزنة (قياسية)",
+          "safeLarge": "خزنة (كبيرة)",
+          "waterbedService": "خدمة سرير مائي",
+          "packingMaterialFee": "رسوم مواد التعبئة"
+        }
        
        
        

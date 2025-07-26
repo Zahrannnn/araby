@@ -64,7 +64,7 @@ export function ExpensesAnalytics() {
   const { data: categoryData, isLoading: loadingCategory, error: errorCategory } = useExpensesCategoryChart()
 
   const monthly = Array.isArray(monthlyData) && monthlyData.length > 0 ? monthlyData : monthlyMock
-  const categories = Array.isArray(categoryData) && categoryData.length > 0 ? categoryData : categoryMock
+  const categories = Array.isArray(categoryData) && categoryData.length > 0 ? categoryData : []
 
   const lineData = {
     labels: monthly.map((m) => m.month),

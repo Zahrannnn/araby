@@ -1119,8 +1119,21 @@
         "selectedHourlyTariffDescription": "Ausgewählte Stundenratentarifbeschreibung",
         "transportDate": "Transportdatum",
         "transportStartTime": "Transportstartzeit",
-        "concessionText": "Konzessionstext"
-
+        "concessionText": "Konzessionstext",
+        "defaultCosts": {
+          "expensesPerDiem": "Spesen (Tagespauschale)",
+          "pianoStandard": "Klavier (Standard)",
+          "pianoLarge": "Klavier (Groß)",
+          "furnitureLiftIncluded": "Möbellift (Inklusive)",
+          "furnitureLiftStandard": "Möbellift (Standard)",
+          "furnitureLiftLarge": "Möbellift (Groß)",
+          "heavyGoodsSurchargeStandard": "Schwergut-Zuschlag (Standard)",
+          "heavyGoodsSurchargeLarge": "Schwergut-Zuschlag (Groß)",
+          "safeStandard": "Tresor (Standard)",
+          "safeLarge": "Tresor (Groß)",
+          "waterbedService": "Wasserbett-Service",
+          "packingMaterialFee": "Verpackungsmaterial-Gebühr"
+        }
 
 
       },
