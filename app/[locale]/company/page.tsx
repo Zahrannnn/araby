@@ -346,7 +346,7 @@ const Page = () => {
             {serviceData.map((service, index) => (
               <div key={index}>
                 <div className='flex justify-between items-center mb-2'>
-                  <span className='text-gray-700 text-sm font-medium'>{service.name}</span>
+                  <span className='text-gray-700 text-sm font-medium'>{t(`servicess.${service.name.toLowerCase()}`)}</span>
                   <span className='font-semibold text-red-600 text-sm'>{formatCurrency(service.amount)}</span>
                 </div>
                 <div className='w-full bg-gray-200 rounded-full h-2'>
@@ -408,56 +408,9 @@ const Page = () => {
           ) : (
             // Fallback to static tasks when no API tasks are available
             <>
-              <div className='bg-gray-50 rounded-lg p-4 border-l-4 border-red-500'>
-                <div className='flex justify-between items-start'>
-                  <div className='flex-1'>
-                    <h4 className='font-medium text-gray-900 mb-2'>{t('tasksList.tasks.presentationTracking')}</h4>
-                    <div className='flex items-center gap-4'>
-                      <span className='text-sm text-gray-500'>{t('tasksList.taskStatus')}: 15.01.2024</span>
-                      <span className='bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-medium'>Hoch</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+             
 
-              <div className='bg-red-50 rounded-lg p-4 border-l-4 border-red-500'>
-                <div className='flex justify-between items-start'>
-                  <div className='flex-1'>
-                    <h4 className='font-medium text-gray-900 mb-2'>{t('tasksList.tasks.priceListUpdate')}</h4>
-                    <div className='flex items-center gap-4'>
-                      <span className='text-sm text-gray-500'>{t('tasksList.taskStatus')}: 12.01.2024</span>
-                      <span className='bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-xs font-medium'>Mittel</span>
-                    </div>
-                  </div>
-                  <div className='bg-red-500 text-white px-3 py-1 rounded-full text-xs font-medium ml-4'>
-                    Überfällig
-                  </div>
-                </div>
-              </div>
-
-              <div className='bg-gray-50 rounded-lg p-4 border-l-4 border-red-500'>
-                <div className='flex justify-between items-start'>
-                  <div className='flex-1'>
-                    <h4 className='font-medium text-gray-900 mb-2'>{t('tasksList.tasks.monthlySalesReport')}</h4>
-                    <div className='flex items-center gap-4'>
-                      <span className='text-sm text-gray-500'>{t('tasksList.taskStatus')}: 15.01.2024</span>
-                      <span className='bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-medium'>Hoch</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className='bg-gray-100 rounded-lg p-4 border-l-4 border-red-500'>
-                <div className='flex justify-between items-start'>
-                  <div className='flex-1'>
-                    <h4 className='font-medium text-gray-900 mb-2'>{t('tasksList.tasks.contractReview')}</h4>
-                    <div className='flex items-center gap-4'>
-                      <span className='text-sm text-gray-500'>{t('tasksList.taskStatus')}: 15.01.2024</span>
-                      <span className='bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-xs font-medium'>Niedrig</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+           
             </>
           )}
         </div>

@@ -101,7 +101,7 @@ const Page = () => {
         }
 
         const response = await fetch(
-          "https://crmproject.runasp.net/api/SuperAdmin/dashboard",
+          "https://nedx.premiumasp.net/api/SuperAdmin/dashboard",
           {
             method: "GET",
             headers: {

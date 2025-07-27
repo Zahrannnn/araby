@@ -1,19 +1,29 @@
-"use client"
+"use client";
 
-import React, { useState, useEffect } from 'react'
-import { useTranslations } from 'next-intl'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ChevronLeftIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline'
+import React, { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  ChevronLeftIcon,
+  PlusIcon,
+  TrashIcon,
+} from "@heroicons/react/24/outline";
 
 // Service Types
 export type AdditionalCost = {
   description: string;
   price: number;
   hidden?: boolean; // Added hidden property
-}
+};
 
 export type MoveService = {
   moveDate: string;
@@ -27,7 +37,7 @@ export type MoveService = {
   durationHours: number;
   disassemblyAssemblyBy: string;
   additionalCosts: AdditionalCost[];
-}
+};
 
 export type CleaningService = {
   cleaningType: string;
@@ -43,7 +53,7 @@ export type CleaningService = {
   deliveryTime: string;
   discount: number;
   additionalCosts: AdditionalCost[];
-}
+};
 
 export type PackingService = {
   packingDate: string;
@@ -55,7 +65,7 @@ export type PackingService = {
   hourlyRateCHF: number;
   packingMaterialsCost: number;
   additionalCosts: AdditionalCost[];
-}
+};
 
 export type UnpackingService = {
   unpackingDate: string;
@@ -67,7 +77,7 @@ export type UnpackingService = {
   hourlyRateCHF: number;
   packingMaterialsCost: number;
   additionalCosts: AdditionalCost[];
-}
+};
 
 export type DisposalService = {
   volumeRateCHFPerM3: number;
@@ -84,14 +94,14 @@ export type DisposalService = {
   discount: number;
   furtherDiscounts: string;
   additionalCosts: AdditionalCost[];
-}
+};
 
 export type StorageService = {
   rateCHFPerM3PerMonth: number;
   volumeM3: number;
   cost: number;
   additionalCosts: AdditionalCost[];
-}
+};
 
 export type TransportService = {
   transportTypeText: string;
@@ -107,134 +117,146 @@ export type TransportService = {
   cost: number;
   discount: number;
   additionalCosts: AdditionalCost[];
-}
+};
 
 export type ServiceType =
-  | { type: 'move'; data: MoveService }
-  | { type: 'cleaning'; data: CleaningService }
-  | { type: 'packing'; data: PackingService }
-  | { type: 'unpacking'; data: UnpackingService }
-  | { type: 'disposal'; data: DisposalService }
-  | { type: 'storage'; data: StorageService }
-  | { type: 'transport'; data: TransportService };
+  | { type: "move"; data: MoveService }
+  | { type: "cleaning"; data: CleaningService }
+  | { type: "packing"; data: PackingService }
+  | { type: "unpacking"; data: UnpackingService }
+  | { type: "disposal"; data: DisposalService }
+  | { type: "storage"; data: StorageService }
+  | { type: "transport"; data: TransportService };
 
 interface ServiceDetailsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  serviceType: ServiceType['type'];
-  initialData?: ServiceType['data'] | null;
-  onSave: (data: ServiceType['data']) => void;
+  serviceType: ServiceType["type"];
+  initialData?: ServiceType["data"] | null;
+  onSave: (data: ServiceType["data"]) => void;
 }
 
-export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData, onSave }: ServiceDetailsModalProps) {
-  const t = useTranslations('company.offers.serviceDetails')
-  
+export function ServiceDetailsModal({
+  isOpen,
+  onClose,
+  serviceType,
+  initialData,
+  onSave,
+}: ServiceDetailsModalProps) {
+  const t = useTranslations("company.offers.serviceDetails");
+
   // Function to get translated default costs
   const getTranslatedDefaultCosts = () => {
     const defaultMoveCosts: AdditionalCost[] = [
-      { description: t('defaultCosts.expensesPerDiem'), price: 20.00 },
-      { description: t('defaultCosts.pianoStandard'), price: 250.00 },
-      { description: t('defaultCosts.pianoLarge'), price: 350.00 },
-      { description: t('defaultCosts.furnitureLiftIncluded'), price: 0.00 },
-      { description: t('defaultCosts.furnitureLiftStandard'), price: 250.00 },
-      { description: t('defaultCosts.furnitureLiftLarge'), price: 350.00 },
-      { description: t('defaultCosts.heavyGoodsSurchargeStandard'), price: 150.00 },
-      { description: t('defaultCosts.heavyGoodsSurchargeLarge'), price: 250.00 },
-      { description: t('defaultCosts.safeStandard'), price: 350.00 },
-      { description: t('defaultCosts.safeLarge'), price: 450.00 },
-      { description: t('defaultCosts.waterbedService'), price: 500.00 },
-      { description: "", price: 0, hidden: true }
+      { description: t("defaultCosts.expensesPerDiem"), price: 20.0 },
+      { description: t("defaultCosts.pianoStandard"), price: 250.0 },
+      { description: t("defaultCosts.pianoLarge"), price: 350.0 },
+      { description: t("defaultCosts.furnitureLiftIncluded"), price: 0.0 },
+      { description: t("defaultCosts.furnitureLiftStandard"), price: 250.0 },
+      { description: t("defaultCosts.furnitureLiftLarge"), price: 350.0 },
+      {
+        description: t("defaultCosts.heavyGoodsSurchargeStandard"),
+        price: 150.0,
+      },
+      { description: t("defaultCosts.heavyGoodsSurchargeLarge"), price: 250.0 },
+      { description: t("defaultCosts.safeStandard"), price: 350.0 },
+      { description: t("defaultCosts.safeLarge"), price: 450.0 },
+      { description: t("defaultCosts.waterbedService"), price: 500.0 },
+      { description: "", price: 0, hidden: true },
     ];
 
     const defaultPackingCosts: AdditionalCost[] = [
-      { description: t('defaultCosts.expensesPerDiem'), price: 20.00 },
-      { description: t('defaultCosts.packingMaterialFee'), price: 0.00 },
-      { description: "", price: 0, hidden: true }
+      { description: t("defaultCosts.expensesPerDiem"), price: 20.0 },
+      { description: t("defaultCosts.packingMaterialFee"), price: 0.0 },
+      { description: "", price: 0, hidden: true },
     ];
 
     const defaultUnpackingCosts: AdditionalCost[] = [
-      { description: t('defaultCosts.expensesPerDiem'), price: 20.00 },
-      { description: t('defaultCosts.packingMaterialFee'), price: 0.00 },
-      { description: "", price: 0, hidden: true }
+      { description: t("defaultCosts.expensesPerDiem"), price: 20.0 },
+      { description: t("defaultCosts.packingMaterialFee"), price: 0.0 },
+      { description: "", price: 0, hidden: true },
     ];
 
     const defaultDisposalCosts: AdditionalCost[] = [
-      { description: t('defaultCosts.expensesPerDiem'), price: 20.00 },
-      { description: "", price: 0, hidden: true }
+      { description: t("defaultCosts.expensesPerDiem"), price: 20.0 },
+      { description: "", price: 0, hidden: true },
     ];
 
     return {
       move: defaultMoveCosts,
       packing: defaultPackingCosts,
       unpacking: defaultUnpackingCosts,
-      disposal: defaultDisposalCosts
+      disposal: defaultDisposalCosts,
     };
   };
-  
+
   // Function to get initial service data
-  const getInitialServiceData = (type: ServiceType['type']): ServiceType['data'] => {
+  const getInitialServiceData = (
+    type: ServiceType["type"]
+  ): ServiceType["data"] => {
     // Helper function to filter out hidden costs
-    const filterHiddenCosts = (costs: AdditionalCost[]) => costs.filter(cost => !cost.hidden);
-    
+    const filterHiddenCosts = (costs: AdditionalCost[]) =>
+      costs.filter((cost) => !cost.hidden);
+
     // Get translated default costs
     const translatedCosts = getTranslatedDefaultCosts();
-    
+
     switch (type) {
-      case 'move':
+      case "move":
         return {
-          moveDate: '',
-          moveInDate: '',
-          moveStartTime: '',
+          moveDate: "",
+          moveInDate: "",
+          moveStartTime: "",
           roundTripCostCHF: 0,
-          selectedTariffDescription: '',
+          selectedTariffDescription: "",
           numberOfStaff: 0,
           numberOfDeliveryTrucks: 0,
           hourlyRateCHF: 0,
           durationHours: 0,
-          disassemblyAssemblyBy: '',
-          additionalCosts: filterHiddenCosts([...translatedCosts.move])
+          disassemblyAssemblyBy: "",
+          additionalCosts: filterHiddenCosts([...translatedCosts.move]),
         };
-      case 'cleaning':
+      case "cleaning":
         return {
-          cleaningType: '',
+          cleaningType: "",
           fixedPriceRateCHF: 0,
           hourlyRateCHFPerHour: null,
           durationHours: null,
           numberOfStaff: 0,
           fillNailHoles: false,
           withHighPressureCleaner: false,
-          cleaningDate: '',
-          cleaningStartTime: '',
-          deliveryDate: '',
-          deliveryTime: '',
+          cleaningDate: "",
+          cleaningStartTime: "",
+          deliveryDate: "",
+          deliveryTime: "",
           discount: 0,
-          additionalCosts: []
+          additionalCosts: [],
         };
-      case 'packing':
+      case "packing":
         return {
-          packingDate: '',
-          packingStartTime: '',
+          packingDate: "",
+          packingStartTime: "",
           roundTripCostCHF: 0,
           durationHours: 0,
-          selectedTariffDescription: '',
+          selectedTariffDescription: "",
           numberOfStaff: 0,
           hourlyRateCHF: 0,
           packingMaterialsCost: 0,
-          additionalCosts: filterHiddenCosts([...translatedCosts.packing])
+          additionalCosts: filterHiddenCosts([...translatedCosts.packing]),
         };
-      case 'unpacking':
+      case "unpacking":
         return {
-          unpackingDate: '',
-          unpackingStartTime: '',
+          unpackingDate: "",
+          unpackingStartTime: "",
           roundTripCostCHF: 0,
           durationHours: 0,
-          selectedTariffDescription: '',
+          selectedTariffDescription: "",
           numberOfStaff: 0,
           hourlyRateCHF: 0,
           packingMaterialsCost: 0,
-          additionalCosts: filterHiddenCosts([...translatedCosts.unpacking])
+          additionalCosts: filterHiddenCosts([...translatedCosts.unpacking]),
         };
-      case 'disposal':
+      case "disposal":
         return {
           volumeRateCHFPerM3: 0,
           flatRateDisposalCostCHF: 0,
@@ -244,40 +266,40 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
           numberOfDeliveryTrucks: null,
           hourlyRateCHF: null,
           durationHours: null,
-          disposalDate: '',
-          disposalStartTime: '',
+          disposalDate: "",
+          disposalStartTime: "",
           roundTripCostCHF: 0,
           discount: 0,
-          furtherDiscounts: '',
-          additionalCosts: filterHiddenCosts([...translatedCosts.disposal])
+          furtherDiscounts: "",
+          additionalCosts: filterHiddenCosts([...translatedCosts.disposal]),
         };
-      case 'storage':
+      case "storage":
         return {
           rateCHFPerM3PerMonth: 0,
           volumeM3: 0,
           cost: 0,
-          additionalCosts: []
+          additionalCosts: [],
         };
-      case 'transport':
+      case "transport":
         return {
-          transportTypeText: '',
+          transportTypeText: "",
           fixedRateCHF: 0,
           selectedHourlyTariffDescription: null,
           numberOfStaff: 0,
           numberOfDeliveryTrucks: 0,
           hourlyRateCHF: null,
           durationHours: null,
-          transportDate: '',
-          transportStartTime: '',
+          transportDate: "",
+          transportStartTime: "",
           roundTripCostCHF: 0,
           cost: 0,
           discount: 0,
-          additionalCosts: []
+          additionalCosts: [],
         };
     }
   };
-  
-  const [formData, setFormData] = useState<ServiceType['data']>(() => {
+
+  const [formData, setFormData] = useState<ServiceType["data"]>(() => {
     if (initialData) {
       return initialData;
     }
@@ -289,82 +311,110 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
   useEffect(() => {
     if (serviceType) {
       // Helper function to filter out hidden costs
-      const filterHiddenCosts = (costs: AdditionalCost[]) => costs.filter(cost => !cost.hidden);
-      
+      const filterHiddenCosts = (costs: AdditionalCost[]) =>
+        costs.filter((cost) => !cost.hidden);
+
       // Get translated default costs
       const translatedCosts = getTranslatedDefaultCosts();
-      
+
       // If initialData is provided, use it; otherwise, use the default data with predefined additional costs
       if (initialData && initialData !== null) {
         // Ensure services have additionalCosts
-        if (serviceType === 'move' && (!initialData.additionalCosts || initialData.additionalCosts.length === 0)) {
-          initialData.additionalCosts = filterHiddenCosts([...translatedCosts.move]);
-        } else if (serviceType === 'packing' && (!initialData.additionalCosts || initialData.additionalCosts.length === 0)) {
-          initialData.additionalCosts = filterHiddenCosts([...translatedCosts.packing]);
-        } else if (serviceType === 'unpacking' && (!initialData.additionalCosts || initialData.additionalCosts.length === 0)) {
-          initialData.additionalCosts = filterHiddenCosts([...translatedCosts.unpacking]);
-        } else if (serviceType === 'disposal' && (!initialData.additionalCosts || initialData.additionalCosts.length === 0)) {
-          initialData.additionalCosts = filterHiddenCosts([...translatedCosts.disposal]);
+        if (
+          serviceType === "move" &&
+          (!initialData.additionalCosts ||
+            initialData.additionalCosts.length === 0)
+        ) {
+          initialData.additionalCosts = filterHiddenCosts([
+            ...translatedCosts.move,
+          ]);
+        } else if (
+          serviceType === "packing" &&
+          (!initialData.additionalCosts ||
+            initialData.additionalCosts.length === 0)
+        ) {
+          initialData.additionalCosts = filterHiddenCosts([
+            ...translatedCosts.packing,
+          ]);
+        } else if (
+          serviceType === "unpacking" &&
+          (!initialData.additionalCosts ||
+            initialData.additionalCosts.length === 0)
+        ) {
+          initialData.additionalCosts = filterHiddenCosts([
+            ...translatedCosts.unpacking,
+          ]);
+        } else if (
+          serviceType === "disposal" &&
+          (!initialData.additionalCosts ||
+            initialData.additionalCosts.length === 0)
+        ) {
+          initialData.additionalCosts = filterHiddenCosts([
+            ...translatedCosts.disposal,
+          ]);
         }
-        
+
         // If initialData has additionalCosts, filter out hidden costs
         if (initialData.additionalCosts) {
-          initialData.additionalCosts = filterHiddenCosts(initialData.additionalCosts);
+          initialData.additionalCosts = filterHiddenCosts(
+            initialData.additionalCosts
+          );
         }
-        
+
         setFormData(initialData);
       } else {
         const defaultData = getInitialServiceData(serviceType);
         setFormData(defaultData);
       }
-      
+
       // Reset the changes flag when modal opens
       setHasChanges(false);
     }
   }, [initialData, serviceType]);
 
   const formatTimeForAPI = (time: string): string => {
-    if (!time) return '';
+    if (!time) return "";
     // Convert time to TimeSpan format ("HH:mm:ss")
-    const [hours, minutes] = time.split(':').map(Number);
-    const formattedHours = hours.toString().padStart(2, '0');
-    const formattedMinutes = minutes.toString().padStart(2, '0');
+    const [hours, minutes] = time.split(":").map(Number);
+    const formattedHours = hours.toString().padStart(2, "0");
+    const formattedMinutes = minutes.toString().padStart(2, "0");
     return `${formattedHours}:${formattedMinutes}:00`;
   };
-  
-
 
   const formatTimeForDisplay = (time: string): string => {
-    if (!time) return '';
+    if (!time) return "";
     // If it's in HH:mm:ss format, return just HH:mm
-    if (time.includes(':')) {
+    if (time.includes(":")) {
       return time.slice(0, 5);
     }
     return time;
   };
 
-  const handleInputChange = (field: string, value: string | number | boolean | null | AdditionalCost[]) => {
+  const handleInputChange = (
+    field: string,
+    value: string | number | boolean | null | AdditionalCost[]
+  ) => {
     // Mark that user has made changes
     setHasChanges(true);
-    
+
     // Special handling for time fields
     if (
-      field.toLowerCase().includes('time') && 
-      typeof value === 'string' && 
-      !field.includes('Date')
+      field.toLowerCase().includes("time") &&
+      typeof value === "string" &&
+      !field.includes("Date")
     ) {
       // Ensure time value is in correct format
       const formattedTime = formatTimeForAPI(value);
       value = formattedTime || value;
     }
-    
-    setFormData(prev => ({
+
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
     // Clear error for the field when it's being changed
     if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: '' }));
+      setErrors((prev) => ({ ...prev, [field]: "" }));
     }
   };
 
@@ -373,73 +423,114 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
     let isValid = true;
 
     // Basic validation for required fields (adapt as needed for each service type)
-    if (serviceType === 'move' && (formData as MoveService).moveDate === '') {
-      newErrors.moveDate = 'Move date is required';
+    if (serviceType === "move" && (formData as MoveService).moveDate === "") {
+      newErrors.moveDate = "Move date is required";
       isValid = false;
     }
-    if (serviceType === 'move' && (formData as MoveService).moveInDate === '') {
-      newErrors.moveInDate = 'Move-in date is required';
+    if (serviceType === "move" && (formData as MoveService).moveInDate === "") {
+      newErrors.moveInDate = "Move-in date is required";
       isValid = false;
     }
     if ((formData as MoveService).roundTripCostCHF < 0) {
-      newErrors.roundTripCostCHF = 'Round trip cost cannot be negative';
+      newErrors.roundTripCostCHF = "Round trip cost cannot be negative";
       isValid = false;
     }
 
-    if ((formData as CleaningService).cleaningType === '' && serviceType === 'cleaning') {
-      newErrors.cleaningType = 'Cleaning type is required';
+    if (
+      (formData as CleaningService).cleaningType === "" &&
+      serviceType === "cleaning"
+    ) {
+      newErrors.cleaningType = "Cleaning type is required";
       isValid = false;
     }
-    if ((formData as CleaningService).fixedPriceRateCHF < 0 && serviceType === 'cleaning') {
-      newErrors.fixedPriceRateCHF = 'Fixed price rate cannot be negative';
+    if (
+      (formData as CleaningService).fixedPriceRateCHF < 0 &&
+      serviceType === "cleaning"
+    ) {
+      newErrors.fixedPriceRateCHF = "Fixed price rate cannot be negative";
       isValid = false;
     }
-    if ((formData as CleaningService).hourlyRateCHFPerHour !== null && (formData as CleaningService).hourlyRateCHFPerHour! < 0 && serviceType === 'cleaning') {
-      newErrors.hourlyRateCHFPerHour = 'Hourly rate cannot be negative';
+    if (
+      (formData as CleaningService).hourlyRateCHFPerHour !== null &&
+      (formData as CleaningService).hourlyRateCHFPerHour! < 0 &&
+      serviceType === "cleaning"
+    ) {
+      newErrors.hourlyRateCHFPerHour = "Hourly rate cannot be negative";
       isValid = false;
     }
-    if ((formData as CleaningService).durationHours !== null && (formData as CleaningService).durationHours! < 0 && serviceType === 'cleaning') {
-      newErrors.durationHours = 'Duration cannot be negative';
+    if (
+      (formData as CleaningService).durationHours !== null &&
+      (formData as CleaningService).durationHours! < 0 &&
+      serviceType === "cleaning"
+    ) {
+      newErrors.durationHours = "Duration cannot be negative";
       isValid = false;
     }
-    if ((formData as CleaningService).numberOfStaff < 0 && serviceType === 'cleaning') {
-      newErrors.numberOfStaff = 'Number of staff cannot be negative';
-      isValid = false;
-    }
-
-    if ((formData as PackingService).packingDate === '' && serviceType === 'packing') {
-      newErrors.packingDate = 'Packing date is required';
-      isValid = false;
-    }
-    if ((formData as PackingService).durationHours < 0 && serviceType === 'packing') {
-      newErrors.durationHours = 'Duration cannot be negative';
-      isValid = false;
-    }
-
-    if ((formData as DisposalService).disposalDate === '' && serviceType === 'disposal') {
-      newErrors.disposalDate = 'Disposal date is required';
-      isValid = false;
-    }
-    if ((formData as DisposalService).estimatedVolumeM3 < 0 && serviceType === 'disposal') {
-      newErrors.estimatedVolumeM3 = 'Estimated volume cannot be negative';
-      isValid = false;
-    }
-
-    if ((formData as StorageService).rateCHFPerM3PerMonth < 0 && serviceType === 'storage') {
-      newErrors.rateCHFPerM3PerMonth = 'Rate cannot be negative';
-      isValid = false;
-    }
-    if ((formData as StorageService).volumeM3 < 0 && serviceType === 'storage') {
-      newErrors.volumeM3 = 'Volume cannot be negative';
+    if (
+      (formData as CleaningService).numberOfStaff < 0 &&
+      serviceType === "cleaning"
+    ) {
+      newErrors.numberOfStaff = "Number of staff cannot be negative";
       isValid = false;
     }
 
-    if ((formData as TransportService).transportDate === '' && serviceType === 'transport') {
-      newErrors.transportDate = 'Transport date is required';
+    if (
+      (formData as PackingService).packingDate === "" &&
+      serviceType === "packing"
+    ) {
+      newErrors.packingDate = "Packing date is required";
       isValid = false;
     }
-    if ((formData as TransportService).fixedRateCHF < 0 && serviceType === 'transport') {
-      newErrors.fixedRateCHF = 'Fixed rate cannot be negative';
+    if (
+      (formData as PackingService).durationHours < 0 &&
+      serviceType === "packing"
+    ) {
+      newErrors.durationHours = "Duration cannot be negative";
+      isValid = false;
+    }
+
+    if (
+      (formData as DisposalService).disposalDate === "" &&
+      serviceType === "disposal"
+    ) {
+      newErrors.disposalDate = "Disposal date is required";
+      isValid = false;
+    }
+    if (
+      (formData as DisposalService).estimatedVolumeM3 < 0 &&
+      serviceType === "disposal"
+    ) {
+      newErrors.estimatedVolumeM3 = "Estimated volume cannot be negative";
+      isValid = false;
+    }
+
+    if (
+      (formData as StorageService).rateCHFPerM3PerMonth < 0 &&
+      serviceType === "storage"
+    ) {
+      newErrors.rateCHFPerM3PerMonth = "Rate cannot be negative";
+      isValid = false;
+    }
+    if (
+      (formData as StorageService).volumeM3 < 0 &&
+      serviceType === "storage"
+    ) {
+      newErrors.volumeM3 = "Volume cannot be negative";
+      isValid = false;
+    }
+
+    if (
+      (formData as TransportService).transportDate === "" &&
+      serviceType === "transport"
+    ) {
+      newErrors.transportDate = "Transport date is required";
+      isValid = false;
+    }
+    if (
+      (formData as TransportService).fixedRateCHF < 0 &&
+      serviceType === "transport"
+    ) {
+      newErrors.fixedRateCHF = "Fixed rate cannot be negative";
       isValid = false;
     }
 
@@ -453,12 +544,14 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
       if (hasChanges || initialData) {
         // Create a clean copy of the form data with hidden costs removed
         const cleanedData = { ...formData };
-        
+
         // Filter out hidden costs if additionalCosts exists
         if (cleanedData.additionalCosts) {
-          cleanedData.additionalCosts = cleanedData.additionalCosts.filter(cost => !cost.hidden);
+          cleanedData.additionalCosts = cleanedData.additionalCosts.filter(
+            (cost) => !cost.hidden
+          );
         }
-        
+
         onSave(cleanedData);
       } else {
         // If no changes were made and this is a new service, just close without saving
@@ -466,7 +559,7 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
       }
     }
   };
-  
+
   const handleCancel = () => {
     // If no changes were made and this is a new service, close without saving
     onClose();
@@ -477,135 +570,195 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
   const renderMoveServiceForm = (data: MoveService) => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('moveDate')}</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("moveDate")}
+        </label>
         <Input
           type="date"
-          value={data.moveDate?.split('T')[0] || ''}
-          onChange={(e) => handleInputChange('moveDate', `${e.target.value}T00:00:00`)}
-          className={errors.moveDate ? 'border-red-500' : ''}
+          value={data.moveDate?.split("T")[0] || ""}
+          onChange={(e) =>
+            handleInputChange("moveDate", `${e.target.value}T00:00:00`)
+          }
+          className={errors.moveDate ? "border-red-500" : ""}
         />
-        {errors.moveDate && <p className="text-red-500 text-sm mt-1">{errors.moveDate}</p>}
+        {errors.moveDate && (
+          <p className="text-red-500 text-sm mt-1">{errors.moveDate}</p>
+        )}
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('moveInDate')}</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("moveInDate")}
+        </label>
         <Input
           type="date"
-          value={data.moveInDate?.split('T')[0] || ''}
-          onChange={(e) => handleInputChange('moveInDate', `${e.target.value}T00:00:00`)}
-          className={errors.moveInDate ? 'border-red-500' : ''}
+          value={data.moveInDate?.split("T")[0] || ""}
+          onChange={(e) =>
+            handleInputChange("moveInDate", `${e.target.value}T00:00:00`)
+          }
+          className={errors.moveInDate ? "border-red-500" : ""}
         />
-        {errors.moveInDate && <p className="text-red-500 text-sm mt-1">{errors.moveInDate}</p>}
+        {errors.moveInDate && (
+          <p className="text-red-500 text-sm mt-1">{errors.moveInDate}</p>
+        )}
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('moveStartTime')}</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("moveStartTime")}
+        </label>
         <Input
           type="time"
           value={formatTimeForDisplay(data.moveStartTime)}
-          onChange={(e) => handleInputChange('moveStartTime', e.target.value)}
+          onChange={(e) => handleInputChange("moveStartTime", e.target.value)}
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('roundTripCostCHF')}</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("roundTripCostCHF")}
+        </label>
         <Input
           type="number"
           value={data.roundTripCostCHF}
-          onChange={(e) => handleInputChange('roundTripCostCHF', parseFloat(e.target.value))}
-          className={errors.roundTripCostCHF ? 'border-red-500' : ''}
+          onChange={(e) =>
+            handleInputChange("roundTripCostCHF", parseFloat(e.target.value))
+          }
+          className={errors.roundTripCostCHF ? "border-red-500" : ""}
         />
-        {errors.roundTripCostCHF && <p className="text-red-500 text-sm mt-1">{errors.roundTripCostCHF}</p>}
+        {errors.roundTripCostCHF && (
+          <p className="text-red-500 text-sm mt-1">{errors.roundTripCostCHF}</p>
+        )}
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('selectedTariffDescription')}</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("selectedTariffDescription")}
+        </label>
         <Input
           value={data.selectedTariffDescription}
-          onChange={(e) => handleInputChange('selectedTariffDescription', e.target.value)}
+          onChange={(e) =>
+            handleInputChange("selectedTariffDescription", e.target.value)
+          }
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('numberOfStaff')}</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("numberOfStaff")}
+        </label>
         <Input
           type="number"
           value={data.numberOfStaff}
-          onChange={(e) => handleInputChange('numberOfStaff', parseInt(e.target.value))}
+          onChange={(e) =>
+            handleInputChange("numberOfStaff", parseInt(e.target.value))
+          }
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('numberOfDeliveryTrucks')}</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("numberOfDeliveryTrucks")}
+        </label>
         <Input
           type="number"
           value={data.numberOfDeliveryTrucks}
-          onChange={(e) => handleInputChange('numberOfDeliveryTrucks', parseInt(e.target.value))}
+          onChange={(e) =>
+            handleInputChange(
+              "numberOfDeliveryTrucks",
+              parseInt(e.target.value)
+            )
+          }
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('hourlyRateCHF')}</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("hourlyRateCHF")}
+        </label>
         <Input
           type="number"
           value={data.hourlyRateCHF}
-          onChange={(e) => handleInputChange('hourlyRateCHF', parseFloat(e.target.value))}
+          onChange={(e) =>
+            handleInputChange("hourlyRateCHF", parseFloat(e.target.value))
+          }
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('durationHours')}</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("durationHours")}
+        </label>
         <Input
           type="number"
           value={data.durationHours}
-          onChange={(e) => handleInputChange('durationHours', parseFloat(e.target.value))}
+          onChange={(e) =>
+            handleInputChange("durationHours", parseFloat(e.target.value))
+          }
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('disassemblyAssemblyBy')}</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("disassemblyAssemblyBy")}
+        </label>
         <Input
           value={data.disassemblyAssemblyBy}
-          onChange={(e) => handleInputChange('disassemblyAssemblyBy', e.target.value)}
+          onChange={(e) =>
+            handleInputChange("disassemblyAssemblyBy", e.target.value)
+          }
         />
       </div>
       <div className="md:col-span-2">
         <div className="flex items-center justify-between mb-4">
-          <label className="block text-sm font-medium text-gray-700">{t('additionalCosts')}</label>
+          <label className="block text-sm font-medium text-gray-700">
+            {t("additionalCosts")}
+          </label>
           <Button
             type="button"
             variant="default"
             size="sm"
             className="gap-2"
             onClick={() => {
-              const newCosts = [...(data.additionalCosts || []), { description: '', price: 0 }]
-              handleInputChange('additionalCosts', newCosts)
+              const newCosts = [
+                ...(data.additionalCosts || []),
+                { description: "", price: 0 },
+              ];
+              handleInputChange("additionalCosts", newCosts);
             }}
           >
             <PlusIcon className="h-4 w-4" />
-            {t('addCost')}
+            {t("addCost")}
           </Button>
         </div>
         <div className="space-y-4">
           {(data.additionalCosts || [])
-            .filter(cost => !cost.hidden) // Filter out hidden costs
+            .filter((cost) => !cost.hidden) // Filter out hidden costs
             .map((cost) => {
               // Find the actual index in the original array
-              const actualIndex = data.additionalCosts.findIndex(c => c === cost);
-              
+              const actualIndex = data.additionalCosts.findIndex(
+                (c) => c === cost
+              );
+
               return (
                 <div key={actualIndex} className="flex gap-4">
                   <div className="flex-1">
                     <Input
-                      placeholder={t('costDescription')}
+                      placeholder={t("costDescription")}
                       value={cost.description}
                       onChange={(e) => {
-                        const newCosts = [...(data.additionalCosts || [])]
-                        newCosts[actualIndex] = { ...cost, description: e.target.value }
-                        handleInputChange('additionalCosts', newCosts)
+                        const newCosts = [...(data.additionalCosts || [])];
+                        newCosts[actualIndex] = {
+                          ...cost,
+                          description: e.target.value,
+                        };
+                        handleInputChange("additionalCosts", newCosts);
                       }}
                     />
                   </div>
                   <div className="w-32">
                     <Input
                       type="number"
-                      placeholder={t('price')}
+                      placeholder={t("price")}
                       value={cost.price}
                       onChange={(e) => {
-                        const newCosts = [...(data.additionalCosts || [])]
-                        newCosts[actualIndex] = { ...cost, price: parseFloat(e.target.value) }
-                        handleInputChange('additionalCosts', newCosts)
+                        const newCosts = [...(data.additionalCosts || [])];
+                        newCosts[actualIndex] = {
+                          ...cost,
+                          price: parseFloat(e.target.value),
+                        };
+                        handleInputChange("additionalCosts", newCosts);
                       }}
                     />
                   </div>
@@ -614,9 +767,9 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
                     variant="destructive"
                     size="icon"
                     onClick={() => {
-                      const newCosts = [...(data.additionalCosts || [])]
-                      newCosts.splice(actualIndex, 1)
-                      handleInputChange('additionalCosts', newCosts)
+                      const newCosts = [...(data.additionalCosts || [])];
+                      newCosts.splice(actualIndex, 1);
+                      handleInputChange("additionalCosts", newCosts);
                     }}
                   >
                     <TrashIcon className="h-4 w-4" />
@@ -627,173 +780,285 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
         </div>
       </div>
     </div>
-  )
+  );
 
   const renderCleaningServiceForm = (data: CleaningService) => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('cleaningType')}</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("cleaningType")}
+        </label>
         <Select
           value={data.cleaningType}
-          onValueChange={(value) => handleInputChange('cleaningType', value)}
+          onValueChange={(value) => handleInputChange("cleaningType", value)}
         >
-          <SelectTrigger className={errors.cleaningType ? 'border-red-500' : ''}>
-            <SelectValue placeholder={t('selectCleaningType')} />
+          <SelectTrigger
+            className={errors.cleaningType ? "border-red-500" : ""}
+          >
+            <SelectValue placeholder={t("selectCleaningType")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="basic">{t('basicCleaning')}</SelectItem>
-            <SelectItem value="deep">{t('deepCleaning')}</SelectItem>
-            <SelectItem value="window">{t('windowCleaning')}</SelectItem>
+            <SelectItem
+              value="Apartment cleaning including acceptance guarantee
+"
+            >
+              {t("apartmentCleaning_including_acceptance_guarantee")}
+            </SelectItem>
+            <SelectItem value="Apartment cleaning including broom clean
+">{t("apartmentCleaning_including_broom_clean")}</SelectItem>
+            <SelectItem value="Single-family home cleaning including acceptance guarantee
+">{t("singleFamilyHomeCleaning_including_acceptance_guarantee")}</SelectItem>
+            <SelectItem value="Single-family home cleaning including broom clean
+">{t("singleFamilyHomeCleaning_including_broom_clean")}</SelectItem>
+            <SelectItem value="RFH cleaning including acceptance guarantee
+">{t("rFHCleaning_including_acceptance_guarantee")}</SelectItem>
+            <SelectItem value="RFH cleaning including sweeping
+">{t("rFHCleaning_including_sweeping")}</SelectItem>
+            <SelectItem value="Construction cleaning
+">{t("constructionCleaning")}</SelectItem>
+            <SelectItem value="Construction cleaning including acceptance guarantee
+">{t("constructionCleaning_including_acceptance_guarantee")}</SelectItem>
+            <SelectItem value="Construction cleaning including broom clean
+">{t("constructionCleaning_including_broom_clean")}</SelectItem>
+            <SelectItem value="Maintenance cleaning
+">{t("maintenanceCleaning")}</SelectItem>
+            <SelectItem value="Commercial cleaning
+">{t("commercialCleaning")}</SelectItem>
+            <SelectItem value="Commercial cleaning including acceptance guarantee
+">{t("commercialCleaning_including_acceptance_guarantee")}</SelectItem>
+            <SelectItem value="Commercial cleaning including broom clean
+">{t("commercialCleaning_including_broom_clean")}</SelectItem>
+            <SelectItem value="Office cleaning 
+">{t("officeCleaning")}</SelectItem>
+            <SelectItem value="Storage room cleaning
+">{t("storageRoomCleaning")}</SelectItem>
           </SelectContent>
         </Select>
-        {errors.cleaningType && <p className="text-red-500 text-sm mt-1">{errors.cleaningType}</p>}
+        {errors.cleaningType && (
+          <p className="text-red-500 text-sm mt-1">{errors.cleaningType}</p>
+        )}
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('fixedPriceRateCHF')}</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("fixedPriceRateCHF")}
+        </label>
         <Input
           type="number"
           value={data.fixedPriceRateCHF}
-          onChange={(e) => handleInputChange('fixedPriceRateCHF', parseFloat(e.target.value))}
-          className={errors.fixedPriceRateCHF ? 'border-red-500' : ''}
+          onChange={(e) =>
+            handleInputChange("fixedPriceRateCHF", parseFloat(e.target.value))
+          }
+          className={errors.fixedPriceRateCHF ? "border-red-500" : ""}
         />
-        {errors.fixedPriceRateCHF && <p className="text-red-500 text-sm mt-1">{errors.fixedPriceRateCHF}</p>}
+        {errors.fixedPriceRateCHF && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.fixedPriceRateCHF}
+          </p>
+        )}
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('hourlyRateCHFPerHour')}</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("hourlyRateCHFPerHour")}
+        </label>
         <Input
           type="number"
-          value={data.hourlyRateCHFPerHour || ''}
-          onChange={(e) => handleInputChange('hourlyRateCHFPerHour', parseFloat(e.target.value) || null)}
-          className={errors.hourlyRateCHFPerHour ? 'border-red-500' : ''}
+          value={data.hourlyRateCHFPerHour || ""}
+          onChange={(e) =>
+            handleInputChange(
+              "hourlyRateCHFPerHour",
+              parseFloat(e.target.value) || null
+            )
+          }
+          className={errors.hourlyRateCHFPerHour ? "border-red-500" : ""}
         />
-        {errors.hourlyRateCHFPerHour && <p className="text-red-500 text-sm mt-1">{errors.hourlyRateCHFPerHour}</p>}
+        {errors.hourlyRateCHFPerHour && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.hourlyRateCHFPerHour}
+          </p>
+        )}
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('durationHours')}</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("durationHours")}
+        </label>
         <Input
           type="number"
-          value={data.durationHours || ''}
-          onChange={(e) => handleInputChange('durationHours', parseFloat(e.target.value) || null)}
-          className={errors.durationHours ? 'border-red-500' : ''}
+          value={data.durationHours || ""}
+          onChange={(e) =>
+            handleInputChange(
+              "durationHours",
+              parseFloat(e.target.value) || null
+            )
+          }
+          className={errors.durationHours ? "border-red-500" : ""}
         />
-        {errors.durationHours && <p className="text-red-500 text-sm mt-1">{errors.durationHours}</p>}
+        {errors.durationHours && (
+          <p className="text-red-500 text-sm mt-1">{errors.durationHours}</p>
+        )}
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('numberOfStaff')}</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("numberOfStaff")}
+        </label>
         <Input
           type="number"
           value={data.numberOfStaff}
-          onChange={(e) => handleInputChange('numberOfStaff', parseInt(e.target.value))}
-          className={errors.numberOfStaff ? 'border-red-500' : ''}
+          onChange={(e) =>
+            handleInputChange("numberOfStaff", parseInt(e.target.value))
+          }
+          className={errors.numberOfStaff ? "border-red-500" : ""}
         />
-        {errors.numberOfStaff && <p className="text-red-500 text-sm mt-1">{errors.numberOfStaff}</p>}
+        {errors.numberOfStaff && (
+          <p className="text-red-500 text-sm mt-1">{errors.numberOfStaff}</p>
+        )}
       </div>
       <div className="flex items-center space-x-2">
         <Checkbox
           id="fillNailHoles"
           checked={data.fillNailHoles}
-          onCheckedChange={(checked) => handleInputChange('fillNailHoles', checked as boolean)}
+          onCheckedChange={(checked) =>
+            handleInputChange("fillNailHoles", checked as boolean)
+          }
         />
-        <label htmlFor="fillNailHoles" className="text-sm font-medium text-gray-700">
-          {t('fillNailHoles')}
+        <label
+          htmlFor="fillNailHoles"
+          className="text-sm font-medium text-gray-700"
+        >
+          {t("fillNailHoles")}
         </label>
       </div>
       <div className="flex items-center space-x-2">
         <Checkbox
           id="withHighPressureCleaner"
           checked={data.withHighPressureCleaner}
-          onCheckedChange={(checked) => handleInputChange('withHighPressureCleaner', checked as boolean)}
+          onCheckedChange={(checked) =>
+            handleInputChange("withHighPressureCleaner", checked as boolean)
+          }
         />
-        <label htmlFor="withHighPressureCleaner" className="text-sm font-medium text-gray-700">
-          {t('withHighPressureCleaner')}
+        <label
+          htmlFor="withHighPressureCleaner"
+          className="text-sm font-medium text-gray-700"
+        >
+          {t("withHighPressureCleaner")}
         </label>
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('cleaningDate')}</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("cleaningDate")}
+        </label>
         <Input
           type="date"
-          value={data.cleaningDate?.split('T')[0]}
-          onChange={(e) => handleInputChange('cleaningDate', `${e.target.value}T00:00:00`)}
+          value={data.cleaningDate?.split("T")[0]}
+          onChange={(e) =>
+            handleInputChange("cleaningDate", `${e.target.value}T00:00:00`)
+          }
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('cleaningStartTime')}</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("cleaningStartTime")}
+        </label>
         <Input
           type="time"
           value={formatTimeForDisplay(data.cleaningStartTime)}
-          onChange={(e) => handleInputChange('cleaningStartTime', e.target.value)}
+          onChange={(e) =>
+            handleInputChange("cleaningStartTime", e.target.value)
+          }
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('deliveryDate')}</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("deliveryDate")}
+        </label>
         <Input
           type="date"
-          value={data.deliveryDate?.split('T')[0]}
-          onChange={(e) => handleInputChange('deliveryDate', `${e.target.value}T00:00:00`)}
+          value={data.deliveryDate?.split("T")[0]}
+          onChange={(e) =>
+            handleInputChange("deliveryDate", `${e.target.value}T00:00:00`)
+          }
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('deliveryTime')}</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("deliveryTime")}
+        </label>
         <Input
           type="time"
           value={formatTimeForDisplay(data.deliveryTime)}
-          onChange={(e) => handleInputChange('deliveryTime', e.target.value)}
+          onChange={(e) => handleInputChange("deliveryTime", e.target.value)}
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('discount')}</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("discount")}
+        </label>
         <Input
           type="number"
           value={data.discount}
-          onChange={(e) => handleInputChange('discount', parseFloat(e.target.value))}
+          onChange={(e) =>
+            handleInputChange("discount", parseFloat(e.target.value))
+          }
         />
       </div>
       <div className="md:col-span-2">
         <div className="flex items-center justify-between mb-4">
-          <label className="block text-sm font-medium text-gray-700">{t('additionalCosts')}</label>
+          <label className="block text-sm font-medium text-gray-700">
+            {t("additionalCosts")}
+          </label>
           <Button
             type="button"
             variant="default"
             size="sm"
             className="gap-2"
             onClick={() => {
-              const newCosts = [...(data.additionalCosts || []), { description: '', price: 0 }]
-              handleInputChange('additionalCosts', newCosts)
+              const newCosts = [
+                ...(data.additionalCosts || []),
+                { description: "", price: 0 },
+              ];
+              handleInputChange("additionalCosts", newCosts);
             }}
           >
             <PlusIcon className="h-4 w-4" />
-            {t('addCost')}
+            {t("addCost")}
           </Button>
         </div>
         <div className="space-y-4">
           {(data.additionalCosts || [])
-            .filter(cost => !cost.hidden) // Filter out hidden costs
+            .filter((cost) => !cost.hidden) // Filter out hidden costs
             .map((cost) => {
               // Find the actual index in the original array
-              const actualIndex = data.additionalCosts.findIndex(c => c === cost);
-              
+              const actualIndex = data.additionalCosts.findIndex(
+                (c) => c === cost
+              );
+
               return (
                 <div key={actualIndex} className="flex gap-4">
                   <div className="flex-1">
                     <Input
-                      placeholder={t('costDescription')}
+                      placeholder={t("costDescription")}
                       value={cost.description}
                       onChange={(e) => {
-                        const newCosts = [...(data.additionalCosts || [])]
-                        newCosts[actualIndex] = { ...cost, description: e.target.value }
-                        handleInputChange('additionalCosts', newCosts)
+                        const newCosts = [...(data.additionalCosts || [])];
+                        newCosts[actualIndex] = {
+                          ...cost,
+                          description: e.target.value,
+                        };
+                        handleInputChange("additionalCosts", newCosts);
                       }}
                     />
                   </div>
                   <div className="w-32">
                     <Input
                       type="number"
-                      placeholder={t('price')}
+                      placeholder={t("price")}
                       value={cost.price}
                       onChange={(e) => {
-                        const newCosts = [...(data.additionalCosts || [])]
-                        newCosts[actualIndex] = { ...cost, price: parseFloat(e.target.value) }
-                        handleInputChange('additionalCosts', newCosts)
+                        const newCosts = [...(data.additionalCosts || [])];
+                        newCosts[actualIndex] = {
+                          ...cost,
+                          price: parseFloat(e.target.value),
+                        };
+                        handleInputChange("additionalCosts", newCosts);
                       }}
                     />
                   </div>
@@ -802,9 +1067,9 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
                     variant="destructive"
                     size="icon"
                     onClick={() => {
-                      const newCosts = [...(data.additionalCosts || [])]
-                      newCosts.splice(actualIndex, 1)
-                      handleInputChange('additionalCosts', newCosts)
+                      const newCosts = [...(data.additionalCosts || [])];
+                      newCosts.splice(actualIndex, 1);
+                      handleInputChange("additionalCosts", newCosts);
                     }}
                   >
                     <TrashIcon className="h-4 w-4" />
@@ -815,94 +1080,175 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
         </div>
       </div>
     </div>
-  )
+  );
 
   const renderPackingServiceForm = (data: PackingService) => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('packingDate')}</label>
-        <Input type="date" value={data.packingDate?.split('T')[0] || ''} onChange={(e) => handleInputChange('packingDate', `${e.target.value}T00:00:00`)} className={errors.packingDate ? 'border-red-500' : ''} />
-        {errors.packingDate && <p className="text-red-500 text-sm mt-1">{errors.packingDate}</p>}
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("packingDate")}
+        </label>
+        <Input
+          type="date"
+          value={data.packingDate?.split("T")[0] || ""}
+          onChange={(e) =>
+            handleInputChange("packingDate", `${e.target.value}T00:00:00`)
+          }
+          className={errors.packingDate ? "border-red-500" : ""}
+        />
+        {errors.packingDate && (
+          <p className="text-red-500 text-sm mt-1">{errors.packingDate}</p>
+        )}
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('packingStartTime')}</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("packingStartTime")}
+        </label>
         <Input
           type="time"
           value={formatTimeForDisplay(data.packingStartTime)}
-          onChange={(e) => handleInputChange('packingStartTime', e.target.value)}
+          onChange={(e) =>
+            handleInputChange("packingStartTime", e.target.value)
+          }
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('roundTripCostCHF')}</label>
-        <Input type="number" value={data.roundTripCostCHF} onChange={(e) => handleInputChange('roundTripCostCHF', parseFloat(e.target.value))} />
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("roundTripCostCHF")}
+        </label>
+        <Input
+          type="number"
+          value={data.roundTripCostCHF}
+          onChange={(e) =>
+            handleInputChange("roundTripCostCHF", parseFloat(e.target.value))
+          }
+        />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('durationHours')}</label>
-        <Input type="number" value={data.durationHours} onChange={(e) => handleInputChange('durationHours', parseFloat(e.target.value))} className={errors.durationHours ? 'border-red-500' : ''} />
-        {errors.durationHours && <p className="text-red-500 text-sm mt-1">{errors.durationHours}</p>}
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("durationHours")}
+        </label>
+        <Input
+          type="number"
+          value={data.durationHours}
+          onChange={(e) =>
+            handleInputChange("durationHours", parseFloat(e.target.value))
+          }
+          className={errors.durationHours ? "border-red-500" : ""}
+        />
+        {errors.durationHours && (
+          <p className="text-red-500 text-sm mt-1">{errors.durationHours}</p>
+        )}
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('selectedTariffDescription')}</label>
-        <Input value={data.selectedTariffDescription} onChange={(e) => handleInputChange('selectedTariffDescription', e.target.value)} />
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("selectedTariffDescription")}
+        </label>
+        <Input
+          value={data.selectedTariffDescription}
+          onChange={(e) =>
+            handleInputChange("selectedTariffDescription", e.target.value)
+          }
+        />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('numberOfStaff')}</label>
-        <Input type="number" value={data.numberOfStaff} onChange={(e) => handleInputChange('numberOfStaff', parseInt(e.target.value))} />
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("numberOfStaff")}
+        </label>
+        <Input
+          type="number"
+          value={data.numberOfStaff}
+          onChange={(e) =>
+            handleInputChange("numberOfStaff", parseInt(e.target.value))
+          }
+        />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('hourlyRateCHF')}</label>
-        <Input type="number" value={data.hourlyRateCHF} onChange={(e) => handleInputChange('hourlyRateCHF', parseFloat(e.target.value))} />
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("hourlyRateCHF")}
+        </label>
+        <Input
+          type="number"
+          value={data.hourlyRateCHF}
+          onChange={(e) =>
+            handleInputChange("hourlyRateCHF", parseFloat(e.target.value))
+          }
+        />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('packingMaterialsCost')}</label>
-        <Input type="number" value={data.packingMaterialsCost} onChange={(e) => handleInputChange('packingMaterialsCost', parseFloat(e.target.value))} />
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("packingMaterialsCost")}
+        </label>
+        <Input
+          type="number"
+          value={data.packingMaterialsCost}
+          onChange={(e) =>
+            handleInputChange(
+              "packingMaterialsCost",
+              parseFloat(e.target.value)
+            )
+          }
+        />
       </div>
       <div className="md:col-span-2">
         <div className="flex items-center justify-between mb-4">
-          <label className="block text-sm font-medium text-gray-700">{t('additionalCosts')}</label>
+          <label className="block text-sm font-medium text-gray-700">
+            {t("additionalCosts")}
+          </label>
           <Button
             type="button"
             variant="default"
             size="sm"
             className="gap-2"
             onClick={() => {
-              const newCosts = [...(data.additionalCosts || []), { description: '', price: 0 }]
-              handleInputChange('additionalCosts', newCosts)
+              const newCosts = [
+                ...(data.additionalCosts || []),
+                { description: "", price: 0 },
+              ];
+              handleInputChange("additionalCosts", newCosts);
             }}
           >
             <PlusIcon className="h-4 w-4" />
-            {t('addCost')}
+            {t("addCost")}
           </Button>
         </div>
         <div className="space-y-4">
           {(data.additionalCosts || [])
-            .filter(cost => !cost.hidden) // Filter out hidden costs
+            .filter((cost) => !cost.hidden) // Filter out hidden costs
             .map((cost) => {
               // Find the actual index in the original array
-              const actualIndex = data.additionalCosts.findIndex(c => c === cost);
-              
+              const actualIndex = data.additionalCosts.findIndex(
+                (c) => c === cost
+              );
+
               return (
                 <div key={actualIndex} className="flex gap-4">
                   <div className="flex-1">
                     <Input
-                      placeholder={t('costDescription')}
+                      placeholder={t("costDescription")}
                       value={cost.description}
                       onChange={(e) => {
-                        const newCosts = [...(data.additionalCosts || [])]
-                        newCosts[actualIndex] = { ...cost, description: e.target.value }
-                        handleInputChange('additionalCosts', newCosts)
+                        const newCosts = [...(data.additionalCosts || [])];
+                        newCosts[actualIndex] = {
+                          ...cost,
+                          description: e.target.value,
+                        };
+                        handleInputChange("additionalCosts", newCosts);
                       }}
                     />
                   </div>
                   <div className="w-32">
                     <Input
                       type="number"
-                      placeholder={t('price')}
+                      placeholder={t("price")}
                       value={cost.price}
                       onChange={(e) => {
-                        const newCosts = [...(data.additionalCosts || [])]
-                        newCosts[actualIndex] = { ...cost, price: parseFloat(e.target.value) }
-                        handleInputChange('additionalCosts', newCosts)
+                        const newCosts = [...(data.additionalCosts || [])];
+                        newCosts[actualIndex] = {
+                          ...cost,
+                          price: parseFloat(e.target.value),
+                        };
+                        handleInputChange("additionalCosts", newCosts);
                       }}
                     />
                   </div>
@@ -911,9 +1257,9 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
                     variant="destructive"
                     size="icon"
                     onClick={() => {
-                      const newCosts = [...(data.additionalCosts || [])]
-                      newCosts.splice(actualIndex, 1)
-                      handleInputChange('additionalCosts', newCosts)
+                      const newCosts = [...(data.additionalCosts || [])];
+                      newCosts.splice(actualIndex, 1);
+                      handleInputChange("additionalCosts", newCosts);
                     }}
                   >
                     <TrashIcon className="h-4 w-4" />
@@ -924,92 +1270,167 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
         </div>
       </div>
     </div>
-  )
+  );
 
   const renderUnpackingServiceForm = (data: UnpackingService) => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('unpackingDate')}</label>
-        <Input type="date" value={data.unpackingDate?.split('T')[0] || ''} onChange={(e) => handleInputChange('unpackingDate', `${e.target.value}T00:00:00`)} />
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('unpackingStartTime')}</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("unpackingDate")}
+        </label>
         <Input
-          type="time"
-          value={formatTimeForDisplay(data.unpackingStartTime)}
-          onChange={(e) => handleInputChange('unpackingStartTime', e.target.value)}
+          type="date"
+          value={data.unpackingDate?.split("T")[0] || ""}
+          onChange={(e) =>
+            handleInputChange("unpackingDate", `${e.target.value}T00:00:00`)
+          }
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('roundTripCostCHF')}</label>
-        <Input type="number" value={data.roundTripCostCHF} onChange={(e) => handleInputChange('roundTripCostCHF', parseFloat(e.target.value))} />
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("unpackingStartTime")}
+        </label>
+        <Input
+          type="time"
+          value={formatTimeForDisplay(data.unpackingStartTime)}
+          onChange={(e) =>
+            handleInputChange("unpackingStartTime", e.target.value)
+          }
+        />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('durationHours')}</label>
-        <Input type="number" value={data.durationHours} onChange={(e) => handleInputChange('durationHours', parseFloat(e.target.value))} />
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("roundTripCostCHF")}
+        </label>
+        <Input
+          type="number"
+          value={data.roundTripCostCHF}
+          onChange={(e) =>
+            handleInputChange("roundTripCostCHF", parseFloat(e.target.value))
+          }
+        />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('selectedTariffDescription')}</label>
-        <Input value={data.selectedTariffDescription} onChange={(e) => handleInputChange('selectedTariffDescription', e.target.value)} />
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("durationHours")}
+        </label>
+        <Input
+          type="number"
+          value={data.durationHours}
+          onChange={(e) =>
+            handleInputChange("durationHours", parseFloat(e.target.value))
+          }
+        />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('numberOfStaff')}</label>
-        <Input type="number" value={data.numberOfStaff} onChange={(e) => handleInputChange('numberOfStaff', parseInt(e.target.value))} />
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("selectedTariffDescription")}
+        </label>
+        <Input
+          value={data.selectedTariffDescription}
+          onChange={(e) =>
+            handleInputChange("selectedTariffDescription", e.target.value)
+          }
+        />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('hourlyRateCHF')}</label>
-        <Input type="number" value={data.hourlyRateCHF} onChange={(e) => handleInputChange('hourlyRateCHF', parseFloat(e.target.value))} />
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("numberOfStaff")}
+        </label>
+        <Input
+          type="number"
+          value={data.numberOfStaff}
+          onChange={(e) =>
+            handleInputChange("numberOfStaff", parseInt(e.target.value))
+          }
+        />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('packingMaterialsCost')}</label>
-        <Input type="number" value={data.packingMaterialsCost} onChange={(e) => handleInputChange('packingMaterialsCost', parseFloat(e.target.value))} />
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("hourlyRateCHF")}
+        </label>
+        <Input
+          type="number"
+          value={data.hourlyRateCHF}
+          onChange={(e) =>
+            handleInputChange("hourlyRateCHF", parseFloat(e.target.value))
+          }
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("packingMaterialsCost")}
+        </label>
+        <Input
+          type="number"
+          value={data.packingMaterialsCost}
+          onChange={(e) =>
+            handleInputChange(
+              "packingMaterialsCost",
+              parseFloat(e.target.value)
+            )
+          }
+        />
       </div>
       <div className="md:col-span-2">
         <div className="flex items-center justify-between mb-4">
-          <label className="block text-sm font-medium text-gray-700">{t('additionalCosts')}</label>
+          <label className="block text-sm font-medium text-gray-700">
+            {t("additionalCosts")}
+          </label>
           <Button
             type="button"
             variant="default"
             size="sm"
             className="gap-2"
             onClick={() => {
-              const newCosts = [...(data.additionalCosts || []), { description: '', price: 0 }]
-              handleInputChange('additionalCosts', newCosts)
+              const newCosts = [
+                ...(data.additionalCosts || []),
+                { description: "", price: 0 },
+              ];
+              handleInputChange("additionalCosts", newCosts);
             }}
           >
             <PlusIcon className="h-4 w-4" />
-            {t('addCost')}
+            {t("addCost")}
           </Button>
         </div>
         <div className="space-y-4">
           {(data.additionalCosts || [])
-            .filter(cost => !cost.hidden) // Filter out hidden costs
+            .filter((cost) => !cost.hidden) // Filter out hidden costs
             .map((cost) => {
               // Find the actual index in the original array
-              const actualIndex = data.additionalCosts.findIndex(c => c === cost);
-              
+              const actualIndex = data.additionalCosts.findIndex(
+                (c) => c === cost
+              );
+
               return (
                 <div key={actualIndex} className="flex gap-4">
                   <div className="flex-1">
                     <Input
-                      placeholder={t('costDescription')}
+                      placeholder={t("costDescription")}
                       value={cost.description}
                       onChange={(e) => {
-                        const newCosts = [...(data.additionalCosts || [])]
-                        newCosts[actualIndex] = { ...cost, description: e.target.value }
-                        handleInputChange('additionalCosts', newCosts)
+                        const newCosts = [...(data.additionalCosts || [])];
+                        newCosts[actualIndex] = {
+                          ...cost,
+                          description: e.target.value,
+                        };
+                        handleInputChange("additionalCosts", newCosts);
                       }}
                     />
                   </div>
                   <div className="w-32">
                     <Input
                       type="number"
-                      placeholder={t('price')}
+                      placeholder={t("price")}
                       value={cost.price}
                       onChange={(e) => {
-                        const newCosts = [...(data.additionalCosts || [])]
-                        newCosts[actualIndex] = { ...cost, price: parseFloat(e.target.value) }
-                        handleInputChange('additionalCosts', newCosts)
+                        const newCosts = [...(data.additionalCosts || [])];
+                        newCosts[actualIndex] = {
+                          ...cost,
+                          price: parseFloat(e.target.value),
+                        };
+                        handleInputChange("additionalCosts", newCosts);
                       }}
                     />
                   </div>
@@ -1018,9 +1439,9 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
                     variant="destructive"
                     size="icon"
                     onClick={() => {
-                      const newCosts = [...(data.additionalCosts || [])]
-                      newCosts.splice(actualIndex, 1)
-                      handleInputChange('additionalCosts', newCosts)
+                      const newCosts = [...(data.additionalCosts || [])];
+                      newCosts.splice(actualIndex, 1);
+                      handleInputChange("additionalCosts", newCosts);
                     }}
                   >
                     <TrashIcon className="h-4 w-4" />
@@ -1031,115 +1452,254 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
         </div>
       </div>
     </div>
-  )
+  );
 
   const renderDisposalServiceForm = (data: DisposalService) => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('volumeRateCHFPerM3')}</label>
-        <Input type="number" value={data.volumeRateCHFPerM3} onChange={(e) => handleInputChange('volumeRateCHFPerM3', parseFloat(e.target.value))} className={errors.volumeRateCHFPerM3 ? 'border-red-500' : ''} />
-        {errors.volumeRateCHFPerM3 && <p className="text-red-500 text-sm mt-1">{errors.volumeRateCHFPerM3}</p>}
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('flatRateDisposalCostCHF')}</label>
-        <Input type="number" value={data.flatRateDisposalCostCHF} onChange={(e) => handleInputChange('flatRateDisposalCostCHF', parseFloat(e.target.value))} />
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('estimatedVolumeM3')}</label>
-        <Input type="number" value={data.estimatedVolumeM3} onChange={(e) => handleInputChange('estimatedVolumeM3', parseFloat(e.target.value))} className={errors.estimatedVolumeM3 ? 'border-red-500' : ''} />
-        {errors.estimatedVolumeM3 && <p className="text-red-500 text-sm mt-1">{errors.estimatedVolumeM3}</p>}
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('selectedEmployeePlanTariffDescription')}</label>
-        <Input value={data.selectedEmployeePlanTariffDescription || ''} onChange={(e) => handleInputChange('selectedEmployeePlanTariffDescription', e.target.value || null)} />
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('numberOfStaff')}</label>
-        <Input type="number" value={data.numberOfStaff || ''} onChange={(e) => handleInputChange('numberOfStaff', parseInt(e.target.value) || null)} />
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('numberOfDeliveryTrucks')}</label>
-        <Input type="number" value={data.numberOfDeliveryTrucks || ''} onChange={(e) => handleInputChange('numberOfDeliveryTrucks', parseInt(e.target.value) || null)} />
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('hourlyRateCHF')}</label>
-        <Input type="number" value={data.hourlyRateCHF || ''} onChange={(e) => handleInputChange('hourlyRateCHF', parseFloat(e.target.value) || null)} />
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('durationHours')}</label>
-        <Input type="number" value={data.durationHours || ''} onChange={(e) => handleInputChange('durationHours', parseFloat(e.target.value) || null)} />
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('disposalDate')}</label>
-        <Input type="date" value={data.disposalDate?.split('T')[0] || ''} onChange={(e) => handleInputChange('disposalDate', `${e.target.value}T00:00:00`)} className={errors.disposalDate ? 'border-red-500' : ''} />
-        {errors.disposalDate && <p className="text-red-500 text-sm mt-1">{errors.disposalDate}</p>}
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('disposalStartTime')}</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("volumeRateCHFPerM3")}
+        </label>
         <Input
-          type="time"
-          value={formatTimeForDisplay(data.disposalStartTime)}
-          onChange={(e) => handleInputChange('disposalStartTime', e.target.value)}
+          type="number"
+          value={data.volumeRateCHFPerM3}
+          onChange={(e) =>
+            handleInputChange("volumeRateCHFPerM3", parseFloat(e.target.value))
+          }
+          className={errors.volumeRateCHFPerM3 ? "border-red-500" : ""}
+        />
+        {errors.volumeRateCHFPerM3 && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.volumeRateCHFPerM3}
+          </p>
+        )}
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("flatRateDisposalCostCHF")}
+        </label>
+        <Input
+          type="number"
+          value={data.flatRateDisposalCostCHF}
+          onChange={(e) =>
+            handleInputChange(
+              "flatRateDisposalCostCHF",
+              parseFloat(e.target.value)
+            )
+          }
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('roundTripCostCHF')}</label>
-        <Input type="number" value={data.roundTripCostCHF} onChange={(e) => handleInputChange('roundTripCostCHF', parseFloat(e.target.value))} />
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("estimatedVolumeM3")}
+        </label>
+        <Input
+          type="number"
+          value={data.estimatedVolumeM3}
+          onChange={(e) =>
+            handleInputChange("estimatedVolumeM3", parseFloat(e.target.value))
+          }
+          className={errors.estimatedVolumeM3 ? "border-red-500" : ""}
+        />
+        {errors.estimatedVolumeM3 && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.estimatedVolumeM3}
+          </p>
+        )}
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('discount')}</label>
-        <Input type="number" value={data.discount} onChange={(e) => handleInputChange('discount', parseFloat(e.target.value))} />
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("selectedEmployeePlanTariffDescription")}
+        </label>
+        <Input
+          value={data.selectedEmployeePlanTariffDescription || ""}
+          onChange={(e) =>
+            handleInputChange(
+              "selectedEmployeePlanTariffDescription",
+              e.target.value || null
+            )
+          }
+        />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('furtherDiscounts')}</label>
-        <Input value={data.furtherDiscounts} onChange={(e) => handleInputChange('furtherDiscounts', e.target.value)} />
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("numberOfStaff")}
+        </label>
+        <Input
+          type="number"
+          value={data.numberOfStaff || ""}
+          onChange={(e) =>
+            handleInputChange("numberOfStaff", parseInt(e.target.value) || null)
+          }
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("numberOfDeliveryTrucks")}
+        </label>
+        <Input
+          type="number"
+          value={data.numberOfDeliveryTrucks || ""}
+          onChange={(e) =>
+            handleInputChange(
+              "numberOfDeliveryTrucks",
+              parseInt(e.target.value) || null
+            )
+          }
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("hourlyRateCHF")}
+        </label>
+        <Input
+          type="number"
+          value={data.hourlyRateCHF || ""}
+          onChange={(e) =>
+            handleInputChange(
+              "hourlyRateCHF",
+              parseFloat(e.target.value) || null
+            )
+          }
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("durationHours")}
+        </label>
+        <Input
+          type="number"
+          value={data.durationHours || ""}
+          onChange={(e) =>
+            handleInputChange(
+              "durationHours",
+              parseFloat(e.target.value) || null
+            )
+          }
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("disposalDate")}
+        </label>
+        <Input
+          type="date"
+          value={data.disposalDate?.split("T")[0] || ""}
+          onChange={(e) =>
+            handleInputChange("disposalDate", `${e.target.value}T00:00:00`)
+          }
+          className={errors.disposalDate ? "border-red-500" : ""}
+        />
+        {errors.disposalDate && (
+          <p className="text-red-500 text-sm mt-1">{errors.disposalDate}</p>
+        )}
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("disposalStartTime")}
+        </label>
+        <Input
+          type="time"
+          value={formatTimeForDisplay(data.disposalStartTime)}
+          onChange={(e) =>
+            handleInputChange("disposalStartTime", e.target.value)
+          }
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("roundTripCostCHF")}
+        </label>
+        <Input
+          type="number"
+          value={data.roundTripCostCHF}
+          onChange={(e) =>
+            handleInputChange("roundTripCostCHF", parseFloat(e.target.value))
+          }
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("discount")}
+        </label>
+        <Input
+          type="number"
+          value={data.discount}
+          onChange={(e) =>
+            handleInputChange("discount", parseFloat(e.target.value))
+          }
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("furtherDiscounts")}
+        </label>
+        <Input
+          value={data.furtherDiscounts}
+          onChange={(e) =>
+            handleInputChange("furtherDiscounts", e.target.value)
+          }
+        />
       </div>
       <div className="md:col-span-2">
         <div className="flex items-center justify-between mb-4">
-          <label className="block text-sm font-medium text-gray-700">{t('additionalCosts')}</label>
+          <label className="block text-sm font-medium text-gray-700">
+            {t("additionalCosts")}
+          </label>
           <Button
             type="button"
             variant="default"
             size="sm"
             className="gap-2"
             onClick={() => {
-              const newCosts = [...(data.additionalCosts || []), { description: '', price: 0 }]
-              handleInputChange('additionalCosts', newCosts)
+              const newCosts = [
+                ...(data.additionalCosts || []),
+                { description: "", price: 0 },
+              ];
+              handleInputChange("additionalCosts", newCosts);
             }}
           >
             <PlusIcon className="h-4 w-4" />
-            {t('addCost')}
+            {t("addCost")}
           </Button>
         </div>
         <div className="space-y-4">
           {(data.additionalCosts || [])
-            .filter(cost => !cost.hidden) // Filter out hidden costs
+            .filter((cost) => !cost.hidden) // Filter out hidden costs
             .map((cost) => {
               // Find the actual index in the original array
-              const actualIndex = data.additionalCosts.findIndex(c => c === cost);
-              
+              const actualIndex = data.additionalCosts.findIndex(
+                (c) => c === cost
+              );
+
               return (
                 <div key={actualIndex} className="flex gap-4">
                   <div className="flex-1">
                     <Input
-                      placeholder={t('costDescription')}
+                      placeholder={t("costDescription")}
                       value={cost.description}
                       onChange={(e) => {
-                        const newCosts = [...(data.additionalCosts || [])]
-                        newCosts[actualIndex] = { ...cost, description: e.target.value }
-                        handleInputChange('additionalCosts', newCosts)
+                        const newCosts = [...(data.additionalCosts || [])];
+                        newCosts[actualIndex] = {
+                          ...cost,
+                          description: e.target.value,
+                        };
+                        handleInputChange("additionalCosts", newCosts);
                       }}
                     />
                   </div>
                   <div className="w-32">
                     <Input
                       type="number"
-                      placeholder={t('price')}
+                      placeholder={t("price")}
                       value={cost.price}
                       onChange={(e) => {
-                        const newCosts = [...(data.additionalCosts || [])]
-                        newCosts[actualIndex] = { ...cost, price: parseFloat(e.target.value) }
-                        handleInputChange('additionalCosts', newCosts)
+                        const newCosts = [...(data.additionalCosts || [])];
+                        newCosts[actualIndex] = {
+                          ...cost,
+                          price: parseFloat(e.target.value),
+                        };
+                        handleInputChange("additionalCosts", newCosts);
                       }}
                     />
                   </div>
@@ -1148,9 +1708,9 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
                     variant="destructive"
                     size="icon"
                     onClick={() => {
-                      const newCosts = [...(data.additionalCosts || [])]
-                      newCosts.splice(actualIndex, 1)
-                      handleInputChange('additionalCosts', newCosts)
+                      const newCosts = [...(data.additionalCosts || [])];
+                      newCosts.splice(actualIndex, 1);
+                      handleInputChange("additionalCosts", newCosts);
                     }}
                   >
                     <TrashIcon className="h-4 w-4" />
@@ -1161,70 +1721,118 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
         </div>
       </div>
     </div>
-  )
+  );
 
   const renderStorageServiceForm = (data: StorageService) => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('rateCHFPerM3PerMonth')}</label>
-        <Input type="number" value={data.rateCHFPerM3PerMonth} onChange={(e) => handleInputChange('rateCHFPerM3PerMonth', parseFloat(e.target.value))} className={errors.rateCHFPerM3PerMonth ? 'border-red-500' : ''} />
-        {errors.rateCHFPerM3PerMonth && <p className="text-red-500 text-sm mt-1">{errors.rateCHFPerM3PerMonth}</p>}
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("rateCHFPerM3PerMonth")}
+        </label>
+        <Input
+          type="number"
+          value={data.rateCHFPerM3PerMonth}
+          onChange={(e) =>
+            handleInputChange(
+              "rateCHFPerM3PerMonth",
+              parseFloat(e.target.value)
+            )
+          }
+          className={errors.rateCHFPerM3PerMonth ? "border-red-500" : ""}
+        />
+        {errors.rateCHFPerM3PerMonth && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.rateCHFPerM3PerMonth}
+          </p>
+        )}
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('volumeM3')}</label>
-        <Input type="number" value={data.volumeM3} onChange={(e) => handleInputChange('volumeM3', parseFloat(e.target.value))} className={errors.volumeM3 ? 'border-red-500' : ''} />
-        {errors.volumeM3 && <p className="text-red-500 text-sm mt-1">{errors.volumeM3}</p>}
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("volumeM3")}
+        </label>
+        <Input
+          type="number"
+          value={data.volumeM3}
+          onChange={(e) =>
+            handleInputChange("volumeM3", parseFloat(e.target.value))
+          }
+          className={errors.volumeM3 ? "border-red-500" : ""}
+        />
+        {errors.volumeM3 && (
+          <p className="text-red-500 text-sm mt-1">{errors.volumeM3}</p>
+        )}
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('cost')}</label>
-        <Input type="number" value={data.cost} onChange={(e) => handleInputChange('cost', parseFloat(e.target.value))} />
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("cost")}
+        </label>
+        <Input
+          type="number"
+          value={data.cost}
+          onChange={(e) =>
+            handleInputChange("cost", parseFloat(e.target.value))
+          }
+        />
       </div>
       <div className="md:col-span-2">
         <div className="flex items-center justify-between mb-4">
-          <label className="block text-sm font-medium text-gray-700">{t('additionalCosts')}</label>
+          <label className="block text-sm font-medium text-gray-700">
+            {t("additionalCosts")}
+          </label>
           <Button
             type="button"
             variant="default"
             size="sm"
             className="gap-2"
             onClick={() => {
-              const newCosts = [...(data.additionalCosts || []), { description: '', price: 0 }]
-              handleInputChange('additionalCosts', newCosts)
+              const newCosts = [
+                ...(data.additionalCosts || []),
+                { description: "", price: 0 },
+              ];
+              handleInputChange("additionalCosts", newCosts);
             }}
           >
             <PlusIcon className="h-4 w-4" />
-            {t('addCost')}
+            {t("addCost")}
           </Button>
         </div>
         <div className="space-y-4">
           {(data.additionalCosts || [])
-            .filter(cost => !cost.hidden) // Filter out hidden costs
+            .filter((cost) => !cost.hidden) // Filter out hidden costs
             .map((cost) => {
               // Find the actual index in the original array
-              const actualIndex = data.additionalCosts.findIndex(c => c === cost);
-              
+              const actualIndex = data.additionalCosts.findIndex(
+                (c) => c === cost
+              );
+
               return (
                 <div key={actualIndex} className="flex gap-4">
                   <div className="flex-1">
                     <Input
-                      placeholder={t('costDescription')}
+                      placeholder={t("costDescription")}
                       value={cost.description}
                       onChange={(e) => {
-                        const newCosts = [...(data.additionalCosts || [])]
-                        newCosts[actualIndex] = { ...cost, description: e.target.value }
-                        handleInputChange('additionalCosts', newCosts)
+                        const newCosts = [...(data.additionalCosts || [])];
+                        newCosts[actualIndex] = {
+                          ...cost,
+                          description: e.target.value,
+                        };
+                        handleInputChange("additionalCosts", newCosts);
                       }}
                     />
                   </div>
                   <div className="w-32">
                     <Input
                       type="number"
-                      placeholder={t('price')}
+                      placeholder={t("price")}
                       value={cost.price}
                       onChange={(e) => {
-                        const newCosts = [...(data.additionalCosts || [])]
-                        newCosts[actualIndex] = { ...cost, price: parseFloat(e.target.value) }
-                        handleInputChange('additionalCosts', newCosts)
+                        const newCosts = [...(data.additionalCosts || [])];
+                        newCosts[actualIndex] = {
+                          ...cost,
+                          price: parseFloat(e.target.value),
+                        };
+                        handleInputChange("additionalCosts", newCosts);
                       }}
                     />
                   </div>
@@ -1233,9 +1841,9 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
                     variant="destructive"
                     size="icon"
                     onClick={() => {
-                      const newCosts = [...(data.additionalCosts || [])]
-                      newCosts.splice(actualIndex, 1)
-                      handleInputChange('additionalCosts', newCosts)
+                      const newCosts = [...(data.additionalCosts || [])];
+                      newCosts.splice(actualIndex, 1);
+                      handleInputChange("additionalCosts", newCosts);
                     }}
                   >
                     <TrashIcon className="h-4 w-4" />
@@ -1246,110 +1854,231 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
         </div>
       </div>
     </div>
-  )
+  );
 
   const renderTransportServiceForm = (data: TransportService) => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('transportTypeText')}</label>
-        <Input value={data.transportTypeText} onChange={(e) => handleInputChange('transportTypeText', e.target.value)} />
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('fixedRateCHF')}</label>
-        <Input type="number" value={data.fixedRateCHF} onChange={(e) => handleInputChange('fixedRateCHF', parseFloat(e.target.value))} className={errors.fixedRateCHF ? 'border-red-500' : ''} />
-        {errors.fixedRateCHF && <p className="text-red-500 text-sm mt-1">{errors.fixedRateCHF}</p>}
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('selectedHourlyTariffDescription')}</label>
-        <Input value={data.selectedHourlyTariffDescription || ''} onChange={(e) => handleInputChange('selectedHourlyTariffDescription', e.target.value || null)} />
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('numberOfStaff')}</label>
-        <Input type="number" value={data.numberOfStaff} onChange={(e) => handleInputChange('numberOfStaff', parseInt(e.target.value))} />
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('numberOfDeliveryTrucks')}</label>
-        <Input type="number" value={data.numberOfDeliveryTrucks} onChange={(e) => handleInputChange('numberOfDeliveryTrucks', parseInt(e.target.value))} />
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('hourlyRateCHF')}</label>
-        <Input type="number" value={data.hourlyRateCHF || ''} onChange={(e) => handleInputChange('hourlyRateCHF', parseFloat(e.target.value) || null)} />
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('durationHours')}</label>
-        <Input type="number" value={data.durationHours || ''} onChange={(e) => handleInputChange('durationHours', parseFloat(e.target.value) || null)} />
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('transportDate')}</label>
-        <Input type="date" value={data.transportDate?.split('T')[0] || ''} onChange={(e) => handleInputChange('transportDate', `${e.target.value}T00:00:00`)} className={errors.transportDate ? 'border-red-500' : ''} />
-        {errors.transportDate && <p className="text-red-500 text-sm mt-1">{errors.transportDate}</p>}
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('transportStartTime')}</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("transportTypeText")}
+        </label>
         <Input
-          type="time"
-          value={formatTimeForDisplay(data.transportStartTime)}
-          onChange={(e) => handleInputChange('transportStartTime', e.target.value)}
+          value={data.transportTypeText}
+          onChange={(e) =>
+            handleInputChange("transportTypeText", e.target.value)
+          }
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('roundTripCostCHF')}</label>
-        <Input type="number" value={data.roundTripCostCHF} onChange={(e) => handleInputChange('roundTripCostCHF', parseFloat(e.target.value))} />
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("fixedRateCHF")}
+        </label>
+        <Input
+          type="number"
+          value={data.fixedRateCHF}
+          onChange={(e) =>
+            handleInputChange("fixedRateCHF", parseFloat(e.target.value))
+          }
+          className={errors.fixedRateCHF ? "border-red-500" : ""}
+        />
+        {errors.fixedRateCHF && (
+          <p className="text-red-500 text-sm mt-1">{errors.fixedRateCHF}</p>
+        )}
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('cost')}</label>
-        <Input type="number" value={data.cost} onChange={(e) => handleInputChange('cost', parseFloat(e.target.value))} />
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("selectedHourlyTariffDescription")}
+        </label>
+        <Input
+          value={data.selectedHourlyTariffDescription || ""}
+          onChange={(e) =>
+            handleInputChange(
+              "selectedHourlyTariffDescription",
+              e.target.value || null
+            )
+          }
+        />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">{t('discount')}</label>
-        <Input type="number" value={data.discount} onChange={(e) => handleInputChange('discount', parseFloat(e.target.value))} />
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("numberOfStaff")}
+        </label>
+        <Input
+          type="number"
+          value={data.numberOfStaff}
+          onChange={(e) =>
+            handleInputChange("numberOfStaff", parseInt(e.target.value))
+          }
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("numberOfDeliveryTrucks")}
+        </label>
+        <Input
+          type="number"
+          value={data.numberOfDeliveryTrucks}
+          onChange={(e) =>
+            handleInputChange(
+              "numberOfDeliveryTrucks",
+              parseInt(e.target.value)
+            )
+          }
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("hourlyRateCHF")}
+        </label>
+        <Input
+          type="number"
+          value={data.hourlyRateCHF || ""}
+          onChange={(e) =>
+            handleInputChange(
+              "hourlyRateCHF",
+              parseFloat(e.target.value) || null
+            )
+          }
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("durationHours")}
+        </label>
+        <Input
+          type="number"
+          value={data.durationHours || ""}
+          onChange={(e) =>
+            handleInputChange(
+              "durationHours",
+              parseFloat(e.target.value) || null
+            )
+          }
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("transportDate")}
+        </label>
+        <Input
+          type="date"
+          value={data.transportDate?.split("T")[0] || ""}
+          onChange={(e) =>
+            handleInputChange("transportDate", `${e.target.value}T00:00:00`)
+          }
+          className={errors.transportDate ? "border-red-500" : ""}
+        />
+        {errors.transportDate && (
+          <p className="text-red-500 text-sm mt-1">{errors.transportDate}</p>
+        )}
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("transportStartTime")}
+        </label>
+        <Input
+          type="time"
+          value={formatTimeForDisplay(data.transportStartTime)}
+          onChange={(e) =>
+            handleInputChange("transportStartTime", e.target.value)
+          }
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("roundTripCostCHF")}
+        </label>
+        <Input
+          type="number"
+          value={data.roundTripCostCHF}
+          onChange={(e) =>
+            handleInputChange("roundTripCostCHF", parseFloat(e.target.value))
+          }
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("cost")}
+        </label>
+        <Input
+          type="number"
+          value={data.cost}
+          onChange={(e) =>
+            handleInputChange("cost", parseFloat(e.target.value))
+          }
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("discount")}
+        </label>
+        <Input
+          type="number"
+          value={data.discount}
+          onChange={(e) =>
+            handleInputChange("discount", parseFloat(e.target.value))
+          }
+        />
       </div>
       <div className="md:col-span-2">
         <div className="flex items-center justify-between mb-4">
-          <label className="block text-sm font-medium text-gray-700">{t('additionalCosts')}</label>
+          <label className="block text-sm font-medium text-gray-700">
+            {t("additionalCosts")}
+          </label>
           <Button
             type="button"
             variant="default"
             size="sm"
             className="gap-2"
             onClick={() => {
-              const newCosts = [...(data.additionalCosts || []), { description: '', price: 0 }]
-              handleInputChange('additionalCosts', newCosts)
+              const newCosts = [
+                ...(data.additionalCosts || []),
+                { description: "", price: 0 },
+              ];
+              handleInputChange("additionalCosts", newCosts);
             }}
           >
             <PlusIcon className="h-4 w-4" />
-            {t('addCost')}
+            {t("addCost")}
           </Button>
         </div>
         <div className="space-y-4">
           {(data.additionalCosts || [])
-            .filter(cost => !cost.hidden) // Filter out hidden costs
+            .filter((cost) => !cost.hidden) // Filter out hidden costs
             .map((cost) => {
               // Find the actual index in the original array
-              const actualIndex = data.additionalCosts.findIndex(c => c === cost);
-              
+              const actualIndex = data.additionalCosts.findIndex(
+                (c) => c === cost
+              );
+
               return (
                 <div key={actualIndex} className="flex gap-4">
                   <div className="flex-1">
                     <Input
-                      placeholder={t('costDescription')}
+                      placeholder={t("costDescription")}
                       value={cost.description}
                       onChange={(e) => {
-                        const newCosts = [...(data.additionalCosts || [])]
-                        newCosts[actualIndex] = { ...cost, description: e.target.value }
-                        handleInputChange('additionalCosts', newCosts)
+                        const newCosts = [...(data.additionalCosts || [])];
+                        newCosts[actualIndex] = {
+                          ...cost,
+                          description: e.target.value,
+                        };
+                        handleInputChange("additionalCosts", newCosts);
                       }}
                     />
                   </div>
                   <div className="w-32">
                     <Input
                       type="number"
-                      placeholder={t('price')}
+                      placeholder={t("price")}
                       value={cost.price}
                       onChange={(e) => {
-                        const newCosts = [...(data.additionalCosts || [])]
-                        newCosts[actualIndex] = { ...cost, price: parseFloat(e.target.value) }
-                        handleInputChange('additionalCosts', newCosts)
+                        const newCosts = [...(data.additionalCosts || [])];
+                        newCosts[actualIndex] = {
+                          ...cost,
+                          price: parseFloat(e.target.value),
+                        };
+                        handleInputChange("additionalCosts", newCosts);
                       }}
                     />
                   </div>
@@ -1358,9 +2087,9 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
                     variant="destructive"
                     size="icon"
                     onClick={() => {
-                      const newCosts = [...(data.additionalCosts || [])]
-                      newCosts.splice(actualIndex, 1)
-                      handleInputChange('additionalCosts', newCosts)
+                      const newCosts = [...(data.additionalCosts || [])];
+                      newCosts.splice(actualIndex, 1);
+                      handleInputChange("additionalCosts", newCosts);
                     }}
                   >
                     <TrashIcon className="h-4 w-4" />
@@ -1371,49 +2100,61 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
         </div>
       </div>
     </div>
-  )
+  );
 
   const renderServiceForm = () => {
     if (!formData) return null;
 
     // Ensure all service types have their default additional costs (but keep hidden ones for internal use)
     switch (serviceType) {
-      case 'move':
-        if (!formData.additionalCosts || formData.additionalCosts.length === 0) {
+      case "move":
+        if (
+          !formData.additionalCosts ||
+          formData.additionalCosts.length === 0
+        ) {
           formData.additionalCosts = [...getTranslatedDefaultCosts().move];
         }
         break;
-      case 'packing':
-        if (!formData.additionalCosts || formData.additionalCosts.length === 0) {
+      case "packing":
+        if (
+          !formData.additionalCosts ||
+          formData.additionalCosts.length === 0
+        ) {
           formData.additionalCosts = [...getTranslatedDefaultCosts().packing];
         }
         break;
-      case 'unpacking':
-        if (!formData.additionalCosts || formData.additionalCosts.length === 0) {
+      case "unpacking":
+        if (
+          !formData.additionalCosts ||
+          formData.additionalCosts.length === 0
+        ) {
           formData.additionalCosts = [...getTranslatedDefaultCosts().unpacking];
         }
         break;
-      case 'disposal':
-        if (!formData.additionalCosts || formData.additionalCosts.length === 0) {
+      case "disposal":
+        if (
+          !formData.additionalCosts ||
+          formData.additionalCosts.length === 0
+        ) {
           formData.additionalCosts = [...getTranslatedDefaultCosts().disposal];
         }
         break;
     }
 
     switch (serviceType) {
-      case 'move':
+      case "move":
         return renderMoveServiceForm(formData as MoveService);
-      case 'cleaning':
+      case "cleaning":
         return renderCleaningServiceForm(formData as CleaningService);
-      case 'packing':
+      case "packing":
         return renderPackingServiceForm(formData as PackingService);
-      case 'unpacking':
+      case "unpacking":
         return renderUnpackingServiceForm(formData as UnpackingService);
-      case 'disposal':
+      case "disposal":
         return renderDisposalServiceForm(formData as DisposalService);
-      case 'storage':
+      case "storage":
         return renderStorageServiceForm(formData as StorageService);
-      case 'transport':
+      case "transport":
         return renderTransportServiceForm(formData as TransportService);
       default:
         return <div>Service type not supported</div>;
@@ -1441,20 +2182,16 @@ export function ServiceDetailsModal({ isOpen, onClose, serviceType, initialData,
         </div>
 
         {/* Content */}
-        <div className="p-6">
-          {renderServiceForm()}
-        </div>
+        <div className="p-6">{renderServiceForm()}</div>
 
         {/* Footer */}
         <div className="flex items-center justify-end gap-4 p-6 border-t border-gray-200">
           <Button variant="secondary" onClick={handleCancel}>
-            {t('cancel')}
+            {t("cancel")}
           </Button>
-          <Button onClick={handleSubmit}>
-            {t('save')}
-          </Button>
+          <Button onClick={handleSubmit}>{t("save")}</Button>
         </div>
       </div>
     </div>
-  )
+  );
 }

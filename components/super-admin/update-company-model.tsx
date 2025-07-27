@@ -171,7 +171,7 @@ export function UpdateCompanyModal({ isOpen, onClose, onSuccess, companyId }: Up
         ...formData
       };
 
-      const response = await fetch(`https://crmproject.runasp.net/api/SuperAdmin/update-company/${companyId}`, {
+      const response = await fetch(`https://nedx.premiumasp.net/api/SuperAdmin/update-company/${companyId}`, {
         method: "PUT",
         headers: {
           "Authorization": `Bearer ${token}`,

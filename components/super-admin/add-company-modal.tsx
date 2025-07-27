@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useRef } from 'react'
+import React, { useState,  } from 'react'
 import { useTranslations } from 'next-intl'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -49,8 +49,8 @@ export function AddCompanyModal({ isOpen, onClose, onSuccess }: AddCompanyModalP
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitError, setSubmitError] = useState<string>("");
   const [logoFile, setLogoFile] = useState<File | null>(null);
-  const [logoPreview, setLogoPreview] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+
+
 
   const [formData, setFormData] = useState<FormData>({
     companyName: "",
@@ -95,54 +95,9 @@ export function AddCompanyModal({ isOpen, onClose, onSuccess }: AddCompanyModalP
     }
   };
 
-  const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // Check if file is an image
-      if (!file.type.startsWith('image/')) {
-        setErrors(prev => ({
-          ...prev,
-          logo: "Please select an image file"
-        }));
-        return;
-      }
-      
-      // Check file size (limit to 2MB)
-      if (file.size > 2 * 1024 * 1024) {
-        setErrors(prev => ({
-          ...prev,
-          logo: "Logo file size must be less than 2MB"
-        }));
-        return;
-      }
 
-      setLogoFile(file);
-      
-      // Create preview
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setLogoPreview(e.target?.result as string);
-      };
-      reader.readAsDataURL(file);
-      
-      // Clear any previous errors
-      if (errors.logo) {
-        setErrors(prev => {
-          const newErrors = { ...prev };
-          delete newErrors.logo;
-          return newErrors;
-        });
-      }
-    }
-  };
 
-  const handleRemoveLogo = () => {
-    setLogoFile(null);
-    setLogoPreview(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-  };
+ 
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
@@ -203,7 +158,7 @@ export function AddCompanyModal({ isOpen, onClose, onSuccess }: AddCompanyModalP
       }
 
       // First create the company
-      const response = await fetch("https://crmproject.runasp.net/api/SuperAdmin/create-company", {
+      const response = await fetch("https://nedx.premiumasp.net/api/SuperAdmin/create-company", {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -260,7 +215,7 @@ export function AddCompanyModal({ isOpen, onClose, onSuccess }: AddCompanyModalP
         notes: ""
       });
       setLogoFile(null);
-      setLogoPreview(null);
+      
       
       onClose();
       if (onSuccess) onSuccess();
@@ -340,56 +295,7 @@ export function AddCompanyModal({ isOpen, onClose, onSuccess }: AddCompanyModalP
                 </div>
               </div>
 
-              {/* Company Logo Section */}
-              <div className="mb-6 border-b border-gray-200 pb-6">
-                <Label htmlFor="company-logo" className="text-sm font-medium text-gray-700 mb-2 block">
-                  {t('companyLogoLabel') || "Company Logo"}
-                </Label>
-                <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0">
-                    <div className="w-24 h-24 border border-gray-300 rounded-md flex items-center justify-center overflow-hidden bg-gray-100">
-                      {logoPreview ? (
-                        <img 
-                          src={logoPreview} 
-                          alt="Company logo preview" 
-                          className="w-full h-full object-contain"
-                        />
-                      ) : (
-                        <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                      )}
-                    </div>
-                  </div>
-                  <div className="flex-grow space-y-2">
-                    <Input
-                      id="company-logo"
-                      type="file"
-                      accept="image/*"
-                      ref={fileInputRef}
-                      className="w-full"
-                      onChange={handleLogoChange}
-                      disabled={isSubmitting}
-                    />
-                    <p className="text-xs text-gray-500">
-                      {t('logoHelpText') || "Upload a company logo (PNG, JPG, JPEG). Max size: 2MB"}
-                    </p>
-                    {errors.logo && <p className="text-red-500 text-xs">{errors.logo}</p>}
-                    {logoPreview && (
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={handleRemoveLogo}
-                        className="text-xs"
-                        disabled={isSubmitting}
-                      >
-                        {t('removeLogo') || "Remove Logo"}
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              </div>
+          
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>

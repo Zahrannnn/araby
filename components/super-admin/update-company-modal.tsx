@@ -225,7 +225,7 @@ export function UpdateCompanyModal({ isOpen, onClose, onSuccess, companyId }: Up
       }
 
       // First, update company information
-      const companyResponse = await fetch(`https://crmproject.runasp.net/api/SuperAdmin/update-company/${companyId}`, {
+      const companyResponse = await fetch(`https://nedx.premiumasp.net/api/SuperAdmin/update-company/${companyId}`, {
         method: "PUT",
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -240,7 +240,7 @@ export function UpdateCompanyModal({ isOpen, onClose, onSuccess, companyId }: Up
       }
 
       // Second, update manager information
-      const managerResponse = await fetch(`https://crmproject.runasp.net/api/SuperAdmin/update-manager/${managerId}`, {
+      const managerResponse = await fetch(`https://nedx.premiumasp.net/api/SuperAdmin/update-manager/${managerId}`, {
         method: "PUT",
         headers: {
           "Authorization": `Bearer ${token}`,

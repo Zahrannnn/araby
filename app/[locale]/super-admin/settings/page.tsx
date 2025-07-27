@@ -40,7 +40,7 @@ const subscriptionApi = {
       throw new Error('No authentication token found');
     }
 
-    const response = await fetch('https://crmproject.runasp.net/api/SuperAdmin/SubsType', {
+    const response = await fetch('https://nedx.premiumasp.net/api/SuperAdmin/SubsType', {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -61,7 +61,7 @@ const subscriptionApi = {
       throw new Error('No authentication token found');
     }
 
-    const response = await fetch('https://crmproject.runasp.net/api/SuperAdmin/updateSubsType', {
+    const response = await fetch('https://nedx.premiumasp.net/api/SuperAdmin/updateSubsType', {
       method: 'PUT',
       headers: {
         'Authorization': `Bearer ${token}`,

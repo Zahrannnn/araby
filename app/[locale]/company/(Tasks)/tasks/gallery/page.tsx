@@ -25,7 +25,7 @@ export default function TaskGalleryPage() {
   const { data: images, isLoading, error } = useQuery<TaskImage[]>({
     queryKey: ['taskGallery'],
     queryFn: async () => {
-      const { data } = await apiClient.get('https://crmproject.runasp.net/api/Task/Gallery');
+      const { data } = await apiClient.get('https://nedx.premiumasp.net/api/Task/Gallery');
       return data;
     }
   });

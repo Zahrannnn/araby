@@ -223,8 +223,8 @@ export default function TaskDetailsPage() {
                   .filter(file => file.fileType === 'Requirement')
                   .map((file) => (
                     <a
-                      key={`https://crmproject.runasp.net/${file.fileUrl}`}
-                      href={`https://crmproject.runasp.net/${file.fileUrl}`}
+                      key={`https://nedx.premiumasp.net${file.fileUrl}`}
+                      href={`https://nedx.premiumasp.net${file.fileUrl}`}
                       download
                       target="_blank"
                       rel="noopener noreferrer"
@@ -257,8 +257,8 @@ export default function TaskDetailsPage() {
                   .filter(file => file.fileType === 'Result')
                   .map((file) => (
                     <a
-                      key={`https://crmproject.runasp.net/${file.fileUrl}`}
-                      href={`https://crmproject.runasp.net/${file.fileUrl}`}
+                      key={`https://nedx.premiumasp.net/${file.fileUrl}`}
+                      href={`https://nedx.premiumasp.net/${file.fileUrl}`}
                       download
                       target="_blank"
                       rel="noopener noreferrer"

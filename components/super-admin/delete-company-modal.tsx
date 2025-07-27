@@ -52,7 +52,7 @@ export function DeleteCompanyModal({
       }
 
       const response = await fetch(
-        `https://crmproject.runasp.net/api/SuperAdmin/delete-company/${companyId}`,
+        `https://nedx.premiumasp.net/api/SuperAdmin/delete-company/${companyId}`,
         {
           method: "DELETE",
           headers: {

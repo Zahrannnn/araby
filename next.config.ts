@@ -23,6 +23,10 @@ const nextConfig: NextConfig = {
       {
         hostname: 'crmproject.runasp.net',
         protocol: 'https',
+      },
+      {
+        hostname: 'nedx.premiumasp.net',
+        protocol: 'https',
       }
     ],
   },

@@ -8,7 +8,7 @@ import { User } from '@/types/user';
 /**
  * Base API configuration
  */
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://crmproject.runasp.net/api';
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://nedx.premiumasp.net/api';
 
 /**
  * API endpoints
@@ -494,6 +494,7 @@ export interface ServiceLineItem {
   serviceType: string;
   totalLinePrice: number;
   serviceDetails: ServiceDetails;
+  additionalCosts: AdditionalCost[];
 }
 
 export interface PackingMaterial {
@@ -1049,7 +1050,7 @@ export const employeeApi = {
 
   async getEmployeeTasks(employeeId: number): Promise<TasksResponse> {
     try {
-      const response = await apiClient.get<TasksResponse>(`${API_ENDPOINTS.EMPLOYEES}/${employeeId}/tasks`);
+      const response = await apiClient.get<TasksResponse>(`Task/assigned-to-me`);
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.data) {

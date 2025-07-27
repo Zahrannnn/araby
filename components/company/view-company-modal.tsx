@@ -1,6 +1,7 @@
 "use client"
 import React, { useState, useRef } from 'react'
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query'
+import { useTranslations } from 'next-intl'
 import { companyApi, googleCalendarApi } from '@/lib/api'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import {
@@ -13,6 +14,7 @@ import { Button } from '@/components/ui/button'
 import Image from 'next/image'
 
 const ViewCompanyPage: React.FC = () => {
+  const t = useTranslations('company.settings')
   const {
     data,
     isLoading,
@@ -50,12 +52,12 @@ const ViewCompanyPage: React.FC = () => {
   const { mutate: saveStripeKeys, isPending: isSaving } = useMutation<void, Error, { publishableKey: string; secretKey: string }>({
     mutationFn: companyApi.setStripeKeys,
     onSuccess: () => {
-      setFormSuccess('Stripe keys saved successfully.')
+      setFormSuccess(t('stripeKeys.keysSaved'))
       setFormError(null)
       queryClient.invalidateQueries({ queryKey: ['company-stripe-keys'] })
     },
     onError: (err: Error) => {
-      setFormError(err.message || 'Failed to save Stripe keys')
+      setFormError(err.message || t('stripeKeys.keysSaveError'))
       setFormSuccess(null)
     },
   })
@@ -76,13 +78,13 @@ const ViewCompanyPage: React.FC = () => {
       return companyApi.uploadCompanyLogo(file);
     },
     onSuccess: () => {
-      setUploadSuccess('Company logo uploaded successfully')
+      setUploadSuccess(t('uploadSuccess'))
       setUploadError(null)
       queryClient.invalidateQueries({ queryKey: ['company-settings'] })
       setLogoFile(null)
     },
     onError: (err: Error) => {
-      setUploadError(err.message || 'Failed to upload logo')
+      setUploadError(err.message || t('uploadError'))
       setUploadSuccess(null)
     },
   })
@@ -92,7 +94,7 @@ const ViewCompanyPage: React.FC = () => {
     setFormError(null)
     setFormSuccess(null)
     if (!publishableKey.trim() || !secretKey.trim()) {
-      setFormError('Both keys are required.')
+      setFormError(t('stripeKeys.bothKeysRequired'))
       return
     }
     saveStripeKeys({ publishableKey, secretKey })
@@ -117,7 +119,7 @@ const ViewCompanyPage: React.FC = () => {
     if (logoFile) {
       uploadLogo(logoFile)
     } else {
-      setUploadError('Please select a file first')
+      setUploadError(t('pleaseSelectFile'))
     }
   }
 
@@ -126,6 +128,7 @@ const ViewCompanyPage: React.FC = () => {
       fileInputRef.current.click()
     }
   }
+  console.log(data?.companyInfo.companyLogoUrl);
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-muted/50 via-background to-white py-10 px-4 md:px-6 animate-fade-in">
@@ -137,7 +140,7 @@ const ViewCompanyPage: React.FC = () => {
                 <div className="p-2.5 bg-primary/10 rounded-lg flex items-center justify-center w-12 h-12">
                   {data?.companyInfo?.companyLogoUrl ? (
                     <Image
-                      src={`https://crmproject.runasp.net/${data.companyInfo.companyLogoUrl}`}
+                      src={`https://nedx.premiumasp.net/${data.companyInfo.companyLogoUrl}`}
                       alt="Company Logo"
                       className="w-full h-full object-cover rounded"
                       width={100}
@@ -149,8 +152,8 @@ const ViewCompanyPage: React.FC = () => {
                   )}
                 </div>
                 <div>
-                  <CardTitle className="text-2xl font-bold tracking-tight">Company Settings</CardTitle>
-                  <CardDescription>Manage your company information and API keys</CardDescription>
+                  <CardTitle className="text-2xl font-bold tracking-tight">{t('title')}</CardTitle>
+                  <CardDescription>{t('subtitle')}</CardDescription>
                 </div>
               </div>
               <Button
@@ -161,12 +164,12 @@ const ViewCompanyPage: React.FC = () => {
                 {isConnecting ? (
                   <>
                     <span className="animate-spin w-4 h-4 border-2 border-black/30 border-t-black rounded-full"></span>
-                    <span>Connecting...</span>
+                    <span>{t('connecting')}</span>
                   </>
                 ) : (
                   <>
                     <CalendarIcon className="w-4 h-4" />
-                    <span>Connect Google Calendar</span>
+                    <span>{t('connectGoogleCalendar')}</span>
                   </>
                 )}
               </Button>
@@ -174,7 +177,7 @@ const ViewCompanyPage: React.FC = () => {
           </CardHeader>
           <CardContent className="pt-6">
             {isLoading ? (
-              <div className="py-16 text-center text-muted-foreground text-lg">Loading...</div>
+              <div className="py-16 text-center text-muted-foreground text-lg">{t('loading')}</div>
             ) : error ? (
               <div className="py-16 text-center text-destructive text-lg">{(error as Error).message}</div>
             ) : data ? (
@@ -188,137 +191,137 @@ const ViewCompanyPage: React.FC = () => {
                     <div className="p-2 bg-primary/10 rounded-lg">
                       <Building2 className="w-5 h-5 text-primary" />
                     </div>
-                    <h3 className="font-semibold text-lg">Company Info</h3>
+                    <h3 className="font-semibold text-lg">{t('companyInfo')}</h3>
                   </div>
                   <div className="h-px w-full bg-gradient-to-r from-muted/50 via-muted/30 to-transparent" />
                   <div className="flex flex-col gap-3 text-sm">
                     <div className="flex items-center gap-2.5">
                       <Building2 className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-muted-foreground">Name:</span>
+                      <span className="text-muted-foreground">{t('fields.name')}:</span>
                       <span className="font-medium text-foreground ml-auto">{data.companyInfo.companyName}</span>
                     </div>
                     <div className="flex items-center gap-2.5">
                       <Mail className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-muted-foreground">Email:</span>
+                      <span className="text-muted-foreground">{t('fields.email')}:</span>
                       <span className="font-medium text-foreground ml-auto">{data.companyInfo.contactEmail}</span>
                     </div>
                     <div className="flex items-center gap-2.5">
                       <Phone className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-muted-foreground">Phone:</span>
+                      <span className="text-muted-foreground">{t('fields.phone')}:</span>
                       <span className="font-medium text-foreground ml-auto">{data.companyInfo.phoneNumber}</span>
                     </div>
                     <div className="flex items-center gap-2.5">
                       <MapPin className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-muted-foreground">Address:</span>
+                      <span className="text-muted-foreground">{t('fields.address')}:</span>
                       <span className="font-medium text-foreground ml-auto">{data.companyInfo.address}</span>
                     </div>
                     <div className="flex items-center gap-2.5">
                       <MapPin className="w-4 h-4 text-muted-foreground opacity-0" />
-                      <span className="text-muted-foreground">City:</span>
+                      <span className="text-muted-foreground">{t('fields.city')}:</span>
                       <span className="font-medium text-foreground ml-auto">{data.companyInfo.city}</span>
                     </div>
                     <div className="flex items-center gap-2.5">
                       <MapPin className="w-4 h-4 text-muted-foreground opacity-0" />
-                      <span className="text-muted-foreground">ZIP:</span>
+                      <span className="text-muted-foreground">{t('fields.zip')}:</span>
                       <span className="font-medium text-foreground ml-auto">{data.companyInfo.zipCode}</span>
                     </div>
                     <div className="flex items-center gap-2.5">
                       <MapPin className="w-4 h-4 text-muted-foreground opacity-0" />
-                      <span className="text-muted-foreground">Country:</span>
+                      <span className="text-muted-foreground">{t('fields.country')}:</span>
                       <span className="font-medium text-foreground ml-auto">{data.companyInfo.country}</span>
                     </div>
                     <div className="flex items-center gap-2.5">
                       <Hash className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-muted-foreground">VAT Number:</span>
+                      <span className="text-muted-foreground">{t('fields.vatNumber')}:</span>
                       <span className="font-medium text-foreground ml-auto">{data.companyInfo.vatNumber}</span>
                     </div>
                     <div className="flex items-center gap-2.5">
                       <CreditCard className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-muted-foreground">Subscription:</span>
+                      <span className="text-muted-foreground">{t('fields.subscription')}:</span>
                       <span className="font-medium text-foreground ml-auto">{data.companyInfo.subsType}</span>
                     </div>
                     <div className="flex items-center gap-2.5">
                       <CreditCard className="w-4 h-4 text-muted-foreground opacity-0" />
-                      <span className="text-muted-foreground">Stripe Sub:</span>
+                      <span className="text-muted-foreground">{t('fields.stripeSub')}:</span>
                       <span className="ml-auto flex items-center gap-1.5">
                         {data.companyInfo.isSubStripe ? (
-                          <><CheckCircle className="w-3.5 h-3.5 text-green-500" /><span className="text-green-600 font-medium">Active</span></>
+                          <><CheckCircle className="w-3.5 h-3.5 text-green-500" /><span className="text-green-600 font-medium">{t('fields.active')}</span></>
                         ) : (
-                          <><AlertCircle className="w-3.5 h-3.5 text-amber-500" /><span className="text-amber-600 font-medium">Inactive</span></>
+                          <><AlertCircle className="w-3.5 h-3.5 text-amber-500" /><span className="text-amber-600 font-medium">{t('fields.inactive')}</span></>
                         )}
                       </span>
                     </div>
                     {data.companyInfo.isSubStripe && data.companyInfo.stripeSubCreatedAt && (
                       <div className="flex items-center gap-2.5">
                         <Calendar className="w-4 h-4 text-muted-foreground opacity-0" />
-                        <span className="text-muted-foreground">Stripe Created:</span>
+                        <span className="text-muted-foreground">{t('fields.stripeCreated')}:</span>
                         <span className="font-medium text-foreground ml-auto">{data.companyInfo.stripeSubCreatedAt?.slice(0, 10)}</span>
                       </div>
                     )}
                     <div className="flex items-center gap-2.5">
                       <Calendar className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-muted-foreground">Ends on:</span>
+                      <span className="text-muted-foreground">{t('fields.endsOn')}:</span>
                       <span className="font-medium text-foreground ml-auto">{data.companyInfo.subscriptionEndDate?.slice(0, 10)}</span>
                     </div>
                     <div className="flex items-center gap-2.5">
                       <Shield className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-muted-foreground">Status:</span>
+                      <span className="text-muted-foreground">{t('fields.status')}:</span>
                       <span className="ml-auto flex items-center gap-1.5">
                         {data.companyInfo.isActive ? (
-                          <><CheckCircle className="w-3.5 h-3.5 text-green-500" /><span className="text-green-600 font-medium">Active</span></>
+                          <><CheckCircle className="w-3.5 h-3.5 text-green-500" /><span className="text-green-600 font-medium">{t('fields.active')}</span></>
                         ) : (
-                          <><AlertCircle className="w-3.5 h-3.5 text-red-500" /><span className="text-red-600 font-medium">Inactive</span></>
+                          <><AlertCircle className="w-3.5 h-3.5 text-red-500" /><span className="text-red-600 font-medium">{t('fields.inactive')}</span></>
                         )}
                       </span>
                     </div>
                     <div className="flex items-center gap-2.5">
                       <Clock className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-muted-foreground">Created:</span>
+                      <span className="text-muted-foreground">{t('fields.created')}:</span>
                       <span className="font-medium text-foreground ml-auto">{data.companyInfo.createdAt?.slice(0, 10)}</span>
                     </div>
                     <div className="flex items-start gap-2.5 mt-1">
                       <FileText className="w-4 h-4 text-muted-foreground mt-0.5" />
-                      <span className="text-muted-foreground">Notes:</span>
+                      <span className="text-muted-foreground">{t('fields.notes')}:</span>
                       <span className="font-medium text-foreground ml-auto text-right">{data.companyInfo.notes || '-'}</span>
                     </div>
                     {/* Banking Information Section */}
                     <div className="pt-3 mt-2 border-t border-gray-100">
-                      <h4 className="font-medium text-gray-700 mb-2">Banking Information</h4>
+                      <h4 className="font-medium text-gray-700 mb-2">{t('fields.bankingInformation')}</h4>
                       <div className="flex flex-col gap-2">
                         <div className="flex items-center gap-2.5">
                           <CreditCard className="w-4 h-4 text-muted-foreground" />
-                          <span className="text-muted-foreground">Bank:</span>
+                          <span className="text-muted-foreground">{t('fields.bank')}:</span>
                           <span className="font-medium text-foreground ml-auto">{data.companyInfo.bank || '-'}</span>
                         </div>
                         <div className="flex items-center gap-2.5">
                           <CreditCard className="w-4 h-4 text-muted-foreground opacity-0" />
-                          <span className="text-muted-foreground">Account Name:</span>
+                          <span className="text-muted-foreground">{t('fields.accountName')}:</span>
                           <span className="font-medium text-foreground ml-auto">{data.companyInfo.nameOfBankAccount || '-'}</span>
                         </div>
                         <div className="flex items-center gap-2.5">
                           <CreditCard className="w-4 h-4 text-muted-foreground opacity-0" />
-                          <span className="text-muted-foreground">IBAN:</span>
+                          <span className="text-muted-foreground">{t('fields.iban')}:</span>
                           <span className="font-medium text-foreground ml-auto">{data.companyInfo.iban || '-'}</span>
                         </div>
                         <div className="flex items-center gap-2.5">
                           <CreditCard className="w-4 h-4 text-muted-foreground opacity-0" />
-                          <span className="text-muted-foreground">BIC:</span>
+                          <span className="text-muted-foreground">{t('fields.bic')}:</span>
                           <span className="font-medium text-foreground ml-auto">{data.companyInfo.bic || '-'}</span>
                         </div>
                       </div>
                     </div>
                     {/* Insurance Information Section */}
                     <div className="pt-3 mt-2 border-t border-gray-100">
-                      <h4 className="font-medium text-gray-700 mb-2">Insurance Information</h4>
+                      <h4 className="font-medium text-gray-700 mb-2">{t('fields.insuranceInformation')}</h4>
                       <div className="flex flex-col gap-2">
                         <div className="flex items-center gap-2.5">
                           <Shield className="w-4 h-4 text-muted-foreground" />
-                          <span className="text-muted-foreground">Transport Insurance:</span>
+                          <span className="text-muted-foreground">{t('fields.transportInsurance')}:</span>
                           <span className="font-medium text-foreground ml-auto">{data.companyInfo.transportInsurancePolicyNo || '-'}</span>
                         </div>
                         <div className="flex items-center gap-2.5">
                           <Shield className="w-4 h-4 text-muted-foreground opacity-0" />
-                          <span className="text-muted-foreground">Business Insurance:</span>
+                          <span className="text-muted-foreground">{t('fields.businessInsurance')}:</span>
                           <span className="font-medium text-foreground ml-auto">{data.companyInfo.businessInsurancePolicyNo || '-'}</span>
                         </div>
                       </div>
@@ -332,39 +335,39 @@ const ViewCompanyPage: React.FC = () => {
                     <div className="p-2 bg-primary/10 rounded-lg">
                       <User2 className="w-5 h-5 text-primary" />
                     </div>
-                    <h3 className="font-semibold text-lg">Manager Info</h3>
+                    <h3 className="font-semibold text-lg">{t('managerInfo')}</h3>
                   </div>
                   <div className="h-px w-full bg-gradient-to-r from-muted/50 via-muted/30 to-transparent" />
                   <div className="flex flex-col gap-3 text-sm">
                     <div className="flex items-center gap-2.5">
                       <User2 className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-muted-foreground">Name:</span>
+                      <span className="text-muted-foreground">{t('fields.name')}:</span>
                       <span className="font-medium text-foreground ml-auto">{data.managerInfo.firstName} {data.managerInfo.lastName}</span>
                     </div>
                     <div className="flex items-center gap-2.5">
                       <Mail className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-muted-foreground">Email:</span>
+                      <span className="text-muted-foreground">{t('fields.email')}:</span>
                       <span className="font-medium text-foreground ml-auto">{data.managerInfo.email}</span>
                     </div>
                     <div className="flex items-center gap-2.5">
                       <User2 className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-muted-foreground">Username:</span>
+                      <span className="text-muted-foreground">{t('fields.username')}:</span>
                       <span className="font-medium text-foreground ml-auto">{data.managerInfo.userName}</span>
                     </div>
                     <div className="flex items-center gap-2.5">
                       <Shield className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-muted-foreground">Status:</span>
+                      <span className="text-muted-foreground">{t('fields.status')}:</span>
                       <span className="ml-auto flex items-center gap-1.5">
                         {data.managerInfo.isActive ? (
-                          <><CheckCircle className="w-3.5 h-3.5 text-green-500" /><span className="text-green-600 font-medium">Active</span></>
+                          <><CheckCircle className="w-3.5 h-3.5 text-green-500" /><span className="text-green-600 font-medium">{t('fields.active')}</span></>
                         ) : (
-                          <><AlertCircle className="w-3.5 h-3.5 text-red-500" /><span className="text-red-600 font-medium">Inactive</span></>
+                          <><AlertCircle className="w-3.5 h-3.5 text-red-500" /><span className="text-red-600 font-medium">{t('fields.inactive')}</span></>
                         )}
                       </span>
                     </div>
                     <div className="flex items-center gap-2.5">
                       <Clock className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-muted-foreground">Created:</span>
+                      <span className="text-muted-foreground">{t('fields.created')}:</span>
                       <span className="font-medium text-foreground ml-auto">{data.managerInfo.createdAt?.slice(0, 10)}</span>
                     </div>
                   </div>
@@ -374,7 +377,7 @@ const ViewCompanyPage: React.FC = () => {
                     <div className="p-2 bg-primary/10 rounded-lg">
                       {/* <p className="w-5 h-5 text-primary" /> */}
                     </div>
-                    <h3 className="font-semibold text-lg">Company Logo</h3>
+                    <h3 className="font-semibold text-lg">{t('companyLogo')}</h3>
                   </div>
                   <div className="h-px w-full bg-gradient-to-r from-muted/50 via-muted/30 to-transparent" />
                   
@@ -399,7 +402,7 @@ const ViewCompanyPage: React.FC = () => {
                           className="w-full border-muted/30 hover:bg-primary/5 hover:text-primary hover:border-primary/30"
                         >
                           <Upload className="w-4 h-4 mr-2" />
-                          {logoFile ? logoFile.name.substring(0, 20) + (logoFile.name.length > 20 ? '...' : '') : 'Select Logo'}
+                          {logoFile ? logoFile.name.substring(0, 20) + (logoFile.name.length > 20 ? '...' : '') : t('selectLogo')}
                         </Button>
                         
                         <Button 
@@ -411,12 +414,12 @@ const ViewCompanyPage: React.FC = () => {
                           {isLogoUploading ? (
                             <>
                               <span className="animate-spin w-4 h-4 border-2 border-white/30 border-t-white rounded-full mr-2"></span>
-                              <span>Uploading...</span>
+                              <span>{t('uploading')}</span>
                             </>
                           ) : (
                             <>
                               <Save className="w-4 h-4 mr-2" />
-                              <span>Upload Logo</span>
+                              <span>{t('uploadLogo')}</span>
                             </>
                           )}
                         </Button>
@@ -437,8 +440,8 @@ const ViewCompanyPage: React.FC = () => {
                       )}
                       
                       <div className="mt-3 text-xs text-muted-foreground">
-                        <p>Recommended: Square image, at least 200x200px</p>
-                        <p>Supported formats: JPEG, PNG, GIF</p>
+                        <p>{t('logoUploadRecommendation')}</p>
+                        <p>{t('logoSupportedFormats')}</p>
                       </div>
                     </div>
                   </div>
@@ -449,39 +452,39 @@ const ViewCompanyPage: React.FC = () => {
                     <div className="p-2 bg-primary/10 rounded-lg">
                       <BarChart2 className="w-5 h-5 text-primary" />
                     </div>
-                    <h3 className="font-semibold text-lg">Metrics</h3>
+                    <h3 className="font-semibold text-lg">{t('metrics')}</h3>
                   </div>
                   <div className="h-px w-full bg-gradient-to-r from-muted/50 via-muted/30 to-transparent" />
                   <div className="flex flex-col gap-3 text-sm">
                     <div className="flex items-center gap-2.5">
                       <Calendar className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-muted-foreground">Subscription Date:</span>
+                      <span className="text-muted-foreground">{t('fields.subscriptionDate')}:</span>
                       <span className="font-medium text-foreground ml-auto">{data.metrics.subscriptionDate?.slice(0, 10)}</span>
                     </div>
                     <div className="flex items-center gap-2.5">
                       <User2 className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-muted-foreground">Customers:</span>
+                      <span className="text-muted-foreground">{t('fields.customers')}:</span>
                       <span className="font-medium text-foreground ml-auto flex items-center gap-1">
                         <span className="px-2 py-0.5 bg-primary/10 rounded-full text-primary font-medium">{data.metrics.customerCount}</span>
                       </span>
                     </div>
                     <div className="flex items-center gap-2.5">
                       <User2 className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-muted-foreground">Employees:</span>
+                      <span className="text-muted-foreground">{t('fields.employees')}:</span>
                       <span className="font-medium text-foreground ml-auto flex items-center gap-1">
                         <span className="px-2 py-0.5 bg-primary/10 rounded-full text-primary font-medium">{data.metrics.employeeCount}</span>
                       </span>
                     </div>
                     <div className="flex items-center gap-2.5">
                       <CreditCard className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-muted-foreground">Total Profit:</span>
+                      <span className="text-muted-foreground">{t('fields.totalProfit')}:</span>
                       <span className="font-medium text-foreground ml-auto flex items-center gap-1">
                         <span className="px-2 py-0.5 bg-green-50 rounded-full text-green-600 font-medium">${data.metrics.totalProfit}</span>
                       </span>
                     </div>
                     <div className="flex items-center gap-2.5">
                       <FileText className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-muted-foreground">Paid Invoices:</span>
+                      <span className="text-muted-foreground">{t('fields.paidInvoices')}:</span>
                       <span className="font-medium text-foreground ml-auto flex items-center gap-1">
                         <span className="px-2 py-0.5 bg-primary/10 rounded-full text-primary font-medium">{data.metrics.paidInvoiceCount}</span>
                       </span>
@@ -499,13 +502,13 @@ const ViewCompanyPage: React.FC = () => {
                       <CreditCard className="w-6 h-6 text-primary" />
                     </div>
                     <div>
-                      <CardTitle className="text-xl font-bold tracking-tight">Stripe API Keys</CardTitle>
-                      <CardDescription>Configure your payment processing credentials</CardDescription>
+                      <CardTitle className="text-xl font-bold tracking-tight">{t('stripeKeys.title')}</CardTitle>
+                      <CardDescription>{t('stripeKeys.subtitle')}</CardDescription>
                     </div>
                     {!stripeKeys?.publishableKey && (
                       <span className="ml-auto text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full text-xs font-medium flex items-center gap-1.5">
                         <AlertCircle className="w-3.5 h-3.5" />
-                        <span>Required for payments</span>
+                        <span>{t('stripeKeys.requiredForPayments')}</span>
                       </span>
                     )}
                   </CardHeader>
@@ -513,7 +516,7 @@ const ViewCompanyPage: React.FC = () => {
                     {isStripeLoading ? (
                       <div className="py-16 text-center text-muted-foreground text-lg flex flex-col items-center gap-3">
                         <div className="animate-spin w-8 h-8 border-4 border-primary/30 border-t-primary rounded-full"></div>
-                        <span>Loading Stripe keys...</span>
+                        <span>{t('loading')}</span>
                       </div>
                     ) : stripeError ? (
                       <div className="py-16 text-center text-destructive text-lg flex flex-col items-center gap-3">
@@ -524,7 +527,7 @@ const ViewCompanyPage: React.FC = () => {
                       <div className="mb-6">
                         <div className="mb-3 text-sm font-medium flex items-center gap-2 text-primary/80">
                           <CheckCircle className="w-4 h-4" />
-                          Current Stripe keys for this company:
+                          {t('stripeKeys.currentKeys')}
                         </div>
                         <div className="flex flex-col gap-3 text-sm">
                           <div className="flex items-center gap-2">
@@ -534,9 +537,9 @@ const ViewCompanyPage: React.FC = () => {
                               value={stripeKeys.publishableKey}
                               className="font-mono text-xs bg-white/80 cursor-pointer focus:ring-2 focus:ring-primary/30 border-muted/30"
                               onClick={() => pubKeyRef.current && handleCopy(pubKeyRef)}
-                              aria-label="Publishable Key"
+                              aria-label={t('stripeKeys.publishableKey')}
                             />
-                            <Button type="button" variant="outline" size="icon" onClick={() => pubKeyRef.current && handleCopy(pubKeyRef)} title="Copy Publishable Key" className="border-muted/30 hover:bg-primary/5 hover:text-primary hover:border-primary/30">
+                            <Button type="button" variant="outline" size="icon" onClick={() => pubKeyRef.current && handleCopy(pubKeyRef)} title={t('stripeKeys.copyKey')} className="border-muted/30 hover:bg-primary/5 hover:text-primary hover:border-primary/30">
                               <Copy className="w-4 h-4" />
                             </Button>
                           </div>
@@ -548,19 +551,19 @@ const ViewCompanyPage: React.FC = () => {
                               value={stripeKeys.secretKey}
                               className="font-mono text-xs bg-white/80 cursor-pointer focus:ring-2 focus:ring-primary/30 border-muted/30"
                               onClick={() => secKeyRef.current && handleCopy(secKeyRef)}
-                              aria-label="Secret Key"
+                              aria-label={t('stripeKeys.secretKey')}
                             />
-                            <Button type="button" variant="outline" size="icon" onClick={() => setShowSecret(v => !v)} title={showSecret ? 'Hide Secret' : 'Show Secret'} className="border-muted/30 hover:bg-primary/5 hover:text-primary hover:border-primary/30">
+                            <Button type="button" variant="outline" size="icon" onClick={() => setShowSecret(v => !v)} title={showSecret ? t('stripeKeys.hideSecret') : t('stripeKeys.showSecret')} className="border-muted/30 hover:bg-primary/5 hover:text-primary hover:border-primary/30">
                               {showSecret ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                             </Button>
-                            <Button type="button" variant="outline" size="icon" onClick={() => secKeyRef.current && handleCopy(secKeyRef)} title="Copy Secret Key" className="border-muted/30 hover:bg-primary/5 hover:text-primary hover:border-primary/30">
+                            <Button type="button" variant="outline" size="icon" onClick={() => secKeyRef.current && handleCopy(secKeyRef)} title={t('stripeKeys.copyKey')} className="border-muted/30 hover:bg-primary/5 hover:text-primary hover:border-primary/30">
                               <Copy className="w-4 h-4" />
                             </Button>
                           </div>
                         </div>
                         <div className="mt-4 text-xs text-muted-foreground flex items-center gap-1.5">
                           <Info className="w-3.5 h-3.5" />
-                          To update, enter new keys below and save.
+                          {t('stripeKeys.updateKeys')}
                         </div>
                         <div className="h-px w-full bg-gradient-to-r from-muted/50 via-muted/30 to-transparent my-4" />
                       </div>
@@ -569,24 +572,24 @@ const ViewCompanyPage: React.FC = () => {
                         <div className="mb-3 p-3 bg-amber-50 border border-amber-200 rounded-lg text-amber-800 flex items-start gap-2">
                           <Info className="w-5 h-5 text-amber-500 mt-0.5" />
                           <div>
-                            <p className="font-medium mb-1">No Stripe keys are set for this company</p>
-                            <p className="text-sm">To accept payments, you need to add your Stripe API keys.</p>
+                            <p className="font-medium mb-1">{t('stripeKeys.noKeysSet')}</p>
+                            <p className="text-sm">{t('stripeKeys.needKeysMessage')}</p>
                           </div>
                         </div>
                         <div className="mt-4 bg-muted/20 p-4 rounded-lg border border-muted/30">
                           <h4 className="text-sm font-medium mb-2 flex items-center gap-1.5">
                             <FileText className="w-4 h-4 text-primary" />
-                            Setup Instructions:
+                            {t('stripeKeys.setupInstructions')}
                           </h4>
                           <ol className="list-decimal list-inside text-sm space-y-1 text-muted-foreground ml-1">
-                            <li>Log in to your <a href="https://dashboard.stripe.com/apikeys" target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80 transition-colors">Stripe Dashboard</a>.</li>
-                            <li>Go to <span className="font-medium text-foreground">Developers &gt; API keys</span>.</li>
-                            <li>Copy your <span className="font-medium text-foreground">Publishable key</span> and <span className="font-medium text-foreground">Secret key</span>.</li>
-                            <li>Paste them below and click <span className="font-medium text-foreground">Save</span>.</li>
+                            <li>{t('stripeKeys.setupSteps.step1')}</li>
+                            <li>{t('stripeKeys.setupSteps.step2')}</li>
+                            <li>{t('stripeKeys.setupSteps.step3')}</li>
+                            <li>{t('stripeKeys.setupSteps.step4')}</li>
                           </ol>
                           <div className="mt-3 text-xs flex items-center gap-1.5 text-amber-600">
                             <Shield className="w-3.5 h-3.5" />
-                            Never share your secret key publicly.
+                            {t('stripeKeys.securityWarning')}
                           </div>
                         </div>
                         <div className="h-px w-full bg-gradient-to-r from-muted/50 via-muted/30 to-transparent my-4" />
@@ -596,7 +599,7 @@ const ViewCompanyPage: React.FC = () => {
                       <div className="flex flex-col gap-1.5">
                         <label htmlFor="publishableKey" className="text-sm font-medium flex items-center gap-1.5">
                           <Key className="w-3.5 h-3.5 text-muted-foreground" />
-                          Publishable Key
+                          {t('stripeKeys.publishableKey')}
                         </label>
                         <Input
                           id="publishableKey"
@@ -612,7 +615,7 @@ const ViewCompanyPage: React.FC = () => {
                       <div className="flex flex-col gap-1.5">
                         <label htmlFor="secretKey" className="text-sm font-medium flex items-center gap-1.5">
                           <Shield className="w-3.5 h-3.5 text-muted-foreground" />
-                          Secret Key
+                          {t('stripeKeys.secretKey')}
                         </label>
                         <div className="relative flex items-center">
                           <Input
@@ -651,12 +654,12 @@ const ViewCompanyPage: React.FC = () => {
                         {isSaving ? (
                           <>
                             <span className="animate-spin w-4 h-4 border-2 border-white/30 border-t-white rounded-full"></span>
-                            <span>Saving...</span>
+                            <span>{t('stripeKeys.saving')}</span>
                           </>
                         ) : (
                           <>
                             <Save className="w-4 h-4" />
-                            <span>Save</span>
+                            <span>{t('stripeKeys.save')}</span>
                           </>
                         )}
                       </Button>

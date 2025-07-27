@@ -338,6 +338,90 @@
   },
 
   "company": {
+    "settings": {
+      "title": "Company Settings",
+      "subtitle": "Manage your company information and API keys",
+      "companyInfo": "Company Info",
+      "managerInfo": "Manager Info",
+      "metrics": "Metrics",
+      "companyLogo": "Company Logo",
+      "logoUploadRecommendation": "Recommended: Square image, at least 200x200px",
+      "logoSupportedFormats": "Supported formats: JPEG, PNG, GIF",
+      "selectLogo": "Select Logo",
+      "uploadLogo": "Upload Logo",
+      "uploading": "Uploading...",
+      "uploadSuccess": "Company logo uploaded successfully",
+      "uploadError": "Failed to upload logo",
+      "pleaseSelectFile": "Please select a file first",
+      "connectGoogleCalendar": "Connect Google Calendar",
+      "connecting": "Connecting...",
+      "loading": "Loading...",
+      "stripeKeys": {
+        "title": "Stripe API Keys",
+        "subtitle": "Configure your payment processing credentials",
+        "requiredForPayments": "Required for payments",
+        "currentKeys": "Current Stripe keys for this company:",
+        "publishableKey": "Publishable Key",
+        "secretKey": "Secret Key",
+        "showSecret": "Show Secret",
+        "hideSecret": "Hide Secret",
+        "copyKey": "Copy Key",
+        "updateKeys": "To update, enter new keys below and save.",
+        "noKeysSet": "No Stripe keys are set for this company",
+        "needKeysMessage": "To accept payments, you need to add your Stripe API keys.",
+        "setupInstructions": "Setup Instructions:",
+        "setupSteps": {
+          "step1": "Log in to your Stripe Dashboard.",
+          "step2": "Go to Developers > API keys.",
+          "step3": "Copy your Publishable key and Secret key.",
+          "step4": "Paste them below and click Save."
+        },
+        "securityWarning": "Never share your secret key publicly.",
+        "keysSaved": "Stripe keys saved successfully.",
+        "keysSaveError": "Failed to save Stripe keys",
+        "bothKeysRequired": "Both keys are required.",
+        "saving": "Saving...",
+        "save": "Save"
+      },
+      "fields": {
+        "name": "Name",
+        "email": "Email",
+        "phone": "Phone",
+        "address": "Address",
+        "city": "City",
+        "zip": "ZIP",
+        "country": "Country",
+        "vatNumber": "VAT Number",
+        "subscription": "Subscription",
+        "stripeSub": "Stripe Sub",
+        "stripeCreated": "Stripe Created",
+        "endsOn": "Ends on",
+        "status": "Status",
+        "created": "Created",
+        "notes": "Notes",
+        "bank": "Bank",
+        "accountName": "Account Name",
+        "iban": "IBAN",
+        "bic": "BIC",
+        "transportInsurance": "Transport Insurance",
+        "businessInsurance": "Business Insurance",
+        "active": "Active",
+        "inactive": "Inactive",
+        "bankingInformation": "Banking Information",
+        "insuranceInformation": "Insurance Information",
+        "subscriptionDate": "Subscription Date",
+        "customers": "Customers",
+        "employees": "Employees",
+        "totalProfit": "Total Profit",
+        "paidInvoices": "Paid Invoices",
+        "username": "Username"
+      }
+    },
+    "errors": {
+      "failedToLoad": "Failed to load data",
+      "networkError": "Network error. Please check your connection.",
+      "serverError": "Server error. Please try again later."
+    },
     "tasks": {
       "gallery": {
         "title": "Task Gallery",
@@ -650,6 +734,17 @@
           "deleting": "Deleting..."
         },
         "offerDetails": {
+          "services":{
+    "move":"Move",
+    "packing":"Packing",
+    "unpacking":"Unpacking",
+    "disposal":"Disposal",
+    "storage":"Storage",
+    "transport":"Transport",
+    "cleaning":"Cleaning",
+    "other":"Other"
+  },
+  "amount": "Amount",
           "numberOfDeliveryTrucks": "Number of Delivery Trucks",
           "furtherDiscounts": "Further Discounts",
           "durationHours": "Duration Hours",
@@ -1014,8 +1109,8 @@
         "searchCustomer":"Search customer",
         "emailNotificationAlert":"After Update, the offer will be sent to the customer via email.",
         "street":"Street",
-        "countryCode":"Country Code",
-        "enterCountryCode":"Enter country code",
+        "countryCode":"Country",
+        "enterCountryCode":"Enter country",
         "createTitle": "Create New Offer",
         "editTitle": "Edit Offer",
         "basicSettings": "Basic Settings",
@@ -1105,6 +1200,21 @@
         
       },
       "serviceDetails": {
+        "apartmentCleaning_including_acceptance_guarantee":"Apartment cleaning including acceptance guarantee",
+        "apartmentCleaning_including_broom_clean":"Apartment cleaning including broom clean",
+        "singleFamilyHomeCleaning_including_acceptance_guarantee":"Single-family home cleaning including acceptance guarantee",
+        "singleFamilyHomeCleaning_including_broom_clean":"Single-family home cleaning including broom clean",
+        "rFHCleaning_including_acceptance_guarantee":"RFH cleaning including acceptance guarantee",
+        "rFHCleaning_including_sweeping":"RFH cleaning including sweeping",
+        "constructionCleaning":"Construction cleaning",
+        "constructionCleaning_including_acceptance_guarantee":"Construction cleaning including acceptance guarantee",
+        "constructionCleaning_including_broom_clean":"Construction cleaning including broom clean",
+        "maintenanceCleaning":"Maintenance cleaning",
+        "commercialCleaning":"Commercial cleaning",
+        "commercialCleaning_including_acceptance_guarantee":"Commercial cleaning including acceptance guarantee",
+        "commercialCleaning_including_broom_clean":"Commercial cleaning including broom clean",
+        "officeCleaning":"Office cleaning",
+        "storageRoomCleaning":"Storage room cleaning",
         "transportService": "Transport Service",
         "cancel": "Cancel",
         "save": "Save",
@@ -1121,7 +1231,7 @@
         "moveInDate": "Move In Date",
         "moveStartTime": "Move Start Time",
         "roundTripCostCHF": "Round Trip Cost CHF",
-        "selectedTariffDescription":"Destination",
+        "selectedTariffDescription":"Tariff Description",
         "numberOfStaff": "Number of Staff",
         "numberOfDeliveryTrucks": "Number of Delivery Trucks",
         "hourlyRateCHF": "Hourly Rate CHF",
@@ -1323,6 +1433,16 @@
   },
 
   "companyDashboard": {
+    "servicess":{
+      "move":"Move",
+      "packing":"Packing",
+      "unpacking":"Unpacking",
+      "disposal":"Disposal",
+      "storage":"Storage",
+      "transport":"Transport",
+      "cleaning":"Cleaning",
+      "other":"Other"
+    },
     "title": "Executive Dashboard",
     "subtitle": "An overview of your business system",
     "today": "Today",
@@ -1391,7 +1511,7 @@
     },
     
     "tasksChart": {
-      "title": "Pending and Overdue Tasks",
+      "title": "Tasks Status",
       "acceptedOffers": "Accepted Offers ",
       "pendingOffers": "Pending Offers ",
       "newUsers": "New Users ",
@@ -1436,5 +1556,6 @@
     "Other / Miscellaneous": "Other / Miscellaneous",
     "Select Category": "Select Category"
   }
+  
  
 }

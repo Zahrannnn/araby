@@ -369,10 +369,10 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
       console.log('Updating status:', {
         offerId,
         newStatus: statusValue,
-        endpoint: `https://crmproject.runasp.net/api/Offers/${offerId}/status`
+        endpoint: `https://nedx.premiumasp.net/api/Offers/${offerId}/status`
       })
 
-      const response = await fetch(`https://crmproject.runasp.net/api/Offers/${offerId}/status`, {
+      const response = await fetch(`https://nedx.premiumasp.net/api/Offers/${offerId}/status`, {
         method: 'PATCH',
         headers: {
           'Accept': '*/*',
@@ -643,8 +643,8 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
       // Make direct API call with explicit headers
       try {
         const url = offerId 
-          ? `https://crmproject.runasp.net/api/Offers/${offerId}` 
-          : 'https://crmproject.runasp.net/api/Offers';
+          ? `https://nedx.premiumasp.net/api/Offers/${offerId}` 
+          : 'https://nedx.premiumasp.net/api/Offers';
         
         const response = await fetch(url, {
           method: offerId ? 'PUT' : 'POST',
@@ -708,8 +708,8 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
       return new Promise<void>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         const url = offerId 
-          ? `https://crmproject.runasp.net/api/Offers/${offerId}` 
-          : 'https://crmproject.runasp.net/api/Offers';
+          ? `https://nedx.premiumasp.net/api/Offers/${offerId}` 
+          : 'https://nedx.premiumasp.net/api/Offers';
         
         xhr.open(offerId ? 'PUT' : 'POST', url);
         xhr.setRequestHeader('Content-Type', 'application/json');
@@ -896,7 +896,7 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
                   )}
                 </div>
                 {customers.length > 0 && (
-                  <div className="absolute z-10 mt-1 w-fit bg-white shadow-lg rounded-md border">
+                  <div className=" z-10 mt-1 w-fit bg-white shadow-lg rounded-md border">
                     <ul className="py-1 max-h-60 overflow-auto">
                       {customers.map((customer) => (
                         <li
