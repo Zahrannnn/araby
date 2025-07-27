@@ -617,7 +617,7 @@ export function UpdateCompanyModal({ isOpen, onClose, onSuccess, companyId }: Up
                         disabled={isSubmitting}
                       />
                     </div>
-                    <div>
+                <div>
                       <Label htmlFor="business-insurance" className="text-sm font-medium text-gray-700 mb-2 block">
                         {t('businessInsuranceLabel') || "Business Insurance Policy No."}
                       </Label>

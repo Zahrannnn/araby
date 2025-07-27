@@ -210,7 +210,7 @@ export function UpdateCustomerModal({ isOpen, onClose, onSuccess, customer }: Up
         {isLoadingCustomer && (
           <div className="p-6 flex items-center justify-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-500 mr-3"></div>
-            <span className="text-gray-700">{t('loading', 'Loading customer data...')}</span>
+            <span className="text-gray-700">{t('loading') || 'Loading customer data...'}</span>
           </div>
         )}
 
