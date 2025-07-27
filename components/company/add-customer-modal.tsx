@@ -208,7 +208,7 @@ export function AddCustomerModal({ isOpen, onClose, onSuccess }: AddCustomerModa
                   </Label>
                   <Input
                     id="phone-number"
-                    placeholder={t('phoneNumberPlaceholder') || '+49 176 12345678'}
+                    placeholder={"Phone: +41 44 1234567 (Zurich landline) or +41 79 123 45 67 (mobile)"}
                     className={`w-full ${errors.phoneNumber ? 'border-red-500' : ''}`}
                     value={formData.phoneNumber}
                     onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
@@ -240,7 +240,7 @@ export function AddCustomerModal({ isOpen, onClose, onSuccess }: AddCustomerModa
                   </Label>
                   <Input
                     id="address"
-                    placeholder={t('addressPlaceholder') || 'Musterstraße 12'}
+                    placeholder={"Bahnhofstrasse 15"}
                     className={`w-full ${errors.address ? 'border-red-500' : ''}`}
                     value={formData.address}
                     onChange={(e) => handleInputChange('address', e.target.value)}
@@ -305,7 +305,7 @@ export function AddCustomerModal({ isOpen, onClose, onSuccess }: AddCustomerModa
                   </Label>
                   <Input
                     id="country"
-                    placeholder={t('countryPlaceholder') || 'Deutschland'}
+                    placeholder={"Switzerland"}
                     className={`w-full ${errors.country ? 'border-red-500' : ''}`}
                     value={formData.country}
                     onChange={(e) => handleInputChange('country', e.target.value)}

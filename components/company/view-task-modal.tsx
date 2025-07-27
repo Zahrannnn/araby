@@ -292,7 +292,7 @@ export function ViewTaskModal({
                           <Button 
                             size="sm" 
                             variant="outline"
-                            onClick={() => window.open(`https://crmproject.runasp.net${file.fileUrl}`, '_blank')}
+                            onClick={() => window.open(`https://nedx.premiumasp.net${file.fileUrl}`, '_blank')}
                             className="text-blue-600 border-blue-200 hover:bg-blue-50"
                           >
                             View
@@ -323,7 +323,7 @@ export function ViewTaskModal({
                           <Button 
                             size="sm" 
                             variant="outline"
-                            onClick={() => window.open(`https://crmproject.runasp.net${file.fileUrl}`, '_blank')}
+                            onClick={() => window.open(`https://nedx.premiumasp.net${file.fileUrl}`, '_blank')}
                             className="text-green-600 border-green-200 hover:bg-green-50"
                           >
                             View

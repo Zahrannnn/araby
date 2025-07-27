@@ -104,7 +104,7 @@ export function ViewOfferModal({ isOpen, onClose, offerId }: ViewOfferModalProps
     
     setIsDownloadingPDF(true);
     try {
-      const fullPdfUrl = `https://crmproject.runasp.net${offerDetails.pdfUrl}`;
+      const fullPdfUrl = `https://nedx.premiumasp.net${offerDetails.pdfUrl}`;
       
       // Create a temporary link and trigger download
       const link = document.createElement('a');

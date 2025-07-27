@@ -94,7 +94,7 @@ export default function TaskGalleryPage() {
                     <CardContent className="p-0 relative aspect-square">
                       <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
                         <Image
-                          src={`https://crmproject.runasp.net${image.imageUrl}`}
+                          src={`https://nedx.premiumasp.net${image.imageUrl}`}
                           alt={image.title}
                           fill
                           className="object-cover"

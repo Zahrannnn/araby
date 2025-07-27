@@ -30,7 +30,7 @@ export const API_ENDPOINTS = {
 
 // Create axios instance with default config
 export const apiClient = axios.create({
-  baseURL: 'https://crmproject.runasp.net',
+  baseURL: 'https://nedx.premiumasp.net',
   headers: {
     'Content-Type': 'application/json',
   },
