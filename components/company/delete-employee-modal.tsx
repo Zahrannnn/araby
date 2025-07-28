@@ -55,7 +55,7 @@ export function DeleteEmployeeModal({
             onClick={onConfirm}
             disabled={isDeleting}
           >
-            {isDeleting ? t('deleting') : t('delete')}
+            {isDeleting ? "Löschen..." : t('delete')}
           </Button>
         </DialogFooter>
       </DialogContent>
