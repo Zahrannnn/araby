@@ -383,7 +383,7 @@ export function UpdateEmployeeModal({
               disabled={updateEmployee.isPending}
               className="bg-red-500 hover:bg-red-600 text-white"
             >
-              {updateEmployee.isPending ? t('actions.updating') : t('actions.update')}
+              {updateEmployee.isPending ? "Aktualisieren..." : "Aktualisieren"}
             </Button>
           </div>
         </div>
