@@ -266,7 +266,7 @@ export function AddEmployeeModal({ isOpen, onClose, onSuccess }: AddEmployeeModa
               disabled={addEmployee.isPending}
               className="bg-red-500 hover:bg-red-600 text-white"
             >
-              {addEmployee.isPending ? t('actions.saving') : t('actions.save')}
+              {addEmployee.isPending ? "Speichern..." : "Speichern"}
             </Button>
             <Button
               variant="outline"
