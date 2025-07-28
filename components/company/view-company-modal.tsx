@@ -516,7 +516,7 @@ const ViewCompanyPage: React.FC = () => {
                     {isStripeLoading ? (
                       <div className="py-16 text-center text-muted-foreground text-lg flex flex-col items-center gap-3">
                         <div className="animate-spin w-8 h-8 border-4 border-primary/30 border-t-primary rounded-full"></div>
-                        <span>{t('loading')}</span>
+                        <span>{t('loading') || 'Laden...'}</span>
                       </div>
                     ) : stripeError ? (
                       <div className="py-16 text-center text-destructive text-lg flex flex-col items-center gap-3">
