@@ -85,7 +85,7 @@ export function ViewEmployeeModal({
         <div className="bg-white rounded-lg max-w-md w-full p-6">
           <div className="flex items-center justify-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-500 mr-3"></div>
-            <span className="text-gray-700">{t('loading')}</span>
+            <span className="text-gray-700">{t('loading') || 'Laden...'}</span>
           </div>
         </div>
       </div>
