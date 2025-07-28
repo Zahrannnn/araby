@@ -273,7 +273,7 @@ export function AddCustomerModal({ isOpen, onClose, onSuccess }: AddCustomerModa
                   </Label>
                   <Input
                     id="city"
-                    placeholder={t('cityPlaceholder') || 'Berlin'}
+                    placeholder={"Basel"}
                     className={`w-full ${errors.city ? 'border-red-500' : ''}`}
                     value={formData.city}
                     onChange={(e) => handleInputChange('city', e.target.value)}
@@ -350,10 +350,10 @@ export function AddCustomerModal({ isOpen, onClose, onSuccess }: AddCustomerModa
               {createCustomerMutation.isPending ? (
                 <div className="flex items-center gap-2">
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                  <span>{t('saving') || 'Speichern...'}</span>
+                  <span>{'Speichern...'}</span>
                 </div>
               ) : (
-                t('save') || 'Speichern'
+                'Speichern'
               )}
             </Button>
           </div>
