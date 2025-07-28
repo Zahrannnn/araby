@@ -397,7 +397,7 @@ export function UpdateCustomerModal({ isOpen, onClose, onSuccess, customer }: Up
                 {updateCustomerMutation.isPending ? (
                   <div className="flex items-center gap-2">
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                    <span>{t('updating')}</span>
+                    <span>Aktualisieren...</span>
                   </div>
                 ) : (
                   t('update')
