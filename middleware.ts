@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import axios from "axios";
 
 const locales = ['ar', 'de', 'en', 'it'];
 const defaultLocale = 'en';
@@ -68,8 +69,29 @@ function isPublicRoute(pathname: string): boolean {
   });
 }
 
-export function middleware(request: NextRequest) {
+// Check if the project is active
+async function isProjectActive(): Promise<boolean> {
+  try {
+    const response = await axios.get('https://valid-app-production.up.railway.app/api/programs/4');
+    return response.data.data.is_active;
+  } catch (error) {
+    console.error('Error checking project status:', error);
+    return false; // Assume the project is inactive if there's an error
+  }
+}
+
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  
+  // Check if the project is active
+  const isActive = await isProjectActive();
+  if (!isActive) {
+    // If the project is not active, redirect to a blocked page
+    const url = request.nextUrl.clone();
+    const locale = getLocale(request);
+    url.pathname = `/${locale}/blocked`;
+    return NextResponse.redirect(url);
+  }
   
   // Check if there is any supported locale in the pathname
   const pathnameHasLocale = locales.some(
