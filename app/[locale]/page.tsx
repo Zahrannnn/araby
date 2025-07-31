@@ -232,6 +232,10 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-12">
         <div className="container mx-auto px-4">
+          <div className="flex justify-center items-center gap-4">
+            <Link href="/privacy">Privacy Policy</Link>
+            <Link href="/terms">Terms of Service</Link>
+          </div>
           <div className="border-t border-gray-800 mt-12 pt-8 text-center">
             <p>{t('footer.copyright')}</p>
           </div>

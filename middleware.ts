@@ -17,7 +17,9 @@ const publicRoutes = [
   '/offer/accepted',
   '/offer/rejected',
   '/success',
-  "/failure"
+  "/failure",
+  "/privacy",
+  "/terms"
 ];
 
 // Get the preferred locale, similar to the above or using a library
