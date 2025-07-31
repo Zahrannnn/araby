@@ -39,13 +39,13 @@ export function Providers({ children, messages, locale = 'en' }: ProvidersProps)
     <HydrationBoundary>
       <NextIntlClientProvider locale={locale} messages={messages}>
         <QueryClientProvider client={queryClient}>
-          <ProjectStatusProvider>
+          {/* <ProjectStatusProvider> */}
             {children}
             {/* Only show React Query devtools in development */}
             {process.env.NODE_ENV === 'development' && (
               <ReactQueryDevtools initialIsOpen={false} />
             )}
-          </ProjectStatusProvider>
+          {/* </ProjectStatusProvider> */}
         </QueryClientProvider>
       </NextIntlClientProvider>
     </HydrationBoundary>

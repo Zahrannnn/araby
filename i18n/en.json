@@ -78,6 +78,53 @@
   "reports": "Reports",
   "notifications": "Notifications",
 
+  "legal": {
+    "privacyPolicy": {
+      "title": "Privacy Policy",
+      "lastUpdated": "Last Updated",
+      "introduction": "Introduction",
+      "introText": "Welcome to NEDX CRM. This Privacy Policy explains how NEDX (\"we,\" \"us,\" or \"our\") collects, uses, and discloses information about you when you use our SaaS platform and services. We are committed to protecting your privacy and handling your data in an open and transparent manner.",
+      "informationWeCollect": "Information We Collect",
+      "informationWeCollectText": "We collect information you provide directly to us, information from third parties, and information we collect automatically.",
+      "companyAccountInfo": "Company & Account Information",
+      "companyAccountInfoText": "When a Company Manager registers, we collect their name, email, password, and company details (name, address, contact info, etc.).",
+      "userInfo": "User Information",
+      "userInfoText": "Managers may add employees, providing their name and email.",
+      "customerOfferData": "Customer & Offer Data",
+      "customerOfferDataText": "You and your users will enter information about your customers, offers, tasks, and expenses. This data belongs to you, and we process it on your behalf.",
+      "googleUserData": "Google User Data",
+      "googleUserDataText": "When you connect your Google Account, we securely store a Refresh Token provided by Google's OAuth 2.0 flow. We do not see or store your Google password.",
+      "stripeData": "Stripe Data",
+      "stripeDataText": "When you connect your Stripe account, we securely store your Stripe Account ID (e.g., acct_...).",
+      "howWeUseInfo": "How We Use Your Information",
+      "googleCalendarUsage": "Google Calendar API Usage (Limited Use)",
+      "googleCalendarUsageText": "Our application's use and transfer of information received from Google APIs will adhere to the Google API Services User Data Policy, including the Limited Use requirements. We use the .../auth/calendar.events scope for the sole purpose of creating, reading, and deleting calendar events related to approved offers in your CRM. This information is not used for any other purpose.",
+      "stripeIntegrationUsage": "Stripe Integration Usage",
+      "stripeIntegrationUsageText": "We use your Stripe Account ID to create secure Stripe Checkout payment links for offers you send to your customers. All payments made through these links go directly from your customer to your Stripe account.",
+      "dataSecurity": "Data Security",
+      "dataSecurityText": "We implement security measures designed to protect your information. This includes using SSL/TLS encryption for data in transit and encrypting sensitive data at rest, such as your Google Refresh Token.",
+      "contactUs": "Contact Us",
+      "contactUsText": "If you have any questions about this Privacy Policy, please contact us at: privacy@ned-x.ch"
+    },
+    "termsOfService": {
+      "title": "Terms of Service",
+      "lastUpdated": "Last Updated",
+      "introText": "Please read these Terms of Service (\"Terms\") carefully before using the NEDX CRM platform. Your access to and use of the Service is conditioned on your acceptance of and compliance with these Terms.",
+      "accounts": "1. Accounts",
+      "accountsText": "When you create an account with us, you must provide information that is accurate and complete. You are responsible for safeguarding your password and for any activities under your account. The Company Manager is responsible for all users (Employees) added to their company account.",
+      "subscriptions": "2. Subscriptions",
+      "subscriptionsText": "Our Service is billed on a subscription basis. You will be billed in advance on a recurring basis (\"Billing Cycle\"). Your Subscription will automatically renew unless you cancel it.",
+      "thirdPartyIntegrations": "3. Third-Party Integrations (Stripe, Google Calendar)",
+      "thirdPartyIntegrationsText": "Our Service integrates with third-party services. Your use of these integrations is subject to the respective terms of service and privacy policies of those providers. We are not responsible for the data practices of third-party services.",
+      "limitationOfLiability": "4. Limitation of Liability",
+      "limitationOfLiabilityText": "In no event shall NEDX be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, or other intangible losses, resulting from your use of the Service.",
+      "governingLaw": "5. Governing Law",
+      "governingLawText": "These Terms shall be governed in accordance with the laws of Switzerland, without regard to its conflict of law provisions.",
+      "contactUs": "Contact Us",
+      "contactUsText": "If you have any questions about these Terms, please contact us at: support@ned-x.ch"
+    }
+  },
+
   "roles": {
     "superAdmin": "Super Administrator",
     "companyManager": "Company Manager",

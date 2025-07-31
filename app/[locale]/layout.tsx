@@ -14,13 +14,11 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
-  const { locale } = await params;
-  const dict = await getDictionary(locale as 'en' | 'de' | 'ar');
-  
+export async function generateMetadata() {
+  // Use fixed metadata values to avoid issues with missing translations
   return {
-    title: dict.home.title,
-    description: dict.home.subtitle,
+    title: "NEDX CRM",
+    description: "NEDX CRM Platform",
   };
 }
 
@@ -44,7 +42,7 @@ export default async function LocaleLayout({
 
   const direction = getDirection(locale as Locale);
   // Load messages for next-intl client components
-  const messages = await getDictionary(locale as 'en' | 'de' | 'ar');
+  const messages = await getDictionary(locale as 'en' | 'de' | 'ar' | 'it');
 
   return (
     <html lang={locale} dir={direction}>
