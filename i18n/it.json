@@ -1184,6 +1184,24 @@
         "enterNotesInOffer": "Inserisci note che appariranno nell'offerta...",
         "notesNotInOffer": "Note Interne",
         "enterNotesNotInOffer": "Inserisci note interne (non visibili nell'offerta)...",
+        "additionalInformation": "Informazioni Aggiuntive",
+        "insurance": "Assicurazione",
+        "enterInsurance": "Inserisci informazioni sull'assicurazione...",
+        "includedInPrice": "Incluso nel Prezzo",
+        "enterIncludedInPrice": "Inserisci cosa è incluso nel prezzo...",
+        "costAndTimeCalculation": "Calcolo Costi e Tempi",
+        "enterCostAndTimeCalculation": "Inserisci dettagli del calcolo costi e tempi...",
+        "defaultValues": {
+          "insurance": "Le assicurazioni di trasporto e responsabilità civile sono incluse nel prezzo. In caso di danni ai vostri beni, l'azienda è responsabile secondo il Codice delle Obbligazioni Svizzero. La base di qualsiasi pagamento è il valore attuale.\nAssicurazione trasporto: Polizza N. XXXXXXX (Copertura CHF 100.000.-)\nAssicurazione responsabilità civile: Polizza N. XXXXXXXX",
+          "includedInPrice": "Spese, assicurazione, chilometraggio, coperte di cotone, pellicola estensibile, coprimaterassi, tutti i materiali ausiliari come strumenti, coperte da imballaggio, carrelli ecc., pernottamenti (se necessario), costi autostradali incl. carburante",
+          "costAndTimeCalculation": "Desideriamo sottolineare che fattureremo i costi di trasporto e materiali secondo il tempo effettivo e la spesa del materiale in conformità al rapporto di lavoro. Il tempo minimo di fatturazione è di 3 ore e la pausa pranzo non viene addebitata"
+        },
+        "validation": {
+          "customerRequired": "Seleziona un cliente",
+          "locationRequired": "È richiesta almeno una località",
+          "locationFieldsRequired": "Compila tutti i campi della località (via, CAP, città, paese)",
+          "serviceRequired": "Seleziona almeno un servizio"
+        },
         "cancel": "Annulla",
         "saveChanges": "Salva Modifiche",
         "createOffer": "Crea Offerta"

@@ -1231,6 +1231,24 @@
         "enterNotesInOffer": "Enter notes that will appear in the offer...",
         "notesNotInOffer": "Internal Notes",
         "enterNotesNotInOffer": "Enter internal notes (not visible in offer)...",
+        "additionalInformation": "Additional Information",
+        "insurance": "Insurance",
+        "enterInsurance": "Enter insurance information...",
+        "includedInPrice": "Included in Price",
+        "enterIncludedInPrice": "Enter what's included in the price...",
+        "costAndTimeCalculation": "Cost and Time Calculation",
+        "enterCostAndTimeCalculation": "Enter cost and time calculation details...",
+        "defaultValues": {
+          "insurance": "Transport and public liability insurance are included in the price. In the event of damage to your goods, the company is liable in accordance with Swiss Code of Obligations. The basis of any payment is the current value.\nTransport insurance: Policy No. XXXXXXX (Coverage CHF 100,000.-)\nPublic liability insurance: Policy No. XXXXXXXX",
+          "includedInPrice": "Expenses, insurance, mileage, cotton blankets, stretch wrap, mattress covers, all auxiliary materials such as tools, packing blankets, dollies etc., overnight stays (if necessary), motorway costs incl. fuel",
+          "costAndTimeCalculation": "We would like to point out that we will invoice the transport and material costs according to the effective time and material expenditure in accordance with the work report. The minimum billing time is 3 hours and the lunch break is not charged"
+        },
+        "validation": {
+          "customerRequired": "Please select a customer",
+          "locationRequired": "At least one location is required",
+          "locationFieldsRequired": "Please fill in all location fields (street, ZIP code, city, country)",
+          "serviceRequired": "Please select at least one service"
+        },
         "cancel": "Cancel",
         "saveChanges": "Save Changes",
         "createOffer": "Create Offer"

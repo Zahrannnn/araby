@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useTranslations } from 'next-intl'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -177,36 +177,9 @@ interface OfferData {
   storageService?: StorageService | null;
   transportService?: TransportService | null;
   status?: OfferStatus; // Added status field
-}
-
-const initialOfferData: OfferData = {
-  customerId: 0,
-  notesInOffer: '',
-  notesNotInOffer: '',
-  costsIncludeVAT: true,
-  costsExcludeVAT: false,
-  vatFree: false,
-  emailToCustomer: true,
-  languageCode: 'en', // Set default to English
-  locations: [{
-    locationType: '',
-    addressIndex: 1,
-    street: '',
-    zipCode: '',
-    city: '',
-    countryCode: '',
-    buildingType: '',
-    floor: '',
-    hasLift: false
-  }],
-  packingMaterials: [],
-  moveService: null,
-  cleaningService: null,
-  packingService: null,
-  unpackingService: null,
-  disposalService: null,
-  storageService: null,
-  transportService: null
+  insurance: string;
+  includedInPrice: string;
+  costAndTimeCalculation: string;
 }
 
 interface EditOfferModalProps {
@@ -225,11 +198,91 @@ const LANGUAGE_OPTIONS = [
 
 export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps) {
   const t = useTranslations('company.offers.editModal')
+  
+
+  
+  const getInitialOfferData = useCallback((): OfferData => {
+    try {
+      const translations = {
+        insurance: t('defaultValues.insurance'),
+        includedInPrice: t('defaultValues.includedInPrice'),
+        costAndTimeCalculation: t('defaultValues.costAndTimeCalculation')
+      }
+      return {
+        customerId: 0,
+        notesInOffer: '',
+        notesNotInOffer: '',
+        costsIncludeVAT: true,
+        costsExcludeVAT: false,
+        vatFree: false,
+        emailToCustomer: true,
+        languageCode: 'en', // Set default to English
+        locations: [{
+          locationType: '',
+          addressIndex: 1,
+          street: '',
+          zipCode: '',
+          city: '',
+          countryCode: '',
+          buildingType: '',
+          floor: '',
+          hasLift: false
+        }],
+        packingMaterials: [],
+        moveService: null,
+        cleaningService: null,
+        packingService: null,
+        unpackingService: null,
+        disposalService: null,
+        storageService: null,
+        transportService: null,
+        insurance: translations.insurance || '',
+        includedInPrice: translations.includedInPrice || '',
+        costAndTimeCalculation: translations.costAndTimeCalculation || ''
+      }
+    } catch (error) {
+      console.error('Error creating initial offer data:', error)
+      // Fallback to empty strings if translations fail
+      return {
+        customerId: 0,
+        notesInOffer: '',
+        notesNotInOffer: '',
+        costsIncludeVAT: true,
+        costsExcludeVAT: false,
+        vatFree: false,
+        emailToCustomer: true,
+        languageCode: 'en',
+        locations: [{
+          locationType: '',
+          addressIndex: 1,
+          street: '',
+          zipCode: '',
+          city: '',
+          countryCode: '',
+          buildingType: '',
+          floor: '',
+          hasLift: false
+        }],
+        packingMaterials: [],
+        moveService: null,
+        cleaningService: null,
+        packingService: null,
+        unpackingService: null,
+        disposalService: null,
+        storageService: null,
+        transportService: null,
+        insurance: '',
+        includedInPrice: '',
+        costAndTimeCalculation: ''
+      }
+    }
+  }, [t])
+  
   const [selectedService, setSelectedService] = useState<ServiceType['type'] | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [offerData, setOfferData] = useState<OfferData>(initialOfferData)
+  const [offerData, setOfferData] = useState<OfferData>(getInitialOfferData())
   const [isPackingMaterialModalOpen, setIsPackingMaterialModalOpen] = useState(false)
   const router = useRouter()
 
@@ -243,7 +296,7 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
   useEffect(() => {
     async function fetchOfferData() {
       if (!offerId) {
-        setOfferData(initialOfferData)
+        setOfferData(getInitialOfferData())
         return
       }
 
@@ -251,7 +304,6 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
         setIsLoading(true)
         setError(null)
         const response = await apiClient.get(`/Offers/${offerId}`)
-        console.log('Fetched offer data:', response.data)
 
         // Extract services from the response data
         const {
@@ -277,23 +329,48 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
         }
 
         // Set the offer data with properly structured services
+        const initialData = getInitialOfferData()
         setOfferData({
           ...restData,
           ...services,
           // Ensure required fields have default values if missing
-          locations: restData.locations || initialOfferData.locations,
-          packingMaterials: restData.packingMaterials || initialOfferData.packingMaterials,
-          languageCode: restData.languageCode || initialOfferData.languageCode,
-          costsIncludeVAT: restData.costsIncludeVAT ?? initialOfferData.costsIncludeVAT,
-          costsExcludeVAT: restData.costsExcludeVAT ?? initialOfferData.costsExcludeVAT,
-          vatFree: restData.vatFree ?? initialOfferData.vatFree,
-          emailToCustomer: restData.emailToCustomer ?? initialOfferData.emailToCustomer,
+          locations: restData.locations || initialData.locations,
+          packingMaterials: restData.packingMaterials || initialData.packingMaterials,
+          languageCode: restData.languageCode || initialData.languageCode,
+          costsIncludeVAT: restData.costsIncludeVAT ?? initialData.costsIncludeVAT,
+          costsExcludeVAT: restData.costsExcludeVAT ?? initialData.costsExcludeVAT,
+          vatFree: restData.vatFree ?? initialData.vatFree,
+          emailToCustomer: restData.emailToCustomer ?? initialData.emailToCustomer,
+          insurance: restData.insurance || initialData.insurance,
+          includedInPrice: restData.includedInPrice || initialData.includedInPrice,
+          costAndTimeCalculation: restData.costAndTimeCalculation || initialData.costAndTimeCalculation,
         })
       } catch (err) {
         console.error('Error fetching offer:', err)
+        
+        // More detailed error logging
+        if (err instanceof Error) {
+          console.error('Error details:', {
+            message: err.message,
+            stack: err.stack,
+            name: err.name
+          })
+        }
+        
+        // Check if it's an axios error
+        if (err && typeof err === 'object' && 'response' in err) {
+          const axiosError = err as { response?: { status?: number; statusText?: string; data?: unknown; headers?: unknown } }
+          console.error('Axios error details:', {
+            status: axiosError.response?.status,
+            statusText: axiosError.response?.statusText,
+            data: axiosError.response?.data,
+            headers: axiosError.response?.headers
+          })
+        }
+        
         setError(
           err instanceof Error 
-            ? err.message 
+            ? `${err.message} (Status: ${(err as { response?: { status?: number } }).response?.status || 'unknown'})` 
             : 'Failed to load offer data'
         )
       } finally {
@@ -304,7 +381,7 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
     if (isOpen) {
       fetchOfferData()
     }
-  }, [isOpen, offerId])
+  }, [isOpen, offerId, getInitialOfferData])
 
   // Search customers when input changes
   useEffect(() => {
@@ -544,12 +621,92 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
       // Create a copy of the data to modify before sending
       const dataToSend = JSON.parse(JSON.stringify(offerData))
       
+            // For existing offers, create a clean payload with only updatable fields
+      if (offerId) {
+        const cleanPayload = {
+          customerId: dataToSend.customerId,
+          notesInOffer: dataToSend.notesInOffer || '',
+          notesNotInOffer: dataToSend.notesNotInOffer || '',
+          insurance: dataToSend.insurance || '',
+          includedInPrice: dataToSend.includedInPrice || '',
+          costAndTimeCalculation: dataToSend.costAndTimeCalculation || '',
+          costsIncludeVAT: dataToSend.costsIncludeVAT,
+          costsExcludeVAT: dataToSend.costsExcludeVAT,
+          vatFree: dataToSend.vatFree,
+          emailToCustomer: dataToSend.emailToCustomer,
+          languageCode: dataToSend.languageCode,
+          locations: dataToSend.locations,
+          packingMaterials: dataToSend.packingMaterials,
+          moveService: dataToSend.moveService,
+          cleaningService: dataToSend.cleaningService,
+          packingService: dataToSend.packingService,
+          unpackingService: dataToSend.unpackingService,
+          disposalService: dataToSend.disposalService,
+          storageService: dataToSend.storageService,
+          transportService: dataToSend.transportService
+        }
+        
+        // Replace the dataToSend with clean payload
+        Object.keys(dataToSend).forEach(key => delete dataToSend[key])
+        Object.assign(dataToSend, cleanPayload)
+      } else {
+        // For new offers, ensure the new fields have proper string values
+        dataToSend.insurance = dataToSend.insurance || ''
+        dataToSend.includedInPrice = dataToSend.includedInPrice || ''
+        dataToSend.costAndTimeCalculation = dataToSend.costAndTimeCalculation || ''
+      }
+      
+      console.log('Final payload being sent:', JSON.stringify(dataToSend, null, 2))
+      
       // Ensure customerId is a valid number
-      if (dataToSend.customerId === 0) {
+      if (!dataToSend.customerId || dataToSend.customerId === 0) {
         setError('A valid customer must be selected')
         setIsSubmitting(false)
         return
       }
+      
+      // Ensure customerId is actually a number
+      dataToSend.customerId = Number(dataToSend.customerId)
+      
+      // Validate locations
+      if (!dataToSend.locations || !Array.isArray(dataToSend.locations) || dataToSend.locations.length === 0) {
+        setError('At least one location is required')
+        setIsSubmitting(false)
+        return
+      }
+      
+      // Fix location data types
+      dataToSend.locations = dataToSend.locations.map((location: Location) => ({
+        ...location,
+        addressIndex: Number(location.addressIndex) || 1,
+        hasLift: Boolean(location.hasLift)
+      }))
+      
+      // Ensure packingMaterials is an array
+      if (!Array.isArray(dataToSend.packingMaterials)) {
+        dataToSend.packingMaterials = []
+      }
+      
+      // Clean up service objects - remove any that are null or have incomplete data
+      const serviceKeys = ['moveService', 'cleaningService', 'packingService', 'unpackingService', 'disposalService', 'storageService', 'transportService']
+      serviceKeys.forEach(serviceKey => {
+        if (dataToSend[serviceKey] && typeof dataToSend[serviceKey] === 'object') {
+          // If service exists but has missing required fields, remove it
+          const service = dataToSend[serviceKey]
+          
+          // Check if service has at least some meaningful data
+          const hasData = Object.values(service).some(value => 
+            value !== null && value !== undefined && value !== '' && value !== 0
+          )
+          
+          if (!hasData) {
+            dataToSend[serviceKey] = null
+            console.log(`Removed empty ${serviceKey}`)
+          }
+        }
+      })
+      
+
       
       // Process the data to match the exact format of the working request
       const processServiceData = (service: Record<string, unknown>) => {
@@ -640,34 +797,21 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
         throw new Error('No authentication token found');
       }
 
-      // Make direct API call with explicit headers
+      // Try using apiClient first, which should handle CORS better
       try {
-        const url = offerId 
-          ? `https://nedx.premiumasp.net/api/Offers/${offerId}` 
-          : 'https://nedx.premiumasp.net/api/Offers';
+        console.log('Using apiClient for request');
         
-        const response = await fetch(url, {
-          method: offerId ? 'PUT' : 'POST',
-          headers: {
-            'Accept': '*/*',
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify(dataToSend)
-        });
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error('API Error Response:', {
-            status: response.status,
-            statusText: response.statusText,
-            body: errorText
-          });
-          throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+        let response;
+        if (offerId) {
+          // PUT request for existing offer
+          response = await apiClient.put(`/Offers/${offerId}`, dataToSend);
+        } else {
+          // POST request for new offer
+          response = await apiClient.post('/Offers', dataToSend);
         }
-        
-        // Success - refresh and close
-        console.log('API call successful');
+
+        // Success with apiClient (axios) - status is in response.status
+        console.log('API call successful:', response.status);
         router.refresh();
         onClose();
       } catch (apiError) {
@@ -1266,6 +1410,46 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
                 <label htmlFor="vatFree" className="text-sm font-medium text-gray-700">
                   {t('vatFree')}
                 </label>
+              </div>
+            </div>
+          </section>
+
+          {/* Additional Information */}
+          <section>
+            <h3 className="text-lg font-medium text-gray-900 mb-4">{t('additionalInformation')}</h3>
+            <div className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('insurance')}
+                </label>
+                <Textarea 
+                  value={offerData.insurance}
+                  onChange={(e) => handleInputChange('insurance', e.target.value)}
+                  placeholder={t('enterInsurance')}
+                  className="min-h-[120px]"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('includedInPrice')}
+                </label>
+                <Textarea 
+                  value={offerData.includedInPrice}
+                  onChange={(e) => handleInputChange('includedInPrice', e.target.value)}
+                  placeholder={t('enterIncludedInPrice')}
+                  className="min-h-[100px]"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('costAndTimeCalculation')}
+                </label>
+                <Textarea 
+                  value={offerData.costAndTimeCalculation}
+                  onChange={(e) => handleInputChange('costAndTimeCalculation', e.target.value)}
+                  placeholder={t('enterCostAndTimeCalculation')}
+                  className="min-h-[100px]"
+                />
               </div>
             </div>
           </section>

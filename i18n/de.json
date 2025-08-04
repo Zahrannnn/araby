@@ -1103,8 +1103,8 @@
           "save":"Speichern",
           "noMaterialsYet":"Noch keine Verpackungsmaterialien hinzugefügt. Klicken Sie auf 'Material hinzufügen', um zu beginnen."
         },
-      "editModal": {
-        "languageCode":"Sprachcode",
+              "editModal": {
+          "languageCode":"Sprachcode",
         "searchCustomer":"Kunden suchen",
         "emailNotificationAlert":"Nach der Aktualisierung wird das Angebot dem Kunden per E-Mail zugesandt.",
         "street":"Strasse",
@@ -1183,9 +1183,27 @@
         "enterNotesInOffer": "Notizen eingeben, die im Angebot erscheinen sollen...",
         "notesNotInOffer": "Interne Notizen",
         "enterNotesNotInOffer": "Interne Notizen eingeben (nicht im Angebot sichtbar)...",
+        "additionalInformation": "Zusätzliche Informationen",
+        "insurance": "Versicherung",
+        "enterInsurance": "Versicherungsinformationen eingeben...",
+        "includedInPrice": "Im Preis enthalten",
+        "enterIncludedInPrice": "Eingeben, was im Preis enthalten ist...",
+        "costAndTimeCalculation": "Kosten- und Zeitberechnung",
+        "enterCostAndTimeCalculation": "Details zur Kosten- und Zeitberechnung eingeben...",
+        "defaultValues": {
+          "insurance": "Transport- und Haftpflichtversicherung sind im Preis enthalten. Im Falle von Schäden an Ihren Gütern haftet das Unternehmen gemäß dem Schweizerischen Obligationenrecht. Grundlage jeder Zahlung ist der aktuelle Wert.\nTransportversicherung: Police Nr. XXXXXXX (Deckung CHF 100.000.-)\nHaftpflichtversicherung: Police Nr. XXXXXXXX",
+          "includedInPrice": "Spesen, Versicherung, Kilometerkosten, Baumwolldecken, Stretchfolie, Matratzenüberzüge, alle Hilfsmaterialien wie Werkzeuge, Packdecken, Rollwagen etc., Übernachtungen (falls erforderlich), Autobahnkosten inkl. Treibstoff",
+          "costAndTimeCalculation": "Wir weisen darauf hin, dass wir die Transport- und Materialkosten nach dem tatsächlichen Zeit- und Materialaufwand gemäß Arbeitsrapport verrechnen. Die Mindestverrechnungszeit beträgt 3 Stunden und die Mittagspause wird nicht verrechnet"
+        },
         "cancel": "Abbrechen",
         "saveChanges": "Änderungen speichern",
-        "createOffer": "Angebot erstellen"
+        "createOffer": "Angebot erstellen",
+        "validation": {
+          "customerRequired": "Bitte wählen Sie einen Kunden aus",
+          "locationRequired": "Mindestens ein Standort ist erforderlich",
+          "locationFieldsRequired": "Bitte füllen Sie alle Standortfelder aus (Straße, PLZ, Stadt, Land)",
+          "serviceRequired": "Bitte wählen Sie mindestens eine Dienstleistung aus"
+        }
       },
       "table": {
         "offerNumber": "Angebotsnummer",
