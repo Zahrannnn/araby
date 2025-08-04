@@ -936,6 +936,7 @@ export interface DashboardData {
     serviceType: string;
     revenue: number;
   }>;
+  companyLogoUrl: string;
   importantTasks: Array<{
     id: string;
     title: string;

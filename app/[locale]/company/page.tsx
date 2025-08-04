@@ -15,6 +15,7 @@ import {
 } from 'chart.js'
 import { Bar, Doughnut } from 'react-chartjs-2'
 import { useDashboard } from '@/hooks/useDashboard'
+import Image from 'next/image'
 
 ChartJS.register(
   CategoryScale,
@@ -218,7 +219,12 @@ const Page = () => {
       <div className='mb-8'>
         <div className='flex justify-between items-center'>
           <div>
-            <h1 className='text-2xl font-bold text-gray-900'>{t('title')}</h1>
+           <div className='flex items-center gap-2'>
+            <div className='w-12 h-12 bg-slate-200 rounded-full flex items-center justify-center' >
+           <Image src={`https://nedx.premiumasp.net/${dashboardData.companyLogoUrl}`} alt="logo" width={80} height={80} className='rounded-full' />
+           </div>
+           <h1 className='text-2xl font-bold text-gray-900'>{t('title')}</h1>
+           </div>
             <p className='text-sm text-gray-600'>{t('subtitle')}</p>
           </div>
           <div className='text-right'>
