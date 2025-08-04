@@ -1302,7 +1302,7 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
           </Button>
         </div>
 
-        {/* Service Details Modal */}
+        {/* Service Details Modalش */}
         <ServiceDetailsModal
           isOpen={!!selectedService}
           onClose={() => setSelectedService(null)}
