@@ -7,8 +7,8 @@
  */
 export interface CreateAppointmentPayload {
   customerId: number;
-  appointmentDate: string; // ISO date string
-  appointmentTime: string; // HH:MM format
+  appointmentDate: string; 
+  appointmentTime: string; 
   durationHours: number;
   location: string;
   notes: string;

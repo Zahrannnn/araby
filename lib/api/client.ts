@@ -40,7 +40,7 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error: AxiosError<ApiErrorResponse>) => {
     if (error.response?.status === HTTP_STATUS.UNAUTHORIZED) {
-      // Clear authentication data and redirect to login
+      
       cookieUtils.clearAll();
       if (typeof window !== 'undefined') {
         window.location.href = '/login';

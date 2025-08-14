@@ -1085,6 +1085,7 @@
       "allStatus": "All Statuses",
       "statusAccepted": "Accepted",
       "statusRejected": "Rejected",
+      "statusCanceled": "Cancelled",
       "statusPending": "Pending",
       "statusInProgress": "In Progress",
       "statusCompleted": "Completed",

@@ -26,19 +26,19 @@ export const authApi = {
       const response = await apiClient.post<LoginResponse>(API_ENDPOINTS.LOGIN, credentials);
       
       if (response.data.token) {
-        // Parse user data from token
+        
         const userFromToken = parseUserFromToken(response.data.token);
         
         if (!userFromToken) {
           throw new Error('Invalid token format');
         }
 
-        // Store authentication data
+        
         cookieUtils.setToken(response.data.token, rememberMe);
         cookieUtils.setUserData(userFromToken, rememberMe);
         cookieUtils.setRememberMe(rememberMe);
 
-        // Store permissions in localStorage
+  
         if (typeof window !== 'undefined' && response.data.permissions) {
           localStorage.setItem('userPermissions', JSON.stringify(response.data.permissions));
         }
