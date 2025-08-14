@@ -17,12 +17,10 @@ export function ViewOfferModal({ isOpen, onClose, offerId }: ViewOfferModalProps
   const t = useTranslations('company.customers.viewModal.offerDetails');
   const [isDownloadingPDF, setIsDownloadingPDF] = React.useState(false);
   
-  // Fetch detailed offer data from API
   const { data: offerDetails, isLoading, error } = useOfferDetails(offerId);
 
   if (!isOpen) return null;
 
-  // Loading state
   if (isLoading) {
     return (
       <div className="fixed inset-0 backdrop-blur-sm bg-black/50 flex items-center justify-center z-50 p-4">

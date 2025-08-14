@@ -34,7 +34,7 @@ const ViewCompanyPage: React.FC = () => {
     queryKey: ['company-stripe-keys'],
     queryFn: companyApi.getStripeKeys,
     staleTime: 5 * 60 * 1000,
-    enabled: !!data?.companyInfo?.isSubStripe, // Only fetch if Stripe is enabled
+    enabled: !!data?.companyInfo?.isSubStripe, 
   })
 
   const [publishableKey, setPublishableKey] = useState('')

@@ -46,10 +46,10 @@ export function AddCustomerModal({ isOpen, onClose, onSuccess }: AddCustomerModa
 
   const [errors, setErrors] = useState<FormErrors>({});
 
-  // Use custom hook for adding customer
+
   const createCustomerMutation = useAddCustomer({
     onSuccess: () => {
-      // Reset form
+
       setFormData({
         firstName: "",
         lastName: "",
@@ -63,7 +63,7 @@ export function AddCustomerModal({ isOpen, onClose, onSuccess }: AddCustomerModa
       });
       setErrors({});
       
-      // Call success callback and close modal
+
       onSuccess?.();
       onClose();
     },
@@ -80,7 +80,7 @@ export function AddCustomerModal({ isOpen, onClose, onSuccess }: AddCustomerModa
       [field]: value
     }));
     
-    // Clear error when user starts typing
+
     if (errors[field]) {
       setErrors(prev => ({
         ...prev,
@@ -92,7 +92,7 @@ export function AddCustomerModal({ isOpen, onClose, onSuccess }: AddCustomerModa
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
 
-    // Required field validation
+
     if (!formData.firstName.trim()) newErrors.firstName = t('validation.firstNameRequired') || "Vorname ist erforderlich";
     if (!formData.lastName.trim()) newErrors.lastName = t('validation.lastNameRequired') || "Nachname ist erforderlich";
     if (!formData.email.trim()) newErrors.email = t('validation.emailRequired') || "E-Mail-Adresse ist erforderlich";
@@ -102,7 +102,7 @@ export function AddCustomerModal({ isOpen, onClose, onSuccess }: AddCustomerModa
     if (!formData.zipCode.trim()) newErrors.zipCode = t('validation.zipCodeRequired') || "Postleitzahl ist erforderlich";
     if (!formData.country.trim()) newErrors.country = t('validation.countryRequired') || "Land ist erforderlich";
 
-    // Email validation
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (formData.email && !emailRegex.test(formData.email)) {
       newErrors.email = t('validation.emailInvalid') || "Bitte geben Sie eine gültige E-Mail-Adresse ein";

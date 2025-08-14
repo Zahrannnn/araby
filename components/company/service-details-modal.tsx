@@ -18,12 +18,12 @@ import {
   TrashIcon,
 } from "@heroicons/react/24/outline";
 
-// Service Types
+
 export type AdditionalCost = {
   description: string;
   price: number;
-  hidden?: boolean; // Added hidden property
-};
+    hidden?: boolean; 
+  };
 
 export type MoveService = {
   moveDate: string;
@@ -145,7 +145,7 @@ export function ServiceDetailsModal({
 }: ServiceDetailsModalProps) {
   const t = useTranslations("company.offers.serviceDetails");
 
-  // Function to get translated default costs
+
   const getTranslatedDefaultCosts = () => {
     const defaultMoveCosts: AdditionalCost[] = [
       { description: t("defaultCosts.expensesPerDiem"), price: 20.0 },
@@ -190,15 +190,15 @@ export function ServiceDetailsModal({
     };
   };
 
-  // Function to get initial service data
+
   const getInitialServiceData = (
     type: ServiceType["type"]
   ): ServiceType["data"] => {
-    // Helper function to filter out hidden costs
+
     const filterHiddenCosts = (costs: AdditionalCost[]) =>
       costs.filter((cost) => !cost.hidden);
 
-    // Get translated default costs
+
     const translatedCosts = getTranslatedDefaultCosts();
 
     switch (type) {
@@ -310,16 +310,16 @@ export function ServiceDetailsModal({
 
   useEffect(() => {
     if (serviceType) {
-      // Helper function to filter out hidden costs
+
       const filterHiddenCosts = (costs: AdditionalCost[]) =>
         costs.filter((cost) => !cost.hidden);
 
-      // Get translated default costs
+
       const translatedCosts = getTranslatedDefaultCosts();
 
-      // If initialData is provided, use it; otherwise, use the default data with predefined additional costs
+
       if (initialData && initialData !== null) {
-        // Ensure services have additionalCosts
+
         if (
           serviceType === "move" &&
           (!initialData.additionalCosts ||
@@ -354,7 +354,7 @@ export function ServiceDetailsModal({
           ]);
         }
 
-        // If initialData has additionalCosts, filter out hidden costs
+       
         if (initialData.additionalCosts) {
           initialData.additionalCosts = filterHiddenCosts(
             initialData.additionalCosts
@@ -367,14 +367,14 @@ export function ServiceDetailsModal({
         setFormData(defaultData);
       }
 
-      // Reset the changes flag when modal opens
+     
       setHasChanges(false);
     }
   }, [initialData, serviceType]);
 
   const formatTimeForAPI = (time: string): string => {
     if (!time) return "";
-    // Convert time to TimeSpan format ("HH:mm:ss")
+   
     const [hours, minutes] = time.split(":").map(Number);
     const formattedHours = hours.toString().padStart(2, "0");
     const formattedMinutes = minutes.toString().padStart(2, "0");
@@ -383,7 +383,7 @@ export function ServiceDetailsModal({
 
   const formatTimeForDisplay = (time: string): string => {
     if (!time) return "";
-    // If it's in HH:mm:ss format, return just HH:mm
+   
     if (time.includes(":")) {
       return time.slice(0, 5);
     }
@@ -394,16 +394,16 @@ export function ServiceDetailsModal({
     field: string,
     value: string | number | boolean | null | AdditionalCost[]
   ) => {
-    // Mark that user has made changes
+   
     setHasChanges(true);
 
-    // Special handling for time fields
+   
     if (
       field.toLowerCase().includes("time") &&
       typeof value === "string" &&
       !field.includes("Date")
     ) {
-      // Ensure time value is in correct format
+     
       const formattedTime = formatTimeForAPI(value);
       value = formattedTime || value;
     }
@@ -412,7 +412,7 @@ export function ServiceDetailsModal({
       ...prev,
       [field]: value,
     }));
-    // Clear error for the field when it's being changed
+   
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: "" }));
     }
@@ -422,7 +422,7 @@ export function ServiceDetailsModal({
     const newErrors: Record<string, string> = {};
     let isValid = true;
 
-    // Basic validation for required fields (adapt as needed for each service type)
+   
     if (serviceType === "move" && (formData as MoveService).moveDate === "") {
       newErrors.moveDate = "Move date is required";
       isValid = false;
@@ -540,12 +540,9 @@ export function ServiceDetailsModal({
 
   const handleSubmit = () => {
     if (validateForm()) {
-      // Only mark as configured if the user has made changes or if the service was already configured
       if (hasChanges || initialData) {
-        // Create a clean copy of the form data with hidden costs removed
         const cleanedData = { ...formData };
 
-        // Filter out hidden costs if additionalCosts exists
         if (cleanedData.additionalCosts) {
           cleanedData.additionalCosts = cleanedData.additionalCosts.filter(
             (cost) => !cost.hidden
@@ -554,14 +551,12 @@ export function ServiceDetailsModal({
 
         onSave(cleanedData);
       } else {
-        // If no changes were made and this is a new service, just close without saving
         onClose();
       }
     }
   };
 
   const handleCancel = () => {
-    // If no changes were made and this is a new service, close without saving
     onClose();
   };
 
@@ -724,9 +719,8 @@ export function ServiceDetailsModal({
         </div>
         <div className="space-y-4">
           {(data.additionalCosts || [])
-            .filter((cost) => !cost.hidden) // Filter out hidden costs
+            .filter((cost) => !cost.hidden) 
             .map((cost) => {
-              // Find the actual index in the original array
               const actualIndex = data.additionalCosts.findIndex(
                 (c) => c === cost
               );
@@ -804,34 +798,90 @@ export function ServiceDetailsModal({
             >
               {t("apartmentCleaning_including_acceptance_guarantee")}
             </SelectItem>
-            <SelectItem value="Apartment cleaning including broom clean
-">{t("apartmentCleaning_including_broom_clean")}</SelectItem>
-            <SelectItem value="Single-family home cleaning including acceptance guarantee
-">{t("singleFamilyHomeCleaning_including_acceptance_guarantee")}</SelectItem>
-            <SelectItem value="Single-family home cleaning including broom clean
-">{t("singleFamilyHomeCleaning_including_broom_clean")}</SelectItem>
-            <SelectItem value="RFH cleaning including acceptance guarantee
-">{t("rFHCleaning_including_acceptance_guarantee")}</SelectItem>
-            <SelectItem value="RFH cleaning including sweeping
-">{t("rFHCleaning_including_sweeping")}</SelectItem>
-            <SelectItem value="Construction cleaning
-">{t("constructionCleaning")}</SelectItem>
-            <SelectItem value="Construction cleaning including acceptance guarantee
-">{t("constructionCleaning_including_acceptance_guarantee")}</SelectItem>
-            <SelectItem value="Construction cleaning including broom clean
-">{t("constructionCleaning_including_broom_clean")}</SelectItem>
-            <SelectItem value="Maintenance cleaning
-">{t("maintenanceCleaning")}</SelectItem>
-            <SelectItem value="Commercial cleaning
-">{t("commercialCleaning")}</SelectItem>
-            <SelectItem value="Commercial cleaning including acceptance guarantee
-">{t("commercialCleaning_including_acceptance_guarantee")}</SelectItem>
-            <SelectItem value="Commercial cleaning including broom clean
-">{t("commercialCleaning_including_broom_clean")}</SelectItem>
-            <SelectItem value="Office cleaning 
-">{t("officeCleaning")}</SelectItem>
-            <SelectItem value="Storage room cleaning
-">{t("storageRoomCleaning")}</SelectItem>
+            <SelectItem
+              value="Apartment cleaning including broom clean
+"
+            >
+              {t("apartmentCleaning_including_broom_clean")}
+            </SelectItem>
+            <SelectItem
+              value="Single-family home cleaning including acceptance guarantee
+"
+            >
+              {t("singleFamilyHomeCleaning_including_acceptance_guarantee")}
+            </SelectItem>
+            <SelectItem
+              value="Single-family home cleaning including broom clean
+"
+            >
+              {t("singleFamilyHomeCleaning_including_broom_clean")}
+            </SelectItem>
+            <SelectItem
+              value="RFH cleaning including acceptance guarantee
+"
+            >
+              {t("rFHCleaning_including_acceptance_guarantee")}
+            </SelectItem>
+            <SelectItem
+              value="RFH cleaning including sweeping
+"
+            >
+              {t("rFHCleaning_including_sweeping")}
+            </SelectItem>
+            <SelectItem
+              value="Construction cleaning
+"
+            >
+              {t("constructionCleaning")}
+            </SelectItem>
+            <SelectItem
+              value="Construction cleaning including acceptance guarantee
+"
+            >
+              {t("constructionCleaning_including_acceptance_guarantee")}
+            </SelectItem>
+            <SelectItem
+              value="Construction cleaning including broom clean
+"
+            >
+              {t("constructionCleaning_including_broom_clean")}
+            </SelectItem>
+            <SelectItem
+              value="Maintenance cleaning
+"
+            >
+              {t("maintenanceCleaning")}
+            </SelectItem>
+            <SelectItem
+              value="Commercial cleaning
+"
+            >
+              {t("commercialCleaning")}
+            </SelectItem>
+            <SelectItem
+              value="Commercial cleaning including acceptance guarantee
+"
+            >
+              {t("commercialCleaning_including_acceptance_guarantee")}
+            </SelectItem>
+            <SelectItem
+              value="Commercial cleaning including broom clean
+"
+            >
+              {t("commercialCleaning_including_broom_clean")}
+            </SelectItem>
+            <SelectItem
+              value="Office cleaning 
+"
+            >
+              {t("officeCleaning")}
+            </SelectItem>
+            <SelectItem
+              value="Storage room cleaning
+"
+            >
+              {t("storageRoomCleaning")}
+            </SelectItem>
           </SelectContent>
         </Select>
         {errors.cleaningType && (

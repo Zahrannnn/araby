@@ -10,11 +10,10 @@ export function useCompanyDetails(companyId: number | null) {
   return useQuery({
     queryKey: queryKeys.companyDetails(companyId || 0),
     queryFn: () => superAdminApi.getCompanyDetails(companyId!),
-    enabled: !!companyId, // Only run query if companyId is provided
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
+    enabled: !!companyId, 
+    staleTime: 5 * 60 * 1000, 
+    gcTime: 10 * 60 * 1000, 
     retry: (failureCount, error) => {
-      // Don't retry on 404 errors
       if (error && 'response' in error && typeof error.response === 'object' && error.response) {
         const axiosError = error as any;
         if (axiosError.response?.status === 404) {

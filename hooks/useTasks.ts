@@ -5,18 +5,13 @@ import { useUserRole } from './useUserRole';
 import { apiClient, tasksApi } from '@/lib/api';
 import type { AxiosError } from 'axios';
 
-/**
- * Custom hook for fetching tasks based on user role
- * Uses /Task/all endpoint for both managers and employees
- * Filtering and pagination are handled client-side
- */
+
 export function useTasks() {
   const { user } = useUserRole();
   
-  // Use /Task/all endpoint for all users
+
   const endpoint = '/Task/all';
   
-  // Create stable query key that includes only the endpoint
   const queryKey = ['tasks', endpoint];
 
   return useQuery({
@@ -24,7 +19,7 @@ export function useTasks() {
     queryFn: async () => {
       try {
         const { data } = await apiClient.get(endpoint);
-        // /Task/all returns { tasks, stats }
+
         return { ...data.tasks, stats: data.stats };
       } catch (error) {
         console.error('useTasks fetch error:', error);
@@ -36,8 +31,8 @@ export function useTasks() {
         throw new Error('Network error. Please check your connection.');
       }
     },
-    staleTime: 2 * 60 * 1000, // 2 minutes
-    gcTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 2 * 60 * 1000, 
+    gcTime: 5 * 60 * 1000, 
     retry: (failureCount, error) => {
       if (error instanceof Error && 'response' in error) {
         const axiosError = error as AxiosError;
@@ -47,7 +42,7 @@ export function useTasks() {
       }
       return failureCount < 3;
     },
-    enabled: !!user, // Only run query if user is loaded
+    enabled: !!user, 
   });
 }
 
@@ -63,7 +58,7 @@ export function useAddTask(options: UseAddTaskOptions = {}) {
   return useMutation({
     mutationFn: tasksApi.createTask,
     onSuccess: () => {
-      // Invalidate all queries that start with the tasks key
+
       queryClient.invalidateQueries({
         predicate: (query) => query.queryKey[0] === 'tasks',
       });
@@ -97,7 +92,7 @@ export function useUpdateTask(options: UseUpdateTaskOptions = {}) {
       requirementFiles?: File[];
     }) => {
       try {
-        // Validate required fields
+
         if (!payload.TaskTitle?.trim()) {
           throw new Error('Task title is required');
         }
@@ -119,10 +114,10 @@ export function useUpdateTask(options: UseUpdateTaskOptions = {}) {
 
         const formData = new FormData();
 
-        // Add task ID
+
         formData.append('TaskItemId', payload.taskItemId.toString());
 
-        // Add all task data fields
+
         formData.append('AssignedToUserId', payload.AssignedToUserId.toString());
         if (payload.CustomerId) {
           formData.append('CustomerId', payload.CustomerId.toString());
@@ -133,7 +128,7 @@ export function useUpdateTask(options: UseUpdateTaskOptions = {}) {
         formData.append('DueDate', new Date(payload.DueDate).toISOString());
         formData.append('Notes', payload.Notes.trim());
 
-        // Add files if provided
+
         if (payload.requirementFiles?.length) {
           payload.requirementFiles.forEach(file => {
             formData.append('requirementFiles', file);
@@ -157,7 +152,7 @@ export function useUpdateTask(options: UseUpdateTaskOptions = {}) {
       }
     },
     onSuccess: () => {
-      // Invalidate all tasks queries
+
       queryClient.invalidateQueries({
         predicate: (query) => query.queryKey[0] === 'tasks',
       });

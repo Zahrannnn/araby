@@ -3,7 +3,7 @@ import { getDictionary } from './dictionaries';
 import { Providers } from '@/lib/providers';
 import { getDirection, locales, type Locale } from '@/i18n';
 import "../globals.css";
-
+import { Toaster} from 'sonner';
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -50,6 +50,7 @@ export default async function LocaleLayout({
         <Providers locale={locale} messages={messages}>
           {children}
         </Providers>
+        <Toaster />
       </body>
     </html>
   );

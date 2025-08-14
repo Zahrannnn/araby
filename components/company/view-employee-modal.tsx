@@ -47,10 +47,8 @@ export function ViewEmployeeModal({
 }: ViewEmployeeModalProps) {
   const t = useTranslations('company.employees.viewModal');
   
-  // Fetch detailed employee data from API
   const { data: employeeDetails, isLoading, error } = useEmployeeDetails(employee?.id || null);
   
-  // Fetch employee tasks
   const { 
     data: tasksData, 
     isLoading: isTasksLoading, 
@@ -61,7 +59,6 @@ export function ViewEmployeeModal({
     error: unknown; 
   };
 
-  // Fetch employee performance data
   const {
     data: performanceData,
     isLoading: isPerformanceLoading,
@@ -70,7 +67,6 @@ export function ViewEmployeeModal({
 
   if (!isOpen) return null;
 
-  // Error handling helper
   const getErrorMessage = (error: unknown): string => {
     if (error && typeof error === 'object' && 'message' in error) {
       return String(error.message);
@@ -78,7 +74,6 @@ export function ViewEmployeeModal({
     return t('errorUnknown');
   };
 
-  // Loading state
   if (isLoading) {
     return (
       <div className="fixed inset-0 backdrop-blur-sm bg-black/50 flex items-center justify-center z-50 p-4">
@@ -92,7 +87,6 @@ export function ViewEmployeeModal({
     );
   }
 
-  // Error state
   if (error) {
     return (
       <div className="fixed inset-0 backdrop-blur-sm bg-black/50 flex items-center justify-center z-50 p-4">
@@ -130,13 +124,11 @@ export function ViewEmployeeModal({
     }
   };
 
-  // Format date
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('de-DE');
   };
 
-  // Get status badge
   const getStatusBadge = (isActive: boolean) => {
     if (isActive) {
       return (
@@ -153,7 +145,6 @@ export function ViewEmployeeModal({
     }
   };
 
-  // Status and priority colors for tasks table
   const getStatusColor = (status: string) => {
     switch (status?.toLowerCase()) {
       case 'completed':
@@ -183,7 +174,6 @@ export function ViewEmployeeModal({
     }
   };
 
-  // Tasks Table Content
   const renderTasksTable = () => {
     if (isTasksLoading) {
       return (
@@ -276,7 +266,6 @@ export function ViewEmployeeModal({
     );
   };
 
-  // Performance Tab Content
   const renderPerformanceContent = () => {
     if (isPerformanceLoading) {
       return (

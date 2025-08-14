@@ -37,7 +37,7 @@ export function DeleteCompanyModal({
       setIsDeleting(true);
       setError("");
       
-      // Get token from cookies
+
       const getCookie = (name: string) => {
         const value = `; ${document.cookie}`;
         const parts = value.split(`; ${name}=`);

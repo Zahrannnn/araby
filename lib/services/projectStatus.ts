@@ -18,7 +18,6 @@ export async function getProjectStatus(): Promise<boolean> {
     return response.data.data.is_active;
   } catch (error) {
     console.error('Error fetching project status:', error);
-    // Assume the project is inactive if there's an error
     return false;
   }
 } 

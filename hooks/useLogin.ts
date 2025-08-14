@@ -41,14 +41,11 @@ export function useLogin(options: UseLoginOptions = {}) {
       }
     },
     onSuccess: (data) => {
-      // Update store with user data
       login(data.user, data.token);
       setLoading(false);
       
-      // Call success callback if provided
       onSuccess?.();
       
-      // Redirect to dashboard
       router.push(redirectTo);
     },
     onError: (error: Error) => {

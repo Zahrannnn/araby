@@ -9,7 +9,7 @@ interface ExpensesPaginationProps {
   pageSize: number
   onPageChange: (page: number) => void
   onPageSizeChange: (size: number) => void
-  totalPages?: number // optional, for future use
+  totalPages?: number 
 }
 
 export function ExpensesPagination({ page, pageSize, onPageChange, onPageSizeChange, totalPages = 3 }: ExpensesPaginationProps) {

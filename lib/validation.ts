@@ -265,8 +265,6 @@ export function isValidPassword(password: string): boolean {
  * Hook to get validation schemas based on current locale
  */
 export function useValidationSchemas() {
-  // This would be used in components to get schemas based on current locale
-  // For now, return a function that accepts locale parameter
   return (locale: 'ar' | 'de' | 'en' = 'en') => createValidationSchemas(locale);
 }
 

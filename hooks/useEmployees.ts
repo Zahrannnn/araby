@@ -9,7 +9,6 @@ import { useMemo } from 'react';
  * Custom hook for fetching employees with pagination and search
  */
 export function useEmployees(params: EmployeeQueryParams = {}) {
-  // Create stable query key that includes the params
   const queryKey = useMemo(() => [...queryKeys.employees, params], [params]);
 
   return useQuery({

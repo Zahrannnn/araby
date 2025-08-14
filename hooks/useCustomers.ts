@@ -36,11 +36,10 @@ export function useCustomer(customerId: number | null) {
   return useQuery({
     queryKey: queryKeys.customer(customerId || 0),
     queryFn: () => customerApi.getCustomer(customerId!),
-    enabled: !!customerId, // Only run query if customerId is provided
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
+    enabled: !!customerId, 
+    staleTime: 5 * 60 * 1000, 
+    gcTime: 10 * 60 * 1000, 
     retry: (failureCount, error) => {
-      // Don't retry on 404 errors
       if (error && 'response' in error && typeof error.response === 'object' && error.response) {
         const axiosError = error as any;
         if (axiosError.response?.status === 404) {
@@ -59,11 +58,10 @@ export function useCustomerTasks(customerId: number | null, pageIndex: number = 
   return useQuery({
     queryKey: queryKeys.customerTasks(customerId || 0, { pageIndex, pageSize }),
     queryFn: () => customerApi.getCustomerTasks(customerId!, pageIndex, pageSize),
-    enabled: !!customerId, // Only run query if customerId is provided
-    staleTime: 2 * 60 * 1000, // 2 minutes - shorter for tasks data
-    gcTime: 5 * 60 * 1000, // 5 minutes
+    enabled: !!customerId, 
+    staleTime: 2 * 60 * 1000, 
+    gcTime: 5 * 60 * 1000, 
     retry: (failureCount, error) => {
-      // Don't retry on 404 errors
       if (error && 'response' in error && typeof error.response === 'object' && error.response) {
         const axiosError = error as any;
         if (axiosError.response?.status === 404) {
@@ -82,11 +80,10 @@ export function useCustomerOffers(customerId: number | null, pageIndex: number =
   return useQuery({
     queryKey: queryKeys.customerOffers(customerId || 0, { pageIndex, pageSize }),
     queryFn: () => customerApi.getCustomerOffers(customerId!, pageIndex, pageSize),
-    enabled: !!customerId, // Only run query if customerId is provided
-    staleTime: 2 * 60 * 1000, // 2 minutes - shorter for offers data
-    gcTime: 5 * 60 * 1000, // 5 minutes
+    enabled: !!customerId, 
+    staleTime: 2 * 60 * 1000, 
+    gcTime: 5 * 60 * 1000, 
     retry: (failureCount, error) => {
-      // Don't retry on 404 errors
       if (error && 'response' in error && typeof error.response === 'object' && error.response) {
         const axiosError = error as any;
         if (axiosError.response?.status === 404) {
@@ -105,11 +102,10 @@ export function useOfferDetails(offerId: number | null) {
   return useQuery({
     queryKey: queryKeys.offerDetails(offerId || 0),
     queryFn: () => offersApi.getOfferDetails(offerId!),
-    enabled: !!offerId, // Only run query if offerId is provided
-    staleTime: 5 * 60 * 1000, // 5 minutes - longer for detailed data
-    gcTime: 10 * 60 * 1000, // 10 minutes
+    enabled: !!offerId, 
+    staleTime: 5 * 60 * 1000, 
+    gcTime: 10 * 60 * 1000, 
     retry: (failureCount, error) => {
-      // Don't retry on 404 errors
       if (error && 'response' in error && typeof error.response === 'object' && error.response) {
         const axiosError = error as any;
         if (axiosError.response?.status === 404) {
@@ -128,11 +124,10 @@ export function useTaskDetails(taskId: number | null) {
   return useQuery({
     queryKey: queryKeys.taskDetails(taskId || 0),
     queryFn: () => tasksApi.getTaskDetails(taskId!),
-    enabled: !!taskId, // Only run query if taskId is provided
-    staleTime: 5 * 60 * 1000, // 5 minutes - longer for detailed data
-    gcTime: 10 * 60 * 1000, // 10 minutes
+    enabled: !!taskId, 
+    staleTime: 5 * 60 * 1000, 
+    gcTime: 10 * 60 * 1000, 
     retry: (failureCount, error) => {
-      // Don't retry on 404 errors
       if (error && 'response' in error && typeof error.response === 'object' && error.response) {
         const axiosError = error as any;
         if (axiosError.response?.status === 404) {
@@ -153,7 +148,6 @@ export function useDeleteCustomer() {
   return useMutation({
     mutationFn: customerApi.deleteCustomer,
     onSuccess: () => {
-      // Invalidate all customer-related queries to refresh the data
       queryClient.invalidateQueries({ 
         predicate: (query) => {
           return query.queryKey[0] === 'customers';
@@ -175,7 +169,7 @@ export function useUpdateCustomer() {
   return useMutation({
     mutationFn: customerApi.updateCustomer,
     onSuccess: () => {
-      // Invalidate all customer-related queries to refresh the data
+      
       queryClient.invalidateQueries({ 
         predicate: (query) => {
           return query.queryKey[0] === 'customers';

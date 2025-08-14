@@ -34,7 +34,7 @@ export function PackingMaterialModal({ isOpen, onClose, onSave }: PackingMateria
   const handleChange = (field: keyof PackingMaterial, value: string | number) => {
     setMaterial(prev => {
       const updated = { ...prev, [field]: value }
-      // Automatically calculate total price when quantity or unit price changes
+    
       if (field === 'quantity' || field === 'unitPrice') {
         updated.totalPrice = updated.quantity * updated.unitPrice
       }

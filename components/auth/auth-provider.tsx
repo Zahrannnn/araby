@@ -15,7 +15,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const { hasHydrated, initializeAuth } = useAuth();
 
   useEffect(() => {
-    // Only initialize auth after Zustand has hydrated
     if (hasHydrated) {
       initializeAuth();
     }

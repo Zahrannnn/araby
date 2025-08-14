@@ -20,7 +20,6 @@ interface ViewCustomerModalProps {
   customer: Customer | null;
 }
 
-// Type for customer tasks endpoint (api/Customer/id/tasks)
 export interface CustomerTaskListItem {
   taskItemId: number;
   taskTitle: string;
@@ -51,24 +50,20 @@ export function ViewCustomerModal({
   const tasksPageSize = 3;
   
   
-  // Fetch detailed customer data from API if needed
   const { data: customerDetails, isLoading, error } = useCustomer(customer?.customerId || null);
   
-  // Fetch customer tasks
   const { 
     data: tasksData, 
     isLoading: isTasksLoading, 
     error: tasksError 
   } = useCustomerTasks(customer?.customerId || null, tasksPage, tasksPageSize);
 
-  // Fetch customer offers
   const { 
     data: offersData, 
     isLoading: isOffersLoading, 
     error: offersError 
   } = useCustomerOffers(customer?.customerId || null, offersPage, offersPageSize);
 
-  // Use API data if available, otherwise fall back to basic customer data
   const displayData = React.useMemo(() => {
     const baseCustomer = customerDetails || customer;
     if (!baseCustomer) return null;
@@ -83,7 +78,6 @@ export function ViewCustomerModal({
       country: baseCustomer.country || 'N/A',
       createdAt: baseCustomer.createdAt ? new Date(baseCustomer.createdAt).toLocaleDateString("de-DE") : 'N/A',
       notes: baseCustomer.notes || 'N/A',
-      // Use real API data for metrics
       offerCount: baseCustomer.offerCount || 0,
       taskCount: baseCustomer.taskCount || 0,
       totalProfit: baseCustomer.totalProfit || 0,
@@ -93,7 +87,6 @@ export function ViewCustomerModal({
 
   if (!isOpen) return null;
 
-  // Loading state
   if (isLoading) {
     return (
       <div className="fixed inset-0 backdrop-blur-sm bg-black/50 flex items-center justify-center z-50 p-4">
@@ -107,7 +100,6 @@ export function ViewCustomerModal({
     );
   }
 
-  // Error state
   if (error) {
     return (
       <div className="fixed inset-0 backdrop-blur-sm bg-black/50 flex items-center justify-center z-50 p-4">

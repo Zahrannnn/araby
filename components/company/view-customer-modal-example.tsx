@@ -5,11 +5,9 @@ import { Button } from "@/components/ui/button"
 import { ViewCustomerModal } from './view-customer-modal'
 import type { Customer } from '@/lib/api'
 
-// Example component showing how to use the ViewCustomerModal
 export function ViewCustomerModalExample() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   
-  // Sample customer data matching the API response structure
   const sampleCustomer: Customer = {
     customerId: 1,
     fullName: "Abdullah Mohamed",
@@ -29,13 +27,11 @@ export function ViewCustomerModalExample() {
 
   const handleEdit = (customer: Customer) => {
     console.log('Edit customer:', customer)
-    // Add your edit logic here
     setIsModalOpen(false)
   }
 
   const handleDelete = (customer: Customer) => {
     console.log('Delete customer:', customer)
-    // Add your delete logic here
     setIsModalOpen(false)
   }
 

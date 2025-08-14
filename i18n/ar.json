@@ -1447,6 +1447,28 @@
   },
 
   "companyDashboard": {
+    "appointments": {
+      "title": "إنشاء موعد",
+      "description": "جدولة موعد جديد مع عميل",
+      "customer": "العميل",
+      "customerPlaceholder": "البحث عن عميل...",
+      "appointmentDate": "تاريخ الموعد",
+      "selectDate": "تحديد التاريخ",
+      "appointmentTime": "وقت الموعد",
+      "selectTime": "تحديد الوقت",
+      "duration": "المدة",
+      "selectDuration": "تحديد المدة",
+      "location": "الموقع",
+      "locationPlaceholder": "أدخل موقع الموعد",
+      "notes": "ملاحظات",
+      "notesPlaceholder": "أضف أي ملاحظات إضافية...",
+      "language": "اللغة",
+      "selectLanguage": "تحديد اللغة",
+      "createAppointment": "إنشاء موعد",
+      "creating": "جارٍ الإنشاء...",
+      "reset": "إعادة تعيين",
+      "success": "تم إنشاء الموعد بنجاح!"
+    },
     "servicess":{
       "move":"نقل",
       "packing":"تعبئة",

@@ -19,11 +19,11 @@ import { apiClient } from '@/lib/api'
 import { useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { useDebounce } from '@/app/hooks/useDebounce'
-// Add imports for alert components
+
 import { AlertCircle } from 'lucide-react'
 import { Alert, AlertDescription } from "@/components/ui/alert"
 
-// Add status enum and options
+
 enum OfferStatus {
   Pending = 0,
   Sent = 1,
@@ -188,7 +188,7 @@ interface EditOfferModalProps {
   offerId?: number;
 }
 
-// Add language options constant
+
 const LANGUAGE_OPTIONS = [
   { code: 'en', label: 'English' },
   { code: 'de', label: 'Deutsch' },
@@ -216,7 +216,7 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
         costsExcludeVAT: false,
         vatFree: false,
         emailToCustomer: true,
-        languageCode: 'en', // Set default to English
+        languageCode: 'en', 
         locations: [{
           locationType: '',
           addressIndex: 1,
@@ -242,7 +242,7 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
       }
     } catch (error) {
       console.error('Error creating initial offer data:', error)
-      // Fallback to empty strings if translations fail
+      
       return {
         customerId: 0,
         notesInOffer: '',
@@ -286,13 +286,13 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
   const [isPackingMaterialModalOpen, setIsPackingMaterialModalOpen] = useState(false)
   const router = useRouter()
 
-  // Customer search state
+  
   const [customerSearch, setCustomerSearch] = useState("")
   const [customers, setCustomers] = useState<Customer[]>([])
   const [isSearching, setIsSearching] = useState(false)
   const debouncedSearch = useDebounce(customerSearch, 300)
 
-  // Fetch offer data when editing
+  
   useEffect(() => {
     async function fetchOfferData() {
       if (!offerId) {
@@ -305,7 +305,7 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
         setError(null)
         const response = await apiClient.get(`/Offers/${offerId}`)
 
-        // Extract services from the response data
+        
         const {
           moveService,
           cleaningService,
@@ -317,7 +317,7 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
           ...restData
         } = response.data
 
-        // Create services object with services that might be null
+        
         const services = {
           moveService: moveService || null,
           cleaningService: cleaningService || null,
@@ -328,12 +328,12 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
           transportService: transportService || null
         }
 
-        // Set the offer data with properly structured services
+        
         const initialData = getInitialOfferData()
         setOfferData({
           ...restData,
           ...services,
-          // Ensure required fields have default values if missing
+          
           locations: restData.locations || initialData.locations,
           packingMaterials: restData.packingMaterials || initialData.packingMaterials,
           languageCode: restData.languageCode || initialData.languageCode,
@@ -348,7 +348,7 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
       } catch (err) {
         console.error('Error fetching offer:', err)
         
-        // More detailed error logging
+
         if (err instanceof Error) {
           console.error('Error details:', {
             message: err.message,
@@ -357,7 +357,7 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
           })
         }
         
-        // Check if it's an axios error
+        
         if (err && typeof err === 'object' && 'response' in err) {
           const axiosError = err as { response?: { status?: number; statusText?: string; data?: unknown; headers?: unknown } }
           console.error('Axios error details:', {
@@ -383,7 +383,7 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
     }
   }, [isOpen, offerId, getInitialOfferData])
 
-  // Search customers when input changes
+  
   useEffect(() => {
     async function searchCustomers() {
       if (!debouncedSearch) {
@@ -424,7 +424,7 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
           [field]: checked
         }))
       } else {
-        // For VAT settings, make them mutually exclusive
+        
         setOfferData(prev => ({
           ...prev,
           costsIncludeVAT: field === 'costsIncludeVAT' ? checked : false,
@@ -435,7 +435,7 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
     }
   }
 
-  // Add status update handler
+  
   const handleStatusUpdate = async (newStatus: string) => {
     try {
       setIsSubmitting(true)
@@ -463,7 +463,7 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
         throw new Error(`Failed to update status: ${response.status} ${response.statusText}`)
       }
 
-      // Update local state after successful API call
+      
       setOfferData(prev => ({
         ...prev,
         status: statusValue as OfferStatus
@@ -497,11 +497,11 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
 
   const handleServiceClick = (type: ServiceType['type']) => {
     setSelectedService(type);
-    // Don't initialize the service data here - let the ServiceDetailsModal handle it
+    
   }
 
   const handleServiceSave = (data: ServiceType['data']) => {
-    // Only update the service data if we received valid data from the modal
+    
     if (data) {
       setOfferData(prev => ({
         ...prev,
@@ -579,14 +579,14 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
       return t('validation.locationRequired')
     }
     
-    // Validate locations
+    
     for (const location of offerData.locations) {
       if (!location.street || !location.zipCode || !location.city || !location.countryCode) {
         return t('validation.locationFieldsRequired')
       }
     }
 
-    // Validate at least one service is configured
+    
     const serviceKeys = [
       'moveService',
       'cleaningService',
@@ -611,17 +611,17 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
       setError(null)
       setIsSubmitting(true)
 
-      // Validate data before sending
+      
       const validationError = validateOfferData()
       if (validationError) {
         setError(validationError)
         return
       }
 
-      // Create a copy of the data to modify before sending
+      
       const dataToSend = JSON.parse(JSON.stringify(offerData))
       
-            // For existing offers, create a clean payload with only updatable fields
+      
       if (offerId) {
         const cleanPayload = {
           customerId: dataToSend.customerId,
@@ -646,11 +646,11 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
           transportService: dataToSend.transportService
         }
         
-        // Replace the dataToSend with clean payload
+        
         Object.keys(dataToSend).forEach(key => delete dataToSend[key])
         Object.assign(dataToSend, cleanPayload)
       } else {
-        // For new offers, ensure the new fields have proper string values
+        
         dataToSend.insurance = dataToSend.insurance || ''
         dataToSend.includedInPrice = dataToSend.includedInPrice || ''
         dataToSend.costAndTimeCalculation = dataToSend.costAndTimeCalculation || ''
@@ -658,43 +658,43 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
       
       console.log('Final payload being sent:', JSON.stringify(dataToSend, null, 2))
       
-      // Ensure customerId is a valid number
+      
       if (!dataToSend.customerId || dataToSend.customerId === 0) {
         setError('A valid customer must be selected')
         setIsSubmitting(false)
         return
       }
       
-      // Ensure customerId is actually a number
+      
       dataToSend.customerId = Number(dataToSend.customerId)
       
-      // Validate locations
+      
       if (!dataToSend.locations || !Array.isArray(dataToSend.locations) || dataToSend.locations.length === 0) {
         setError('At least one location is required')
         setIsSubmitting(false)
         return
       }
       
-      // Fix location data types
+      
       dataToSend.locations = dataToSend.locations.map((location: Location) => ({
         ...location,
         addressIndex: Number(location.addressIndex) || 1,
         hasLift: Boolean(location.hasLift)
       }))
       
-      // Ensure packingMaterials is an array
+      
       if (!Array.isArray(dataToSend.packingMaterials)) {
         dataToSend.packingMaterials = []
       }
       
-      // Clean up service objects - remove any that are null or have incomplete data
+      
       const serviceKeys = ['moveService', 'cleaningService', 'packingService', 'unpackingService', 'disposalService', 'storageService', 'transportService']
       serviceKeys.forEach(serviceKey => {
         if (dataToSend[serviceKey] && typeof dataToSend[serviceKey] === 'object') {
-          // If service exists but has missing required fields, remove it
+          
           const service = dataToSend[serviceKey]
           
-          // Check if service has at least some meaningful data
+          
           const hasData = Object.values(service).some(value => 
             value !== null && value !== undefined && value !== '' && value !== 0
           )
@@ -708,29 +708,29 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
       
 
       
-      // Process the data to match the exact format of the working request
+      
       const processServiceData = (service: Record<string, unknown>) => {
         if (!service) return null
         
-        // Process date fields in the service
+        
         Object.keys(service).forEach(key => {
-          // Handle empty string dates
+          
           if (typeof service[key] === 'string' && key.toLowerCase().includes('date') && service[key] === '') {
             service[key] = null
             return
           }
           
-          // Format date fields to match the working example (with Z suffix)
+          
           if (typeof service[key] === 'string' && key.toLowerCase().includes('date') && service[key]) {
-            // Make sure the date string ends with Z for UTC timezone
+            
             if (!service[key].toString().endsWith('Z')) {
-              // Remove any existing timezone info and add Z
+              
               const dateStr = service[key].toString().replace(/\.\d+Z?$/, '');
               service[key] = dateStr.endsWith('Z') ? dateStr : `${dateStr}Z`;
             }
           }
           
-          // Ensure time fields are in the correct format (HH:MM:SS)
+          
           if (typeof service[key] === 'string' && 
               (key.toLowerCase().includes('time') && !key.toLowerCase().includes('date'))) {
             const timeStr = service[key].toString();
@@ -742,7 +742,7 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
             }
           }
           
-          // Ensure numeric fields are actual numbers
+      
           if (key.toLowerCase().includes('cost') || 
               key.toLowerCase().includes('price') || 
               key.toLowerCase().includes('rate') || 
@@ -756,7 +756,7 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
           }
         })
         
-        // Ensure additionalCosts is always an array
+        
         if (!service.additionalCosts) {
           service.additionalCosts = [];
         }
@@ -764,7 +764,7 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
         return service
       }
       
-      // Process all services
+      
       if (dataToSend.moveService) dataToSend.moveService = processServiceData(dataToSend.moveService)
       if (dataToSend.cleaningService) dataToSend.cleaningService = processServiceData(dataToSend.cleaningService)
       if (dataToSend.packingService) dataToSend.packingService = processServiceData(dataToSend.packingService)
@@ -773,7 +773,7 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
       if (dataToSend.storageService) dataToSend.storageService = processServiceData(dataToSend.storageService)
       if (dataToSend.transportService) dataToSend.transportService = processServiceData(dataToSend.transportService)
       
-      // Process packing materials to ensure numeric values
+      
       if (dataToSend.packingMaterials && Array.isArray(dataToSend.packingMaterials)) {
         dataToSend.packingMaterials = dataToSend.packingMaterials.map((material: PackingMaterial) => ({
           ...material,
@@ -788,36 +788,36 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
         data: dataToSend
       })
       
-      // Log the actual JSON payload to help diagnose issues
+      
       console.log('JSON payload:', JSON.stringify(dataToSend, null, 2))
 
-      // Get the token
+      
       const token = cookieUtils.getToken();
       if (!token) {
         throw new Error('No authentication token found');
       }
 
-      // Try using apiClient first, which should handle CORS better
+      
       try {
         console.log('Using apiClient for request');
         
         let response;
         if (offerId) {
-          // PUT request for existing offer
+          
           response = await apiClient.put(`/Offers/${offerId}`, dataToSend);
         } else {
-          // POST request for new offer
+          
           response = await apiClient.post('/Offers', dataToSend);
         }
 
-        // Success with apiClient (axios) - status is in response.status
+        
         console.log('API call successful:', response.status);
         router.refresh();
         onClose();
       } catch (apiError) {
         console.error('API Error:', apiError);
         
-        // If the direct API call fails, try the form submission approach as fallback
+        
         try {
           await handleSaveOfferWithForm(dataToSend);
         } catch (formError) {
@@ -840,10 +840,10 @@ export function EditOfferModal({ isOpen, onClose, offerId }: EditOfferModalProps
     }
   }
 
-  // If the above direct API call fails due to CORS, you can use this as a fallback
+  
   const handleSaveOfferWithForm = async (dataToSend: OfferData) => {
     try {
-      // Alternative approach using XMLHttpRequest which might handle CORS differently
+      
       const token = cookieUtils.getToken();
       if (!token) {
         throw new Error('No authentication token found');

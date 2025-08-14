@@ -18,20 +18,17 @@ export function useAddCustomer(options: UseAddCustomerOptions = {}) {
   return useMutation({
     mutationFn: customerApi.createCustomer,
     onSuccess: () => {
-      // Invalidate all queries that start with the customers key
       queryClient.invalidateQueries({ 
         predicate: (query) => {
           return query.queryKey[0] === 'customers';
         }
       });
       
-      // Call success callback if provided
       onSuccess?.();
     },
     onError: (error: Error) => {
       console.error('Error creating customer:', error);
       
-      // Call error callback if provided
       onError?.(error);
     },
   });

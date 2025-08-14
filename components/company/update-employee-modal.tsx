@@ -11,7 +11,6 @@ import { ArrowLeft, UserCircle2, ShieldCheck } from "lucide-react"
 import { z } from "zod"
 import type { Employee } from "@/lib/api"
 
-// Define available permissions
 const PERMISSIONS = {
   can_view_offers: 1,
   can_edit_customers: 2,
@@ -29,7 +28,6 @@ const employeeSchema = z.object({
   newPassword: z.string().min(8, "Password must be at least 8 characters").optional(),
   confirmPassword: z.string().optional(),
 }).refine((data) => {
-  // If either password field is filled, both must match
   if (data.newPassword || data.confirmPassword) {
     return data.newPassword === data.confirmPassword;
   }
@@ -70,7 +68,6 @@ export function UpdateEmployeeModal({
   const [errors, setErrors] = useState<Partial<Record<keyof EmployeeFormData | 'submit', string>>>({})
   const [isActive, setIsActive] = useState(true)
 
-  // Initialize form data when employee prop changes
   useEffect(() => {
     if (employee) {
       setFormData({
@@ -88,7 +85,6 @@ export function UpdateEmployeeModal({
 
   const handleChange = (field: keyof EmployeeFormData) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({ ...prev, [field]: e.target.value }))
-    // Clear error when user starts typing
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: undefined }))
     }
@@ -106,21 +102,18 @@ export function UpdateEmployeeModal({
 
   const validateForm = () => {
     try {
-      // Log the current form data
       console.log('Validating form data:', {
         ...formData,
         newPassword: formData.newPassword ? '***' : undefined,
         confirmPassword: formData.confirmPassword ? '***' : undefined,
       });
 
-      // Create a validation object without password fields if they're empty
       const validationObject = {
         ...formData,
         newPassword: formData.newPassword || undefined,
         confirmPassword: formData.confirmPassword || undefined,
       }
       
-      // Log the validation object
       console.log('Validation object:', {
         ...validationObject,
         newPassword: validationObject.newPassword ? '***' : undefined,
@@ -129,7 +122,6 @@ export function UpdateEmployeeModal({
       
       employeeSchema.parse(validationObject)
       
-      // Check if passwords match only if a new password is being set
       if (formData.newPassword || formData.confirmPassword) {
         if (formData.newPassword !== formData.confirmPassword) {
           console.log('Password mismatch error');

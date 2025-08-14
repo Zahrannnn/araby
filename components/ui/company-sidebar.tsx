@@ -8,7 +8,7 @@ import {
   HomeIcon,
   UsersIcon,
   DocumentTextIcon,
-
+  CalendarIcon,
   CheckCircleIcon,
   CreditCardIcon,
   UserGroupIcon,
@@ -64,7 +64,13 @@ const sidebarItems: SidebarItem[] = [
     icon: DocumentTextIcon,
     requiredPermission: 'can_view_offers'
   },
- 
+  {
+    name: 'Termine',
+    translationKey: 'appointments',
+    href: '/company/appointments',
+    icon: CalendarIcon,
+    requiredPermission: 'can_manage_tasks'
+  },
   {
     name: 'Aufgaben',
     translationKey: 'tasks',

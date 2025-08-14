@@ -1446,6 +1446,28 @@
   },
 
   "companyDashboard": {
+    "appointments": {
+      "title": "Termin erstellen",
+      "description": "Einen neuen Termin mit einem Kunden vereinbaren",
+      "customer": "Kunde",
+      "customerPlaceholder": "Kunden suchen...",
+      "appointmentDate": "Termindatum",
+      "selectDate": "Datum auswählen",
+      "appointmentTime": "Terminzeit",
+      "selectTime": "Uhrzeit auswählen",
+      "duration": "Dauer",
+      "selectDuration": "Dauer auswählen",
+      "location": "Ort",
+      "locationPlaceholder": "Terminort eingeben",
+      "notes": "Notizen",
+      "notesPlaceholder": "Zusätzliche Notizen hinzufügen...",
+      "language": "Sprache",
+      "selectLanguage": "Sprache auswählen",
+      "createAppointment": "Termin erstellen",
+      "creating": "Wird erstellt...",
+      "reset": "Zurücksetzen",
+      "success": "Termin erfolgreich erstellt!"
+    },
     "servicess":{
       "move":"Umzug",
       "packing":"Einpacken",

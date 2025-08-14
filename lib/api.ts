@@ -36,6 +36,7 @@ export const API_ENDPOINTS = {
   EXPENSES_CATEGORY_CHART: '/Expenses/category-chart',
   EXPENSES_MONTHLY_CHART: '/Expenses/monthly-chart',
   REVENUES: '/revenues',
+  APPOINTMENTS: '/Appointments',
   
   // Dashboard
   COMPANY_DASHBOARD: '/CompanyDashboard',
@@ -141,17 +142,17 @@ export interface ParsedLoginResponse extends LoginResponse {
 }
 
 /**
- * Axios instance with interceptors
+ * Axios instance 
  */
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 15000, // Increased timeout for external API
+  timeout: 15000, 
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Request interceptor to add auth token
+
 apiClient.interceptors.request.use(
   (config) => {
     const token = cookieUtils.getToken();
@@ -165,12 +166,12 @@ apiClient.interceptors.request.use(
   }
 );
 
-// Response interceptor for error handling
+
 apiClient.interceptors.response.use(
   (response) => response,
   (error: AxiosError<ApiErrorResponse>) => {
     if (error.response?.status === HTTP_STATUS.UNAUTHORIZED) {
-      // Clear cookies and redirect to login
+      
       cookieUtils.clearAll();
       if (typeof window !== 'undefined') {
         window.location.href = '/login';
@@ -189,24 +190,24 @@ export const authApi = {
       const response = await apiClient.post<LoginResponse>(API_ENDPOINTS.LOGIN, credentials);
       
       if (response.data.token) {
-        // Parse user information from JWT token
+        
         const userFromToken = parseUserFromToken(response.data.token);
         
         if (!userFromToken) {
           throw new Error('Invalid token format');
         }
 
-        // Store token and user data in cookies
+        
         cookieUtils.setToken(response.data.token, rememberMe);
         cookieUtils.setUserData(userFromToken, rememberMe);
         cookieUtils.setRememberMe(rememberMe);
 
-        // Store permissions in localStorage
+        
         if (typeof window !== 'undefined' && response.data.permissions) {
           localStorage.setItem('userPermissions', JSON.stringify(response.data.permissions));
         }
 
-        // Return parsed response with user data
+ 
         return {
           ...response.data,
           user: userFromToken as User,
@@ -227,10 +228,8 @@ export const authApi = {
     try {
       await apiClient.post(API_ENDPOINTS.LOGOUT);
     } catch (error) {
-      // Continue with local cleanup even if API call fails
       console.warn('Logout API call failed:', error);
     } finally {
-      // Clear all cookies and localStorage
       cookieUtils.clearAll();
       if (typeof window !== 'undefined') {
         localStorage.removeItem('userPermissions');
@@ -246,9 +245,7 @@ export const authApi = {
     return userData as User | null;
   },
 
-  /**
-   * Check if user is authenticated
-   */
+ 
   isAuthenticated(): boolean {
     const token = cookieUtils.getToken();
     return !!token;
@@ -734,16 +731,15 @@ export const tasksApi = {
   },
   async createTask(payload: {
     AssignedToUserId: number;
-    CustomerId?: number; // Made optional to match C# DTO
+    CustomerId?: number; 
     TaskTitle: string;
     Description: string;
     Priority: string;
-    DueDate: string | Date; // Allow both string and Date
+    DueDate: string | Date; 
     Notes: string;
     requirementFiles: File[];
   }): Promise<unknown> {
     try {
-      // Validate required fields before creating FormData
       if (!payload.TaskTitle?.trim()) {
         throw new Error('Task title is required');
       }
@@ -771,7 +767,6 @@ export const tasksApi = {
 
       const formData = new FormData();
 
-      // Add all task data fields directly to FormData
       formData.append('AssignedToUserId', payload.AssignedToUserId.toString());
       formData.append('CustomerId', payload.CustomerId.toString());
       formData.append('TaskTitle', payload.TaskTitle.trim());
@@ -780,19 +775,16 @@ export const tasksApi = {
       formData.append('DueDate', new Date(payload.DueDate).toISOString());
       formData.append('Notes', payload.Notes.trim());
 
-      // Add files
       payload.requirementFiles.forEach(file => {
         formData.append('requirementFiles', file);
       });
 
-      // Set proper headers for multipart/form-data
       const config = {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       };
 
-      // Debug log
       console.log('API_BASE_URL:', API_BASE_URL);
       console.log('FormData being sent:');
       for (const pair of formData.entries()) {
@@ -840,10 +832,9 @@ export const tasksApi = {
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      gcTime: 10 * 60 * 1000, // 10 minutes (formerly cacheTime)
+      staleTime: 5 * 60 * 1000, 
+      gcTime: 10 * 60 * 1000, 
       retry: (failureCount, error: Error) => {
-        // Don't retry on 404 or auth errors
         if (error && 'response' in error && typeof error.response === 'object' && error.response) {
           const axiosError = error as AxiosError;
           if (axiosError.response?.status === 404 || axiosError.response?.status === 401) {
@@ -889,13 +880,14 @@ export const queryKeys = {
   invoice: (id: string) => ['invoices', id] as const,
   expenses: (companyId: string) => ['expenses', companyId] as const,
   revenues: (companyId: string) => ['revenues', companyId] as const,
+  appointments: ['appointments'] as const,
   subscriptions: ['subscriptions'] as const,
   notifications: ['notifications'] as const,
   dashboard: ['dashboard'] as const,
 } as const; 
 
 /**
- * Notification interface based on API response
+ * Notification interface 
  */
 export interface Notification {
   notificationId: number;
@@ -1184,6 +1176,43 @@ export const googleCalendarApi = {
       if (axios.isAxiosError(error) && error.response?.data) {
         const errorData = error.response.data as ApiErrorResponse;
         throw new Error(errorData.message || errorData.error || 'Failed to get Google Calendar connect URL');
+      }
+      throw new Error('Network error. Please check your connection.');
+    }
+  },
+};
+
+/**
+ * Appointment types
+ */
+export interface CreateAppointmentPayload {
+  customerId: number;
+  appointmentDate: string; // ISO date string
+  appointmentTime: string; // HH:MM format
+  durationHours: number;
+  location: string;
+  notes: string;
+  languageCode: string;
+}
+
+export interface Appointment extends CreateAppointmentPayload {
+  id: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/**
+ * Appointments API calls
+ */
+export const appointmentsApi = {
+  async createAppointment(payload: CreateAppointmentPayload): Promise<Appointment> {
+    try {
+      const response = await apiClient.post<Appointment>(API_ENDPOINTS.APPOINTMENTS, payload);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const errorData = error.response.data as ApiErrorResponse;
+        throw new Error(errorData.message || errorData.error || 'Failed to create appointment');
       }
       throw new Error('Network error. Please check your connection.');
     }

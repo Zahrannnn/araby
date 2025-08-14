@@ -57,18 +57,14 @@ export function UpdateCustomerModal({ isOpen, onClose, onSuccess, customer }: Up
 
   const [errors, setErrors] = useState<FormErrors>({});
 
-  // Fetch full customer details when modal is opened
   const { data: fullCustomerData, isLoading: isLoadingCustomer } = useCustomer(
     isOpen && customer ? customer.customerId : null
   );
 
-  // Use custom hook for updating customer
   const updateCustomerMutation = useUpdateCustomer();
 
-  // Populate form when customer changes or when full data is loaded
   useEffect(() => {
     if (isOpen && (fullCustomerData || customer)) {
-      // Use full customer data if available, otherwise fall back to the passed customer
       const customerData = fullCustomerData || customer;
       
       if (customerData) {
@@ -77,7 +73,6 @@ export function UpdateCustomerModal({ isOpen, onClose, onSuccess, customer }: Up
         console.log('Country:', customerData.country);
         console.log('ZipCode:', customerData.zipCode);
         
-        // Split fullName into firstName and lastName
         const nameParts = customerData.fullName.split(' ');
         const firstName = nameParts[0] || '';
         const lastName = nameParts.slice(1).join(' ') || '';
@@ -106,7 +101,6 @@ export function UpdateCustomerModal({ isOpen, onClose, onSuccess, customer }: Up
       [field]: value
     }));
     
-    // Clear error when user starts typing
     if (errors[field]) {
       setErrors(prev => ({
         ...prev,
@@ -118,7 +112,6 @@ export function UpdateCustomerModal({ isOpen, onClose, onSuccess, customer }: Up
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
 
-    // Required field validation
     if (!formData.firstName.trim()) newErrors.firstName = t('validation.firstNameRequired') || "Vorname ist erforderlich";
     if (!formData.lastName.trim()) newErrors.lastName = t('validation.lastNameRequired') || "Nachname ist erforderlich";
     if (!formData.email.trim()) newErrors.email = t('validation.emailRequired') || "E-Mail-Adresse ist erforderlich";
@@ -128,7 +121,6 @@ export function UpdateCustomerModal({ isOpen, onClose, onSuccess, customer }: Up
     if (!formData.zipCode.trim()) newErrors.zipCode = t('validation.zipCodeRequired') || "Postleitzahl ist erforderlich";
     if (!formData.country.trim()) newErrors.country = t('validation.countryRequired') || "Land ist erforderlich";
 
-    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (formData.email && !emailRegex.test(formData.email)) {
       newErrors.email = t('validation.emailInvalid') || "Bitte geben Sie eine gültige E-Mail-Adresse ein";
@@ -148,7 +140,6 @@ export function UpdateCustomerModal({ isOpen, onClose, onSuccess, customer }: Up
       ...formData
     }, {
       onSuccess: () => {
-        // Call success callback and close modal
         onSuccess?.();
         onClose();
       },

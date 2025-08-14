@@ -157,7 +157,7 @@ export function AddCompanyModal({ isOpen, onClose, onSuccess }: AddCompanyModalP
         throw new Error("Authentication token not found");
       }
 
-      // First create the company
+     
       const response = await fetch("https://nedx.premiumasp.net/api/SuperAdmin/create-company", {
         method: "POST",
         headers: {
@@ -172,7 +172,7 @@ export function AddCompanyModal({ isOpen, onClose, onSuccess }: AddCompanyModalP
         throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
 
-      // If logo file exists, upload it
+     
       if (logoFile) {
         try {
           const formData = new FormData();
@@ -185,7 +185,7 @@ export function AddCompanyModal({ isOpen, onClose, onSuccess }: AddCompanyModalP
           });
         } catch (logoError) {
           console.error("Error uploading logo:", logoError);
-          // Continue with success even if logo upload fails
+         
         }
       }
      

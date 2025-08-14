@@ -1447,6 +1447,28 @@
   },
 
   "companyDashboard": {
+    "appointments": {
+      "title": "Crea Appuntamento",
+      "description": "Pianifica un nuovo appuntamento con un cliente",
+      "customer": "Cliente",
+      "customerPlaceholder": "Cerca un cliente...",
+      "appointmentDate": "Data Appuntamento",
+      "selectDate": "Seleziona data",
+      "appointmentTime": "Ora Appuntamento",
+      "selectTime": "Seleziona ora",
+      "duration": "Durata",
+      "selectDuration": "Seleziona durata",
+      "location": "Posizione",
+      "locationPlaceholder": "Inserisci la posizione dell'appuntamento",
+      "notes": "Note",
+      "notesPlaceholder": "Aggiungi note aggiuntive...",
+      "language": "Lingua",
+      "selectLanguage": "Seleziona lingua",
+      "createAppointment": "Crea Appuntamento",
+      "creating": "Creazione in corso...",
+      "reset": "Ripristina",
+      "success": "Appuntamento creato con successo!"
+    },
     "servicess":{
       "move":"Trasloco",
       "packing":"Imballaggio",

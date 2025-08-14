@@ -34,6 +34,7 @@
   "offers": "Offers",
   "invoices": "Invoices",
   "expenses": "Expenses",
+  "appointments": "Appointments",
   "Add New Expense": "Add New Expense",
   "Edit Expense": "Edit Expense",
   "Description": "Description",
@@ -1604,6 +1605,28 @@
         "overdue": "Overdue",
         "completed": "Completed"
       }
+    },
+    "appointments": {
+      "title": "Create Appointment",
+      "description": "Schedule a new appointment with a customer",
+      "customer": "Customer",
+      "customerPlaceholder": "Search for a customer...",
+      "appointmentDate": "Appointment Date",
+      "selectDate": "Select date",
+      "appointmentTime": "Appointment Time",
+      "selectTime": "Select time",
+      "duration": "Duration",
+      "selectDuration": "Select duration",
+      "location": "Location",
+      "locationPlaceholder": "Enter appointment location",
+      "notes": "Notes",
+      "notesPlaceholder": "Add any additional notes...",
+      "language": "Language",
+      "selectLanguage": "Select language",
+      "createAppointment": "Create Appointment",
+      "creating": "Creating...",
+      "reset": "Reset",
+      "success": "Appointment created successfully!"
     }
   },
 

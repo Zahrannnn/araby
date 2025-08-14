@@ -99,7 +99,7 @@ export function UpdateCompanyModal({ isOpen, onClose, onSuccess, companyId }: Up
       [field]: value
     }));
     
-    // Clear error when user starts typing
+   
     if (errors[field]) {
       setErrors(prev => ({
         ...prev,
@@ -111,7 +111,7 @@ export function UpdateCompanyModal({ isOpen, onClose, onSuccess, companyId }: Up
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
 
-    // Required field validation
+   
     if (!formData.companyName.trim()) newErrors.companyName = "Company name is required";
     if (!formData.contactEmail.trim()) newErrors.contactEmail = "Contact email is required";
     if (!formData.phoneNumber.trim()) newErrors.phoneNumber = "Phone number is required";
@@ -125,7 +125,7 @@ export function UpdateCompanyModal({ isOpen, onClose, onSuccess, companyId }: Up
     if (!formData.managerUserName.trim()) newErrors.managerUserName = "Username is required";
     if (!formData.subscriptionEndDate.trim()) newErrors.subscriptionEndDate = "Subscription end date is required";
 
-    // Email validation
+   
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (formData.contactEmail && !emailRegex.test(formData.contactEmail)) {
       newErrors.contactEmail = "Please enter a valid email address";
@@ -165,7 +165,7 @@ export function UpdateCompanyModal({ isOpen, onClose, onSuccess, companyId }: Up
         throw new Error("Authentication token not found");
       }
 
-      // Prepare update payload
+     
       const updatePayload = {
         companyId: companyId,
         ...formData
@@ -202,7 +202,7 @@ export function UpdateCompanyModal({ isOpen, onClose, onSuccess, companyId }: Up
     }
   };
 
-  // Loading state
+  
   if (isLoading) {
     return (
       <div className="fixed inset-0 backdrop-blur-sm bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -216,7 +216,7 @@ export function UpdateCompanyModal({ isOpen, onClose, onSuccess, companyId }: Up
     );
   }
 
-  // Error state
+  
   if (error) {
     return (
       <div className="fixed inset-0 backdrop-blur-sm bg-opacity-50 flex items-center justify-center z-50 p-4">

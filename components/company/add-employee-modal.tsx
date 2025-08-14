@@ -10,7 +10,7 @@ import { useAddEmployee } from "@/hooks/useEmployees"
 import { ArrowLeft, UserCircle2, ShieldCheck } from "lucide-react"
 import { z } from "zod"
 
-// Define available permissions
+
 const PERMISSIONS = {
   can_view_offers: 1,
   can_edit_customers: 2,

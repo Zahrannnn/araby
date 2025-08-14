@@ -1,6 +1,5 @@
 import axios from 'axios'
 
-// API Response Types
 export interface ApiErrorResponse {
   message?: string
   error?: string
@@ -28,7 +27,6 @@ export const API_ENDPOINTS = {
   OFFERS: '/api/Offers',
 } as const;
 
-// Create axios instance with default config
 export const apiClient = axios.create({
   baseURL: 'https://nedx.premiumasp.net',
   headers: {
@@ -36,11 +34,9 @@ export const apiClient = axios.create({
   },
 });
 
-// Add request interceptor for auth token
 apiClient.interceptors.request.use((config) => {
-  // Get token from cookies
   const getCookie = (name: string) => {
-    if (typeof document === 'undefined') return null; // Skip on server side
+    if (typeof document === 'undefined') return null;
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop()?.split(';').shift();
@@ -54,7 +50,6 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
-// Add response interceptor for error handling
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {

@@ -100,7 +100,7 @@ export function ExpensesAnalytics() {
       {
         data: categories.map((c) => c.total),
         backgroundColor: [
-          "#f22e3e", // red for largest
+          "#f22e3e", 
           "#64748b",
           "#cbd5e1",
         ],

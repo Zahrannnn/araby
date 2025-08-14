@@ -20,10 +20,8 @@ export function ViewTaskModal({
 }: ViewTaskModalProps) {
   const t = useTranslations('company.tasks.viewModal');
   
-  // Fetch detailed task data from API
   const { data: taskDetails, isLoading, error } = useTaskDetails(taskId);
 
-  // Log task details when data is fetched
   useEffect(() => {
     if (taskDetails) {
       console.log('=== TASK DETAILS FETCHED ===');

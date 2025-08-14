@@ -79,7 +79,7 @@ export const useStore = create<StoreState>()(
       user: null,
       token: null,
       isAuthenticated: false,
-      isLoading: false, // Changed from true to false to prevent infinite loops
+      isLoading: false, 
       hasHydrated: false,
 
       // Auth actions
@@ -200,7 +200,6 @@ export const useStore = create<StoreState>()(
     {
       name: 'araby-store',
       storage: createJSONStorage(() => localStorage),
-      // Only persist app preferences, not auth state (handled by cookies)
       partialize: (state) => ({
         locale: state.locale,
         theme: state.theme,
@@ -209,7 +208,6 @@ export const useStore = create<StoreState>()(
       onRehydrateStorage: () => (state) => {
         if (state) {
           state.setHasHydrated(true);
-          // Initialize auth state from cookies after hydration
           state.initializeAuth();
         }
       },
@@ -250,7 +248,5 @@ export const useNotifications = () => useStore((state) => ({
   clearNotifications: state.clearNotifications,
 }));
 
-/**
- * Export notification type for external use
- */
+
 export type { Notification }; 

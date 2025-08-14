@@ -4,16 +4,13 @@ import { useState, useEffect } from 'react';
 import { User, UserRole } from '@/lib/auth';
 import { cookieUtils } from '@/lib/utils/cookies';
 
-/**
- * Custom hook for managing user role and permissions
- */
+
 export function useUserRole() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // TODO: Implement actual user fetching from your auth provider
-    // This could be from NextAuth, Supabase, Firebase, etc.
+ 
     
     const fetchUser = async () => {
       try {
@@ -55,6 +52,6 @@ export function useUserRole() {
     hasAnyRole,
     isAdmin,
     canAccessCompany,
-    setUser, // For login/logout
+    setUser, 
   };
 }
