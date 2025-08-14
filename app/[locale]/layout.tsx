@@ -51,6 +51,7 @@ export default async function LocaleLayout({
           {children}
         </Providers>
         <Toaster />
+        {/* !! I18N */}
       </body>
     </html>
   );
