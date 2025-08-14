@@ -1547,7 +1547,7 @@
     },
 
     "tasksChart": {
-      "title": "حالة المهام",
+      "title": "حالة العروض",
       "acceptedOffers": "العروض المقبولة",
       "pendingOffers": "العروض المعلقة",
       "newUsers": "المستخدمون الجدد",

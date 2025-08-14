@@ -1547,7 +1547,7 @@
     },
 
     "tasksChart": {
-      "title": "Stato Attività",
+      "title": "Stato Offerte",
       "acceptedOffers": "Offerte Accettate ",
       "pendingOffers": "Offerte in Sospeso ",
       "newUsers": "Nuovi Utenti ",

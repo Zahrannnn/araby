@@ -1578,7 +1578,7 @@
     },
     
     "tasksChart": {
-      "title": "Tasks Status",
+      "title": "Offers Status",
       "acceptedOffers": "Accepted Offers ",
       "pendingOffers": "Pending Offers ",
       "newUsers": "New Users ",
