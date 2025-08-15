@@ -369,7 +369,7 @@ export default function AppointmentsPage() {
                   <SelectContent>
                     <SelectItem value="en">English</SelectItem>
                     <SelectItem value="de">Deutsch</SelectItem>
-                    <SelectItem value="ar">العربية</SelectItem>
+                    <SelectItem value="fr">French</SelectItem>
                     <SelectItem value="it">Italiano</SelectItem>
                   </SelectContent>
                 </Select>
