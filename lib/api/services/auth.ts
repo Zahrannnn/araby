@@ -10,8 +10,7 @@ import type { User } from '@/types/user';
 import type { 
   LoginRequest, 
   LoginResponse, 
-  ParsedLoginResponse,
-  ApiErrorResponse 
+  ParsedLoginResponse 
 } from '../types';
 
 /**
@@ -52,10 +51,32 @@ export const authApi = {
       throw new Error('No token received from server');
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.data) {
-        const errorData = error.response.data as ApiErrorResponse;
-        throw new Error(errorData.message || errorData.error || 'Login failed');
+        const errorData = error.response.data;
+        
+        // Try different possible error message properties
+        const backendMessage = errorData.message || errorData.error || errorData;
+        
+        // If the backend message is a string, use it directly
+        if (typeof backendMessage === 'string') {
+          throw new Error(backendMessage);
+        }
+        
+        // If it's an object, try to extract the message
+        if (typeof backendMessage === 'object' && backendMessage !== null) {
+          const errorObj = backendMessage as Record<string, unknown>;
+          const message = errorObj.message || errorObj.error;
+          if (typeof message === 'string') {
+            throw new Error(message);
+          }
+        }
       }
-      throw new Error('Network error. Please check your connection.');
+      
+      // For network errors or other non-API errors
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+      
+      throw new Error('An unexpected error occurred');
     }
   },
 

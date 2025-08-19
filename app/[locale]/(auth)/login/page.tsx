@@ -84,8 +84,7 @@ const LoginPage = () => {
       router.push(redirectPath);
     } catch (error) {
       console.error("Login error:", error);
-      const errorMessage =
-        error instanceof Error ? error.message : t("auth.errors.serverError");
+      const errorMessage = error instanceof Error ? error.message : "An error occurred during login";
       setError(errorMessage);
     } finally {
       setIsLoading(false);

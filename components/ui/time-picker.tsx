@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
 import { Input } from "@/components/ui/input"
+import { useTranslations } from "next-intl"
 
 interface TimePickerProps {
   value?: string
@@ -30,7 +31,7 @@ export function TimePicker({ value, onChange, placeholder = "Select time", class
     onChange?.(timeString)
     setIsOpen(false)
   }
-
+const t = useTranslations("")
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
@@ -50,7 +51,7 @@ export function TimePicker({ value, onChange, placeholder = "Select time", class
         <div className="flex flex-col space-y-4">
           <div className="flex justify-between items-center">
             <div className="flex-1">
-              <label className="text-sm font-medium mb-1 block">Hours</label>
+              <label className="text-sm font-medium mb-1 block">{t("hours")}</label>
               <Input
                 type="number"
                 min={0}
@@ -62,7 +63,7 @@ export function TimePicker({ value, onChange, placeholder = "Select time", class
             </div>
             <div className="px-2 pt-6">:</div>
             <div className="flex-1">
-              <label className="text-sm font-medium mb-1 block">Minutes</label>
+              <label className="text-sm font-medium mb-1 block">{t("minutes")}</label>
               <Input
                 type="number"
                 min={0}
@@ -109,7 +110,7 @@ export function TimePicker({ value, onChange, placeholder = "Select time", class
             onClick={() => handleTimeChange(hours, minutes)}
             className="w-full"
           >
-            Set Time
+            {t("setTime")}
           </Button>
         </div>
       </PopoverContent>
