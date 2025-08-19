@@ -30,16 +30,6 @@ interface CustomerSearchResult {
 import { CalendarIcon, ClockIcon, MapPinIcon, UserIcon } from '@heroicons/react/24/outline';
 import { toast } from 'sonner';
 
-const DURATION_OPTIONS = [
-  { value: 0.5, label: '30 minutes' },
-  { value: 1, label: '1 hour' },
-  { value: 1.5, label: '1.5 hours' },
-  { value: 2, label: '2 hours' },
-  { value: 3, label: '3 hours' },
-  { value: 4, label: '4 hours' },
-  { value: 6, label: '6 hours' },
-  { value: 8, label: '8 hours' },
-];
 
 export default function AppointmentsPage() {
   const t = useTranslations('companyDashboard.appointments');
@@ -54,6 +44,19 @@ export default function AppointmentsPage() {
     languageCode: 'en',
   });
 
+
+  const tDuration = useTranslations('');
+
+const DURATION_OPTIONS = [
+  { value: 0.5, label: `${tDuration("minutes")} 30` },
+  { value: 1, label: `${tDuration("hours")} 1` },
+  { value: 1.5, label: `${tDuration("hours")} 1.5` },
+  { value: 2, label: `${tDuration("hours")} 2` },
+  { value: 3, label: `${tDuration("hours")} 3` },
+  { value: 4, label: `${tDuration("hours")} 4` },
+  { value: 6, label: `${tDuration("hours")} 6` },
+  { value: 8, label: `${tDuration("hours")} 8` },
+];
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [customers, setCustomers] = useState<CustomerSearchResult[]>([]);
   const [customerSearch, setCustomerSearch] = useState('');
