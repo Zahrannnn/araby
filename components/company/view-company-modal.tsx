@@ -146,6 +146,7 @@ const ViewCompanyPage: React.FC = () => {
                       width={100}
                       height={100}
                       loading="lazy"
+                      unoptimized
                     />
                   ) : (
                     <Building2 className="w-6 h-6 text-primary" />

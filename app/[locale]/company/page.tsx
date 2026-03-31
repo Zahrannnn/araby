@@ -221,7 +221,7 @@ const Page = () => {
           <div>
            <div className='flex items-center gap-2'>
             <div className='w-12 h-12 bg-slate-200 rounded-full flex items-center justify-center' >
-           <Image src={`https://nedx.premiumasp.net/${dashboardData.companyLogoUrl}`} alt="logo" width={80} height={80} className='rounded-full' />
+           <Image src={`https://nedx.premiumasp.net/${dashboardData.companyLogoUrl}`} alt="logo" width={80} height={80} className='rounded-full' unoptimized />
            </div>
            <h1 className='text-2xl font-bold text-gray-900'>{t('title')}</h1>
            </div>
